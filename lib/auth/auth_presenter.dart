@@ -20,7 +20,6 @@ class AuthPresenter {
       (token) {
         Future(() {
           deviceId = token;
-          print("Toke: $token");
         }).catchError((err) => throw Exception(err));
       },
       onError: (err) => throw Exception(err),

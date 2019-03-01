@@ -1,6 +1,5 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/cache_db/user_cache.dart';
 import 'package:nvip/data_repo/network/user_repo.dart';
@@ -13,7 +12,7 @@ import 'package:nvip/scenes/immunizations/screen_immunizations_table.dart';
 import 'package:nvip/scenes/users/screen_users.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum _HomeMenuItems { Logout, Exit }
+enum _HomeMenuItems { Logout, Settings }
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -36,12 +35,14 @@ class _HomePageState extends State<_HomePage>
   Connectivity _connectivity;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   TabController _tabController;
+  ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _connectivity = Connectivity();
     _userCache = UserCache();
+    _scrollController = ScrollController();
     _userCache.currentUser.then((user) {
       setState(() {
         _user = user;
@@ -60,76 +61,79 @@ class _HomePageState extends State<_HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            tooltip: "Signout",
-            onPressed: () {
-              _signOut(context);
-            },
-          ),
-          PopupMenuButton<_HomeMenuItems>(
-            onSelected: (itemValue) {
-              if (itemValue == _HomeMenuItems.Logout) {
-                _signOut(context);
-              } else if (itemValue == _HomeMenuItems.Exit) {
-                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-//                SystemNavigator.pop();
-              } else {
-                Constants.showSnackBar(_scaffoldKey, "Unknown item");
-              }
-            },
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<_HomeMenuItems>>[
-                  PopupMenuItem<_HomeMenuItems>(
-                    value: _HomeMenuItems.Logout,
-                    child: ListTile(
-                      title: Text("Signout"),
-                    ),
-                  ),
-                  PopupMenuItem<_HomeMenuItems>(
-                    value: _HomeMenuItems.Exit,
-                    child: ListTile(
-                      title: Text("Exit"),
-                    ),
-                  ),
-                ],
-          )
-        ],
-        bottom: _tabController != null
-            ? TabBar(
-                controller: _tabController,
-                isScrollable: false,
-                tabs: [
-                  Tab(
-                    icon: Icon(Icons.record_voice_over),
-                    text: Constants.tabTitleEducative,
-                  ),
-                  Tab(
-                    icon: Icon(Icons.schedule),
-                    text: Constants.tabTitleSchedule,
-                  ),
-                  Tab(
-                    icon: Icon(Icons.child_care),
-                    text: Constants.tabTitleChildren,
-                  ),
-                ],
-              )
-            : null,
-      ),
       drawer: _buildDrawer(context),
-      body: _tabController != null
-          ? TabBarView(
-              controller: _tabController,
-              children: [
-                EducativePostsScreen(_user),
-                SchedulesTableScreen(_user),
-                MyChildrenScreen(_user),
-              ],
-            )
-          : null,
+      body: NestedScrollView(
+        controller: _scrollController,
+          headerSliverBuilder: (context, isInnerBoxScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                title: Text(widget.title),
+                pinned: true,
+                floating: true,
+                forceElevated: isInnerBoxScrolled,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    tooltip: "Signout",
+                    onPressed: () {
+                      _signOut(context);
+                    },
+                  ),
+                  PopupMenuButton<_HomeMenuItems>(
+                    onSelected: (itemValue) {
+                      if (itemValue == _HomeMenuItems.Logout) {
+                        _signOut(context);
+                      } else if (itemValue == _HomeMenuItems.Settings) {
+//                        SystemChannels.platform
+//                            .invokeMethod('SystemNavigator.pop');
+                      } else {
+                        Constants.showSnackBar(_scaffoldKey, "Unknown item");
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<_HomeMenuItems>>[
+                          PopupMenuItem<_HomeMenuItems>(
+                            value: _HomeMenuItems.Settings,
+                            child: ListTile(
+                              title: Text("Settings"),
+                            ),
+                          ),
+                        ],
+                  )
+                ],
+                bottom: _tabController != null
+                    ? TabBar(
+                        controller: _tabController,
+                        isScrollable: false,
+                        tabs: [
+                          Tab(
+                            icon: Icon(Icons.record_voice_over),
+                            text: Constants.tabTitleEducative,
+                          ),
+                          Tab(
+                            icon: Icon(Icons.schedule),
+                            text: Constants.tabTitleSchedule,
+                          ),
+                          Tab(
+                            icon: Icon(Icons.child_care),
+                            text: Constants.tabTitleChildren,
+                          ),
+                        ],
+                      )
+                    : null,
+              ),
+            ];
+          },
+          body: _tabController != null
+              ? TabBarView(
+                  controller: _tabController,
+                  children: [
+                    EducativePostsScreen(_user),
+                    SchedulesTableScreen(_user),
+                    MyChildrenScreen(_user),
+                  ],
+                )
+              : null),
     );
   }
 
