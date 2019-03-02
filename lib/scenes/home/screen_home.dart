@@ -54,6 +54,7 @@ class _HomePageState extends State<_HomePage>
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -62,8 +63,9 @@ class _HomePageState extends State<_HomePage>
     return Scaffold(
       key: _scaffoldKey,
       drawer: _buildDrawer(context),
-      body: NestedScrollView(
-        controller: _scrollController,
+      body: SafeArea(
+        child: NestedScrollView(
+          controller: _scrollController,
           headerSliverBuilder: (context, isInnerBoxScrolled) {
             return <Widget>[
               SliverAppBar(
@@ -133,7 +135,9 @@ class _HomePageState extends State<_HomePage>
                     MyChildrenScreen(_user),
                   ],
                 )
-              : null),
+              : Container(),
+        ),
+      ),
     );
   }
 

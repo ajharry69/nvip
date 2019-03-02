@@ -34,7 +34,6 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
     var isUserAdmin = _user != null && _user.role == Constants.privilegeAdmin;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: null,
       body: Center(
         child: Text("Immunization Schedules will appear here"),
       ),

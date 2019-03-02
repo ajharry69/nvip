@@ -49,7 +49,6 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
     var isUserAdmin = _user != null && _user.role == Constants.privilegeAdmin;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: null,
       body: FutureBuilder<List<EducativePost>>(
         future: _posts,
         builder: (context, snapshot) {
