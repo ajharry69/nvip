@@ -30,7 +30,6 @@ import 'package:nvip/scenes/vaccines/screen_vaccines_table.dart';
 
 final routes = {
   Routes.keyDefault: (BuildContext context) => SplashScreen(),
-//  Routes.keyDefault: (BuildContext context) => CalendarsPage(),
   Routes.keyAbout: (BuildContext context) => AboutPage(),
   Routes.keySignIn: (BuildContext context) => SignInScreen(),
 //  Routes.keyChangePass: (BuildContext context) => ChangePasswordScreen(),
