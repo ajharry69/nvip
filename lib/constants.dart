@@ -15,6 +15,9 @@ class Constants {
     return {HttpHeaders.authorizationHeader: "Bearer $token"};
   }
 
+  static final List<String> diseaseFilters = <String>[];
+  static final List<String> placesFilters = <String>[];
+
   // REST API json response keys
   // Constant Standardized
   static final String keyIsError = 'isError';
