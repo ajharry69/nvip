@@ -41,9 +41,9 @@ class Constants {
   static final String keyEducativePosts = 'educativePosts';
 
   // User Roles/Privileges
-  static final String privilegeAdmin = 'Admin';
-  static final String privilegeParent = 'Parent';
-  static final String privilegeProvider = 'Provider';
+  static final String privilegeAdmin = 'Admin'.toUpperCase();
+  static final String privilegeParent = 'Parent'.toUpperCase();
+  static final String privilegeProvider = 'Provider'.toUpperCase();
 
   // Password reset identifier
   static final String prTypeChange = 'C';
@@ -325,14 +325,6 @@ class Styles {
 
 class SQLQueries {
   // Create tables...
-//  static final String _createUsersTable =
-//      "CREATE TABLE IF NOT EXISTS ${UserTable.tableName}(${UserTable.colId} "
-//      "VARCHAR(100) PRIMARY KEY, ${UserTable.colIdNo} VARCHAR(20) NOT NULL, "
-//      "${UserTable.colSName} VARCHAR(50), ${UserTable.colFName} "
-//      "VARCHAR(50) NOT NULL, ${UserTable.colLName} VARCHAR(50), "
-//      "${UserTable.colEmail} VARCHAR(150) NOT NULL, ${UserTable.colRole} "
-//      "VARCHAR(20) NOT NULL, ${UserTable.colMobileNo} VARCHAR(20), "
-//      "${UserTable.colVerified} SMALLINT(1) DEFAULT 0);";
 
   static final String createUserTokenTable =
       "CREATE TABLE IF NOT EXISTS ${UserTokenTable.tableName}(${UserTokenTable.colToken} "
@@ -343,27 +335,10 @@ class SQLQueries {
       "(${UserRolesTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
       "${UserRolesTable.colName} VARCHAR(50) NOT NULL);";
 
-//  static final String createDiseasesTable =
-//      "CREATE TABLE IF NOT EXISTS ${DiseasesTable.tableName} "
-//      "(${DiseasesTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
-//      "${DiseasesTable.colName} VARCHAR(200) NOT NULL, "
-//      "${DiseasesTable.colDesc} TEXT);";
-
-//  static final String createCentersTable =
-//      "CREATE TABLE IF NOT EXISTS ${CentersTable.tableName}"
-//      "(${CentersTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
-//      "${CentersTable.colName} VARCHAR(100) NOT NULL);";
-
   // Delete tables...
 
   static final String dropUserRolesTable =
       "DROP TABLE IF EXISTS ${UserRolesTable.tableName};";
-
-//  static final String dropDiseasesTable =
-//      "DROP TABLE IF EXISTS ${DiseasesTable.tableName};";
-//
-//  static final String dropCentersTable =
-//      "DROP TABLE IF EXISTS ${CentersTable.tableName};";
 }
 
 class UserRolesTable {
@@ -449,9 +424,8 @@ class Routes {
 }
 
 class Urls {
-//  static final String _baseUrl = "http://nvip.krizlaapp.com/NVIP";
+  static final String _baseUrl = "https://nvip.krizlaapp.com/";
 //  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
-  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
   static final String _baseAPIUrl = "$_baseUrl/RestAPI";
   static final String _immunizationRoot = "$_baseAPIUrl/immunization";
   static final String _userRoot = "$_baseAPIUrl/user";

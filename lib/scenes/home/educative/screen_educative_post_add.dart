@@ -30,6 +30,8 @@ class _PostScreenBody extends StatefulWidget {
 
 class _PostScreenBodyState extends State<_PostScreenBody> {
   final EducativePost educativePost;
+  final defaultImage = "images/no_image.png";
+  final imageHeight = 200.0;
   bool _isRequestSent = false;
   File _imageFile;
   Connectivity _connectivity;
@@ -129,15 +131,21 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                       );
                     },
                     child: _imageFile == null
-                        ? FadeInImage.assetNetwork(
-                            placeholder: "images/no_image.png",
-                            image: educativePost != null
-                                ? educativePost.imageUrl
-                                : Urls.getPostImage(""),
-                            width: double.maxFinite,
-                            height: 200.0,
-                            fit: BoxFit.fill,
-                          )
+                        ? educativePost != null &&
+                                educativePost.imageUrl != null
+                            ? FadeInImage.assetNetwork(
+                                placeholder: defaultImage,
+                                image: educativePost.imageUrl,
+                                width: double.maxFinite,
+                                height: imageHeight,
+                                fit: BoxFit.fill,
+                              )
+                            : Image.asset(
+                                defaultImage,
+                                width: double.maxFinite,
+                                height: imageHeight,
+                                fit: BoxFit.fill,
+                              )
                         : Image.file(
                             _imageFile,
                             width: double.maxFinite,
