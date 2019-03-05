@@ -12,6 +12,7 @@ class Constants {
 
   static Future<Map<String, String>> httpHeaders() async {
     var token = await UserCache().authToken;
+    print("Bearer $token"); // TODO: Delete this...
     return {HttpHeaders.authorizationHeader: "Bearer $token"};
   }
 
@@ -76,7 +77,7 @@ class Constants {
 
   // Cache Database
   static final String dbName = '${appName.toLowerCase()}.db';
-  static final int dbVersion = 3;
+  static final int dbVersion = 1;
 
   static final IconData backIcon = Icons.arrow_back;
 
@@ -164,8 +165,7 @@ class Constants {
     try {
       var userResponse = parseJwt(token);
       return User.fromMap(userResponse[Constants.keyUser]);
-    } on Exception catch (err) {
-      print(refinedExceptionMessage(err));
+    } on Exception catch (_) {
       return null;
     }
   }
@@ -325,14 +325,14 @@ class Styles {
 
 class SQLQueries {
   // Create tables...
-  static final String createUsersTable =
-      "CREATE TABLE IF NOT EXISTS ${UserTable.tableName}(${UserTable.colId} "
-      "VARCHAR(100) PRIMARY KEY, ${UserTable.colIdNo} VARCHAR(20) NOT NULL, "
-      "${UserTable.colSName} VARCHAR(50), ${UserTable.colFName} "
-      "VARCHAR(50) NOT NULL, ${UserTable.colLName} VARCHAR(50), "
-      "${UserTable.colEmail} VARCHAR(150) NOT NULL, ${UserTable.colRole} "
-      "VARCHAR(20) NOT NULL, ${UserTable.colMobileNo} VARCHAR(20), "
-      "${UserTable.colVerified} SMALLINT(1) DEFAULT 0);";
+//  static final String _createUsersTable =
+//      "CREATE TABLE IF NOT EXISTS ${UserTable.tableName}(${UserTable.colId} "
+//      "VARCHAR(100) PRIMARY KEY, ${UserTable.colIdNo} VARCHAR(20) NOT NULL, "
+//      "${UserTable.colSName} VARCHAR(50), ${UserTable.colFName} "
+//      "VARCHAR(50) NOT NULL, ${UserTable.colLName} VARCHAR(50), "
+//      "${UserTable.colEmail} VARCHAR(150) NOT NULL, ${UserTable.colRole} "
+//      "VARCHAR(20) NOT NULL, ${UserTable.colMobileNo} VARCHAR(20), "
+//      "${UserTable.colVerified} SMALLINT(1) DEFAULT 0);";
 
   static final String createUserTokenTable =
       "CREATE TABLE IF NOT EXISTS ${UserTokenTable.tableName}(${UserTokenTable.colToken} "
@@ -343,29 +343,27 @@ class SQLQueries {
       "(${UserRolesTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
       "${UserRolesTable.colName} VARCHAR(50) NOT NULL);";
 
-  static final String createDiseasesTable =
-      "CREATE TABLE IF NOT EXISTS ${DiseasesTable.tableName} "
-      "(${DiseasesTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
-      "${DiseasesTable.colName} VARCHAR(200) NOT NULL, "
-      "${DiseasesTable.colDesc} TEXT);";
+//  static final String createDiseasesTable =
+//      "CREATE TABLE IF NOT EXISTS ${DiseasesTable.tableName} "
+//      "(${DiseasesTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
+//      "${DiseasesTable.colName} VARCHAR(200) NOT NULL, "
+//      "${DiseasesTable.colDesc} TEXT);";
 
-  static final String createCentersTable =
-      "CREATE TABLE IF NOT EXISTS ${CentersTable.tableName}"
-      "(${CentersTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
-      "${CentersTable.colName} VARCHAR(100) NOT NULL);";
+//  static final String createCentersTable =
+//      "CREATE TABLE IF NOT EXISTS ${CentersTable.tableName}"
+//      "(${CentersTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
+//      "${CentersTable.colName} VARCHAR(100) NOT NULL);";
 
   // Delete tables...
-  static final String dropUsersTable =
-      "DROP TABLE IF EXISTS ${UserTable.tableName};";
 
   static final String dropUserRolesTable =
       "DROP TABLE IF EXISTS ${UserRolesTable.tableName};";
 
-  static final String dropDiseasesTable =
-      "DROP TABLE IF EXISTS ${DiseasesTable.tableName};";
-
-  static final String dropCentersTable =
-      "DROP TABLE IF EXISTS ${CentersTable.tableName};";
+//  static final String dropDiseasesTable =
+//      "DROP TABLE IF EXISTS ${DiseasesTable.tableName};";
+//
+//  static final String dropCentersTable =
+//      "DROP TABLE IF EXISTS ${CentersTable.tableName};";
 }
 
 class UserRolesTable {

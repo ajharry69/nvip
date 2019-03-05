@@ -4,13 +4,13 @@ import 'package:nvip/data_repo/network/user_repo.dart';
 import 'package:nvip/models/user.dart';
 
 abstract class AuthContract {
-  void onSignInSuccess(User user);
+  void onSignInSuccess(String authToken);
 
   void onSignInFailed(String error);
 }
 
 class AuthPresenter {
-  String deviceId = "";
+  String deviceId = "deviceId";
   AuthContract _authContract;
   UserDataRepo _userDataRepo = UserDataRepo();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();

@@ -359,9 +359,9 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
   }
 
   @override
-  void onSignInSuccess(User user) async {
+  void onSignInSuccess(String authToken) async {
     try {
-      await _userCache.saveUser(user);
+      await _userCache.saveUserToken(authToken);
       __onServerResponseReceived(isResponseSuccess: true);
       _authStateProvider.initState();
     } on Exception catch (e) {

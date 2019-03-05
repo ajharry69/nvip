@@ -345,7 +345,6 @@ class _HomePageState extends State<_HomePage>
 
       if (result != ConnectivityResult.none) {
         await UserDataRepo().signOut(_user);
-        await _userCache.deleteAllUsers();
         await _userCache.deleteAllUserTokens();
       } else {
         Constants.showSnackBar(_scaffoldKey, Constants.connectionLost,

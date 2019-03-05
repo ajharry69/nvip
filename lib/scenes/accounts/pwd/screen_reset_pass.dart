@@ -149,60 +149,65 @@ class __ResetPasswordScreenBodyState extends State<_ResetPasswordScreenBody> {
       if (result != ConnectivityResult.none) {
         if (!_isRequestSent) {
           _isRequestSent = true;
-          var response = await _userDataRepo.requestPasswordReset(email);
+          var sr = await _userDataRepo.requestPasswordReset(email);
           _onServerResponseReceived();
-          if (!response.isError) {
+          var message = sr.message;
+          if (!sr.isError) {
             Future(() {
               showDialog<void>(
                 context: context,
                 barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Password Sent!"),
-                    content: Text(response.message),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("Cancel"),
-                        onPressed: () {
-                          Future(() {
-                            Navigator.of(context).pop();
-                          }).catchError((err) =>
-                              print(Constants.refinedExceptionMessage(err)));
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Proceed"),
-                        onPressed: () {
-                          Future(() {
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ChangePasswordScreen(
-                                    Constants.prTypeReset, email),
-                              ),
-                            );
-                          }).catchError((err) =>
-                              print(Constants.refinedExceptionMessage(err)));
-                        },
-                      )
-                    ],
-                  );
-                },
+                builder: (BuildContext context) => AlertDialog(
+                      title: Text("Password Sent!"),
+                      content: Text(message),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Future(() {
+                              Navigator.of(context).pop();
+                            }).catchError((err) =>
+                                print(Constants.refinedExceptionMessage(err)));
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Proceed"),
+                          onPressed: () {
+                            Future(() {
+                              Navigator.of(context).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ChangePasswordScreen(
+                                      Constants.prTypeReset, email),
+                                ),
+                              );
+                            }).catchError((err) =>
+                                print(Constants.refinedExceptionMessage(err)));
+                          },
+                        )
+                      ],
+                    ),
               );
             });
           } else {
-            Constants.showSnackBar(
-              _scaffoldKey,
-              response.message,
-              showActionButton: true,
-              actionLabel: "Register".toUpperCase(),
-              action: () {
-                Future(() {
-                  Navigator.pushReplacementNamed(context, Routes.keySignUp);
-                });
-              },
-            );
+            if (message
+                .toLowerCase()
+                .contains("email address not registered")) {
+              Constants.showSnackBar(
+                _scaffoldKey,
+                message,
+                showActionButton: true,
+                actionLabel: "Register".toUpperCase(),
+                action: () {
+                  Future(() {
+                    Navigator.pushReplacementNamed(context, Routes.keySignUp);
+                  });
+                },
+              );
+            } else {
+              throw Exception(message);
+            }
           }
         }
       } else {

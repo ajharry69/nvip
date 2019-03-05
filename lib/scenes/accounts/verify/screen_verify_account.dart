@@ -301,9 +301,9 @@ class __VerifyAccountScreenBodyState extends State<_VerifyAccountScreenBody>
   }
 
   @override
-  void onSignInSuccess(User user) async {
+  void onSignInSuccess(String authToken) async {
     try {
-      await _userCache.saveUser(user);
+      await _userCache.saveUserToken(authToken);
       _onServerResponseReceived();
       _authStateProvider.initState();
     } on Exception catch (e) {

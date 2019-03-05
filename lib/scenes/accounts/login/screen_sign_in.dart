@@ -9,7 +9,6 @@ import 'package:nvip/auth/auth_listener.dart';
 import 'package:nvip/auth/auth_presenter.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/cache_db/user_cache.dart';
-import 'package:nvip/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -309,9 +308,9 @@ class __SignInScreenBodyState extends State<_SignInScreenBody>
   }
 
   @override
-  void onSignInSuccess(User user) async {
+  void onSignInSuccess(String authToken) async {
     try {
-      await _userCache.saveUser(user);
+      await _userCache.saveUserToken(authToken);
       __onServerResponseReceived(isResponseSuccess: true);
       _authStateProvider.initState();
     } on Exception catch (e) {

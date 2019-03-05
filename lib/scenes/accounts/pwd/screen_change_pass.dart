@@ -6,7 +6,6 @@ import 'package:nvip/auth/auth_listener.dart';
 import 'package:nvip/auth/auth_presenter.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/cache_db/user_cache.dart';
-import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/accounts/pwd/screen_reset_pass.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
@@ -266,9 +265,9 @@ class __ChangePasswordScreenBodyState extends State<_ChangePasswordScreenBody>
   }
 
   @override
-  void onSignInSuccess(User user) async {
+  void onSignInSuccess(String authToken) async {
     try {
-      await _userCache.saveUser(user);
+      await _userCache.saveUserToken(authToken);
       _onServerResponseReceived();
       _authStateProvider.initState();
     } on Exception catch (e) {

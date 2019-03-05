@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:nvip/constants.dart';
-import 'package:nvip/data_repo/cache_db/user_cache.dart';
 import 'package:nvip/models/server_response.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/utils/network_utils.dart';
@@ -18,9 +17,8 @@ class UserDataRepo {
   static final String _keyPROpType = 'op';
 
   NetworkUtils _networkUtils = NetworkUtils();
-  UserCache _userCache = UserCache();
 
-  Future<User> signUp(User user, String password) {
+  Future<String> signUp(User user, String password) {
     return _networkUtils
         .post(Urls.userSignUp, body: user.toMapForSignUp(password))
         .then(
@@ -32,9 +30,8 @@ class UserDataRepo {
                     print(sr.debugMessage);
                     throw Exception(sr.message);
                   }
-                  var token = response[Constants.keyToken];
-                  await _userCache.saveUserToken(token);
-                  return Constants.getUserFromToken(token);
+                  String token = response[Constants.keyToken];
+                  return token;
                 },
               ),
         )
@@ -42,7 +39,7 @@ class UserDataRepo {
             (err) => throw Exception(Constants.refinedExceptionMessage(err)));
   }
 
-  Future<User> signIn(String username, String password, String deviceId) {
+  Future<String> signIn(String username, String password, String deviceId) {
     return _networkUtils
         .post(Urls.userSignIn, body: {
           _keyUsername: username,
@@ -58,9 +55,8 @@ class UserDataRepo {
                     print(sr.debugMessage);
                     throw Exception(sr.message);
                   }
-                  var token = response[Constants.keyToken];
-                  await _userCache.saveUserToken(token);
-                  return Constants.getUserFromToken(token);
+                  String token = response[Constants.keyToken];
+                  return token;
                 },
               ),
         )
@@ -68,7 +64,7 @@ class UserDataRepo {
             (err) => throw Exception(Constants.refinedExceptionMessage(err)));
   }
 
-  Future<User> verifyAccount(
+  Future<String> verifyAccount(
       String userId, String vCode, String deviceId) async {
     return _networkUtils
         .post(Urls.userVerifyAccount,
@@ -83,9 +79,8 @@ class UserDataRepo {
                     print(sr.debugMessage);
                     throw Exception(sr.message);
                   }
-                  var token = response[Constants.keyToken];
-                  await _userCache.saveUserToken(token);
-                  return Constants.getUserFromToken(token);
+                  String token = response[Constants.keyToken];
+                  return token;
                 },
               ),
         )
@@ -93,7 +88,7 @@ class UserDataRepo {
             (err) => throw Exception(Constants.refinedExceptionMessage(err)));
   }
 
-  Future<User> changePassword(String opType, String email, String tempPass,
+  Future<String> changePassword(String opType, String email, String tempPass,
       String newPass, String deviceId) {
     return _networkUtils
         .post(Urls.userResetPass, body: {
@@ -112,9 +107,8 @@ class UserDataRepo {
                     print(sr.debugMessage);
                     throw Exception(sr.message);
                   }
-                  var token = response[Constants.keyToken];
-                  await _userCache.saveUserToken(token);
-                  return Constants.getUserFromToken(token);
+                  String token = response[Constants.keyToken];
+                  return token;
                 },
               ),
         )
