@@ -20,7 +20,7 @@ class EducativePost {
       [this._ownerName, this._ownerImageUrl, this._datePosted]);
 
   EducativePost.fromMap(dynamic postMap) {
-    this._id = int.tryParse(postMap[_keyId]);
+    this._id = postMap[_keyId];
     this._title = postMap[_keyTitle];
     this._description = postMap[_keyDescription];
     this._imageUrl = postMap[_keyPostImageUrl];
