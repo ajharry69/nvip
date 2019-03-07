@@ -70,6 +70,7 @@ class _PlacesFilterState extends State<PlacesFilter> {
     VaccineCentersDataRepo().getCenters().then((centers) {
       Future(() {
         setState(() {
+          _places.add(_PlaceFilterEntry("Nation-wide"));
           centers.forEach((c) {
             _places.add(_PlaceFilterEntry(c.name));
           });

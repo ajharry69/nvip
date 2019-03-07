@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
-import 'package:nvip/data_repo/cache_db/user_cache.dart';
 import 'package:nvip/data_repo/network/children_repo.dart';
 import 'package:nvip/data_repo/tables/data_source_children.dart';
 import 'package:nvip/models/child.dart';
@@ -22,8 +21,7 @@ class _ChildrenScreenBody extends StatefulWidget {
   const _ChildrenScreenBody({Key key, this.user}) : super(key: key);
 
   @override
-  __ChildrenScreenBodyState createState() =>
-      __ChildrenScreenBodyState(this.user);
+  __ChildrenScreenBodyState createState() => __ChildrenScreenBodyState();
 }
 
 class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
@@ -32,12 +30,11 @@ class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
   int _rowsPerPage1 = 0;
   bool _isSortAscending = true;
   int _sortColumnIndex = 1;
-  final User _user;
   ChildrenTableDataSource _childrenDataSource;
   Future<List<Child>> _children;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  __ChildrenScreenBodyState([this._user]);
+  __ChildrenScreenBodyState();
 
   void _sort<T>(
       Comparable<T> getField(Child d), int columnIndex, bool isAscending) {
@@ -51,11 +48,7 @@ class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
   @override
   void initState() {
     super.initState();
-    UserCache().currentUser.then((user) {
-      setState(() {
-        _children = ChildrenDataRepo().getChildren(user?.id);
-      });
-    });
+    _children = ChildrenDataRepo().getChildren();
     setState(() {
       _rowsPerPage = _defaultRowsPerPage;
       _rowsPerPage1 = _defaultRowsPerPage;

@@ -50,7 +50,7 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
   @override
   void initState() {
     super.initState();
-    _immunizationList = ImmunizationDataRepo().getImmunizations(user?.id);
+    _immunizationList = ImmunizationDataRepo().getImmunizations();
     _rowsPerPage = _defaultRowsPerPage;
     _rowsPerPage1 = _defaultRowsPerPage;
   }

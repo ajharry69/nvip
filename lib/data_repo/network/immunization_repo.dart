@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:nvip/constants.dart';
+import 'package:nvip/data_repo/cache_db/user_cache.dart';
 import 'package:nvip/models/immunization.dart';
 import 'package:nvip/models/server_response.dart';
 import 'package:nvip/utils/network_utils.dart';
@@ -41,10 +42,12 @@ class ImmunizationDataRepo {
     }
   }
 
-  Future<List<Immunization>> getImmunizations(String userId,
+  Future<List<Immunization>> getImmunizations(
       [String no = Constants.immunizationRecNoAll]) async {
     return _networkUtils
-        .get(Urls.getImmunizations(userId: userId, no: no),
+        .get(
+            Urls.getImmunizations(
+                userId: (await UserCache().currentUser).id, no: no),
             headers: await Constants.httpHeaders())
         .then(
       (response) {

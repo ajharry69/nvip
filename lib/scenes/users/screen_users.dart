@@ -38,7 +38,7 @@ class __UserListScreenBodyState extends State<_UserListScreenBody>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     setState(() {
-      _userList = UserDataRepo().getUsers(user?.id);
+      _userList = UserDataRepo().getUsers();
     });
   }
 

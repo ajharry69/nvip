@@ -440,7 +440,7 @@ class Urls {
 
   static String getImmunizations(
           {String userId, String no = Constants.immunizationRecNoAll}) =>
-      "$_immunizationRoot/get.php?${RestKeys.keyUserId}=$userId&${RestKeys.keyRecordNo}=$no";
+      "$_immunizationRoot/get.php?${RestKeys.keyRecordNo}=$no";
   static final String immunizationAdd = "$_immunizationRoot/add.php";
   static final String immunizationDelete = "$_immunizationRoot/delete.php";
   static final String immunizationUpdate = "$_immunizationRoot/update.php";
@@ -452,7 +452,7 @@ class Urls {
 
   static String getChildren(
           {String userId, String no = Constants.childrenRecNoAll}) =>
-      "$_childRoot/get.php?${RestKeys.keyUserId}=$userId&${RestKeys.keyRecordNo}=$no";
+      "$_childRoot/get.php?${RestKeys.keyRecordNo}=$no";
   static final String childRegister = "$_childRoot/register.php";
   static final String childDelete = "$_childRoot/delete.php";
   static final String childUpdate = "$_childRoot/update.php";
@@ -483,8 +483,7 @@ class Urls {
   static final String scheduleDelete = "$_schedulePostsRoot/delete.php";
   static final String scheduleUpdate = "$_schedulePostsRoot/update.php";
 
-  static String getUsers(String uuid) =>
-      "$_adminRoot/getUsers.php?${RestKeys.keyUserId}=$uuid";
+  static String getUsers() => "$_adminRoot/getUsers.php";
   static final String userSignUp = "$_userRoot/signUp.php";
   static final String userSignIn = "$_userRoot/signIn.php";
   static final String userSignOut = "$_userRoot/signOut.php";

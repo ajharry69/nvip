@@ -51,8 +51,8 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
   @override
   void initState() {
     super.initState();
-    _children = ChildrenDataRepo()
-        .getChildren(_user?.id, no: Constants.childrenRecNoParent);
+    _children =
+        ChildrenDataRepo().getChildren(no: Constants.childrenRecNoParent);
     _rowsPerPage = _defaultRowsPerPage;
     _rowsPerPage1 = _defaultRowsPerPage;
   }

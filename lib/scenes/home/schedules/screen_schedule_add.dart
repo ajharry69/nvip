@@ -1,8 +1,9 @@
-import 'dart:convert';
-
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nvip/constants.dart';
+import 'package:nvip/data_repo/network/schedules_repo.dart';
+import 'package:nvip/models/immunization_schedule.dart';
 import 'package:nvip/widgets/diseases_filter.dart';
 import 'package:nvip/widgets/places_filter.dart';
 
@@ -17,6 +18,8 @@ class _ScheduleScreenBody extends StatefulWidget {
 }
 
 class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
+  var _isRequestSent = false;
+  final firstStartDate = DateTime.now().add(Duration(days: 1));
   final dateFormat = DateFormat(Constants.defaultDateFormat);
   var _formKey = GlobalKey<FormState>();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -33,8 +36,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
     _endDateController = TextEditingController();
     _descController = TextEditingController();
 
-    _startDateController.text =
-        dateFormat.format(DateTime.now().add(Duration(days: 1)));
+    _startDateController.text = dateFormat.format(firstStartDate);
     _setEndDate(_startDateController.text);
   }
 
@@ -79,6 +81,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                     padding:
                         const EdgeInsets.only(bottom: Constants.defaultPadding),
                     child: TextFormField(
+                      controller: _titleController,
                       validator: (String title) {
                         if (title.isEmpty) {
                           return 'Title is required';
@@ -119,9 +122,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                                             _startDateController.text != null
                                                 ? DateTime.tryParse(
                                                     _startDateController.text)
-                                                : DateTime.now(),
-                                        firstDate: DateTime.now()
-                                            .add(Duration(days: 1)),
+                                                : firstStartDate,
+                                        firstDate: DateTime.now(),
                                         lastDate: DateTime.now()
                                             .add(Duration(days: 365 * 3)),
                                       ) ??
@@ -250,6 +252,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                     padding: const EdgeInsets.only(
                         bottom: Constants.defaultPadding * 2),
                     child: TextFormField(
+                      controller: _descController,
                       maxLines: 4,
                       validator: (String title) {
                         if (title.isEmpty) {
@@ -275,11 +278,13 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                         textScaleFactor: Constants.defaultScaleFactor,
                         style: Styles.btnTextStyle,
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          submitPost();
-                        }
-                      },
+                      onPressed: _isRequestSent
+                          ? null
+                          : () {
+                              if (_formKey.currentState.validate()) {
+                                _submitPost();
+                              }
+                            },
                     ),
                   )
                 ],
@@ -295,11 +300,42 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
         : dateFormat.format(DateTime.now().add(Duration(days: 5)));
   }
 
-  void submitPost() {
-    var filters = Constants.diseaseFilters;
-    print(filters);
-    print(jsonEncode(filters));
-    print(jsonDecode(jsonEncode(filters)));
-    print(jsonEncode(filters).substring(0, 5));
+  void _submitPost() async {
+    try {
+      String title = _titleController.text.trimRight().trimLeft();
+      String description = _descController.text;
+      String startDate = _startDateController.text.trimLeft().trimRight();
+      String endDate = _endDateController.text.trimLeft().trimRight();
+      var diseases = Constants.diseaseFilters;
+      var places = Constants.placesFilters;
+
+      var result = await Connectivity().checkConnectivity();
+
+      if (result != ConnectivityResult.none) {
+        var schedule = Schedule(
+          title: title,
+          description: description,
+          startDate: startDate,
+          endDate: endDate,
+          diseases: diseases,
+          places: places,
+        );
+
+        if (!_isRequestSent) {
+          _isRequestSent = true;
+          var sr = await ScheduleDataRepo().addSchedule(schedule);
+
+          Constants.showSnackBar(_scaffoldKey, sr.message);
+        }
+      } else {
+        Constants.showSnackBar(_scaffoldKey, Constants.connectionLost,
+            isNetworkConnected: false);
+      }
+    } on Exception catch (err) {
+      Constants.showSnackBar(
+          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    } finally {
+      _isRequestSent = false;
+    }
   }
 }

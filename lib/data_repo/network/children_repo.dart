@@ -42,11 +42,10 @@ class ChildrenDataRepo {
     ).catchError((err) => throw Exception(err.toString()));
   }
 
-  Future<List<Child>> getChildren(String userId,
+  Future<List<Child>> getChildren(
       {String no = Constants.childrenRecNoAll}) async {
     return _networkUtils
-        .get(Urls.getChildren(userId: userId, no: no),
-            headers: await Constants.httpHeaders())
+        .get(Urls.getChildren(no: no), headers: await Constants.httpHeaders())
         .then(
       (response) {
         var sr = ServerResponse.fromMap(response);

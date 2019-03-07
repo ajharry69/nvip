@@ -116,9 +116,9 @@ class UserDataRepo {
             (err) => throw Exception(Constants.refinedExceptionMessage(err)));
   }
 
-  Future<List<User>> getUsers(String userId) async {
+  Future<List<User>> getUsers() async {
     return _networkUtils
-        .get(Urls.getUsers(userId), headers: await Constants.httpHeaders())
+        .get(Urls.getUsers(), headers: await Constants.httpHeaders())
         .then(
           (dynamic response) => Future(() {
                 var sr = ServerResponse.fromMap(response);

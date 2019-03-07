@@ -235,21 +235,19 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
 
         if (!_isRequestSent) {
           _isRequestSent = true;
-          var sr = await EducativePostDataRepo().addPost(post);
-          setState(() {
-            _isRequestSent = false;
-          });
-          if (sr.isError) throw Exception(sr.message);
+          await EducativePostDataRepo().addPost(post);
 
           Navigator.pushReplacementNamed(context, Routes.keyHome);
         }
+      } else {
+        Constants.showSnackBar(_scaffoldKey, Constants.connectionLost,
+            isNetworkConnected: false);
       }
     } on Exception catch (err) {
-      setState(() {
-        _isRequestSent = false;
-      });
       Constants.showSnackBar(
           _scaffoldKey, Constants.refinedExceptionMessage(err));
+    } finally {
+      _isRequestSent = false;
     }
   }
 
