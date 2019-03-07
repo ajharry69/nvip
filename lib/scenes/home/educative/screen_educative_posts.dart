@@ -38,6 +38,86 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
 
   __EducativePostsBodyState([this._user]);
 
+  Iterable<Widget> _postsWidget(
+      BuildContext context, List<EducativePost> posts) sync* {
+    for (var post in posts) {
+      yield GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => AddEducativePostScreen(
+                        educativePost: post,
+                      )));
+        },
+        child: Card(
+          margin: const EdgeInsets.only(
+            top: Constants.defaultPadding / 2,
+            right: Constants.defaultPadding,
+            left: Constants.defaultPadding,
+            bottom: Constants.defaultPadding / 2,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ListTile(
+                leading: CircleAvatar(
+                  child: loadNetworkImage(post.ownerImageUrl),
+                ),
+                title: Text(post.ownerName),
+                subtitle: Text(post.datePosted),
+                trailing: IconButton(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(
+                    top: Constants.defaultPadding,
+                    left: Constants.defaultPadding,
+                    bottom: Constants.defaultPadding,
+                  ),
+                  icon: Icon(Icons.more_vert),
+                  onPressed: () {
+                    Constants.showSnackBar(_scaffoldKey, "REPLACE"); //TODO:
+                  },
+                ),
+              ),
+              post.imageUrl != null
+                  ? FadeInImage.assetNetwork(
+                      placeholder: defaultImage,
+                      image: post.imageUrl,
+                      width: double.maxFinite,
+                      height: imageHeight,
+                      fit: BoxFit.fill,
+                    )
+                  : Image.asset(
+                      defaultImage,
+                      width: double.maxFinite,
+                      height: imageHeight,
+                      fit: BoxFit.fill,
+                    ),
+              Padding(
+                padding: defaultPadding,
+                child: Text(
+                  post.title,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                  style: Theme.of(context).textTheme.title,
+                ),
+              ),
+              Padding(
+                padding: defaultPadding,
+                child: Text(
+                  post.description,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +129,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
     var isUserAdmin = _user != null && _user.role == Constants.privilegeAdmin;
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomPadding: false,
       body: FutureBuilder<List<EducativePost>>(
         future: _posts,
         builder: (context, snapshot) {
@@ -60,87 +141,11 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
           } else {
             if (snapshot.hasData) {
               var postList = snapshot.data;
-              return ListView.builder(
-                itemCount: postList.length,
+              return SingleChildScrollView(
                 reverse: postList.length > 15,
-                itemBuilder: (ctx, pos) {
-                  var post = postList[pos];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          ctx,
-                          MaterialPageRoute(
-                              builder: (_) => AddEducativePostScreen(
-                                    educativePost: post,
-                                  )));
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.only(
-                        top: Constants.defaultPadding / 2,
-                        right: Constants.defaultPadding,
-                        left: Constants.defaultPadding,
-                        bottom: Constants.defaultPadding / 2,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          ListTile(
-                            leading: CircleAvatar(
-                              child: loadNetworkImage(post.ownerImageUrl),
-                            ),
-                            title: Text(post.ownerName),
-                            subtitle: Text(post.datePosted),
-                            trailing: IconButton(
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(
-                                top: Constants.defaultPadding,
-                                left: Constants.defaultPadding,
-                                bottom: Constants.defaultPadding,
-                              ),
-                              icon: Icon(Icons.more_vert),
-                              onPressed: () {
-                                Constants.showSnackBar(
-                                    _scaffoldKey, "REPLACE"); //TODO:
-                              },
-                            ),
-                          ),
-                          post.imageUrl != null
-                              ? FadeInImage.assetNetwork(
-                                  placeholder: defaultImage,
-                                  image: post.imageUrl,
-                                  width: double.maxFinite,
-                                  height: imageHeight,
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.asset(
-                                  defaultImage,
-                                  width: double.maxFinite,
-                                  height: imageHeight,
-                                  fit: BoxFit.fill,
-                                ),
-                          Padding(
-                            padding: defaultPadding,
-                            child: Text(
-                              post.title,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.justify,
-                              style: Theme.of(context).textTheme.title,
-                            ),
-                          ),
-                          Padding(
-                            padding: defaultPadding,
-                            child: Text(
-                              post.description,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+                child: Column(
+                  children: _postsWidget(context, postList).toList(),
+                ),
               );
             }
           }

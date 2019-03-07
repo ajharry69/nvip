@@ -19,7 +19,7 @@ class DiseasesTableDataSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text("${index + 1}")),
         DataCell(Text(disease.name)),
-        DataCell(Text(disease.description ?? "")),
+//        DataCell(Text(disease.description ?? "")),
       ],
     );
   }

@@ -30,6 +30,7 @@ class _HomePage extends StatefulWidget {
 
 class _HomePageState extends State<_HomePage>
     with SingleTickerProviderStateMixin {
+  final Color blueShade700 = Colors.blue.shade700;
   User _user;
   UserCache _userCache;
   Connectivity _connectivity;
@@ -61,82 +62,81 @@ class _HomePageState extends State<_HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       key: _scaffoldKey,
       drawer: _buildDrawer(context),
-      body: SafeArea(
-        child: NestedScrollView(
-          controller: _scrollController,
-          headerSliverBuilder: (context, isInnerBoxScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                title: Text(widget.title),
-                pinned: true,
-                floating: true,
-                forceElevated: isInnerBoxScrolled,
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.exit_to_app),
-                    tooltip: "Signout",
-                    onPressed: () {
+      body: NestedScrollView(
+        controller: _scrollController,
+        headerSliverBuilder: (context, isInnerBoxScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              title: Text(widget.title),
+              pinned: true,
+              floating: true,
+              forceElevated: isInnerBoxScrolled,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.exit_to_app),
+                  tooltip: "Signout",
+                  onPressed: () {
+                    _signOut(context);
+                  },
+                ),
+                PopupMenuButton<_HomeMenuItems>(
+                  onSelected: (itemValue) {
+                    if (itemValue == _HomeMenuItems.Logout) {
                       _signOut(context);
-                    },
-                  ),
-                  PopupMenuButton<_HomeMenuItems>(
-                    onSelected: (itemValue) {
-                      if (itemValue == _HomeMenuItems.Logout) {
-                        _signOut(context);
-                      } else if (itemValue == _HomeMenuItems.Settings) {
+                    } else if (itemValue == _HomeMenuItems.Settings) {
 //                        SystemChannels.platform
 //                            .invokeMethod('SystemNavigator.pop');
-                      } else {
-                        Constants.showSnackBar(_scaffoldKey, "Unknown item");
-                      }
-                    },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<_HomeMenuItems>>[
-                          PopupMenuItem<_HomeMenuItems>(
-                            value: _HomeMenuItems.Settings,
-                            child: ListTile(
-                              title: Text("Settings"),
-                            ),
+                    } else {
+                      Constants.showSnackBar(_scaffoldKey, "Unknown item");
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<_HomeMenuItems>>[
+                        PopupMenuItem<_HomeMenuItems>(
+                          value: _HomeMenuItems.Settings,
+                          child: ListTile(
+                            title: Text("Settings"),
                           ),
-                        ],
-                  )
-                ],
-                bottom: _tabController != null
-                    ? TabBar(
-                        controller: _tabController,
-                        isScrollable: false,
-                        tabs: [
-                          Tab(
-                            icon: Icon(Icons.record_voice_over),
-                            text: Constants.tabTitleEducative,
-                          ),
-                          Tab(
-                            icon: Icon(Icons.schedule),
-                            text: Constants.tabTitleSchedule,
-                          ),
-                          Tab(
-                            icon: Icon(Icons.child_care),
-                            text: Constants.tabTitleChildren,
-                          ),
-                        ],
-                      )
-                    : null,
-              ),
-            ];
-          },
-          body: _tabController != null
-              ? TabBarView(
-                  controller: _tabController,
-                  children: [
-                    EducativePostsScreen(_user),
-                    SchedulesTableScreen(_user),
-                    MyChildrenScreen(_user),
-                  ],
+                        ),
+                      ],
                 )
-              : Container(),
-        ),
+              ],
+              bottom: _tabController != null
+                  ? TabBar(
+                      controller: _tabController,
+                      isScrollable: false,
+                      tabs: [
+                        Tab(
+                          icon: Icon(Icons.record_voice_over),
+                          text: Constants.tabTitleEducative,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.schedule),
+                          text: Constants.tabTitleSchedule,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.child_care),
+                          text: Constants.tabTitleChildren,
+                        ),
+                      ],
+                    )
+                  : null,
+            ),
+          ];
+        },
+        body: _tabController != null
+            ? TabBarView(
+                controller: _tabController,
+                children: [
+                  EducativePostsScreen(_user),
+                  SchedulesTableScreen(_user),
+                  MyChildrenScreen(_user),
+                ],
+              )
+            : Container(),
       ),
     );
   }
@@ -145,19 +145,13 @@ class _HomePageState extends State<_HomePage>
     var isAdmin = _user?.role == Constants.privilegeAdmin;
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(color: Theme.of(context).accentColor),
+        decoration: BoxDecoration(color: blueShade700),
         child: ListView(
           children: <Widget>[
             _buildDrawerHeader(),
             ListTile(
-              leading: Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-              title: Text(
-                "Account Profile",
-                style: TextStyle(color: Colors.white),
-              ),
+              leading: Icon(Icons.person),
+              title: Text("Account Profile"),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushReplacementNamed(context, Routes.keyProfile);
@@ -165,14 +159,8 @@ class _HomePageState extends State<_HomePage>
             ),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.list,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Immunizations",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.list),
+                    title: Text("Immunizations"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacement(
@@ -187,14 +175,8 @@ class _HomePageState extends State<_HomePage>
                 : Container(),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.pie_chart,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Charts",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.pie_chart),
+                    title: Text("Charts"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(context, Routes.keyCharts);
@@ -203,14 +185,8 @@ class _HomePageState extends State<_HomePage>
                 : Container(),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.people,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Users",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.people),
+                    title: Text("Users"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacement(
@@ -225,14 +201,8 @@ class _HomePageState extends State<_HomePage>
                 : Container(),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.child_care,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Children",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.child_care),
+                    title: Text("Children"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacement(
@@ -246,14 +216,8 @@ class _HomePageState extends State<_HomePage>
                 : Container(),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.table_chart,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Vaccines",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.table_chart),
+                    title: Text("Vaccines"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(
@@ -263,14 +227,8 @@ class _HomePageState extends State<_HomePage>
                 : Container(),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.place,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Centers",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.place),
+                    title: Text("Centers"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(
@@ -280,14 +238,8 @@ class _HomePageState extends State<_HomePage>
                 : Container(),
             isAdmin
                 ? ListTile(
-                    leading: Icon(
-                      Icons.hdr_weak,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "Diseases",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    leading: Icon(Icons.hdr_weak),
+                    title: Text("Diseases"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(
@@ -302,37 +254,39 @@ class _HomePageState extends State<_HomePage>
   }
 
   DrawerHeader _buildDrawerHeader() {
-    String name = "${_user?.sName} ${_user?.fName} ${_user?.lName}";
+    String name = "${_user?.sName} ${_user?.fName} ${_user?.lName}"
+        .trimLeft()
+        .trimRight();
     String email = _user?.email;
     return DrawerHeader(
       child: Container(
+        decoration: BoxDecoration(color: blueShade700),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CircleAvatar(
-              radius: 30.0,
+              radius: 25.0,
               child: Icon(Icons.person),
-              backgroundColor: Colors.white70,
+              backgroundColor: Theme.of(context).primaryColorLight,
             ),
             Padding(
               padding: const EdgeInsets.only(
-                top: Constants.defaultPadding * 2,
+                top: Constants.defaultPadding,
                 bottom: Constants.defaultPadding,
               ),
               child: Text(
                 _user != null ? name : Constants.drawerHeaderName,
-                style: TextStyle(fontSize: 16.0, color: Colors.white70),
+                style: TextStyle(fontSize: 13.0),
               ),
             ),
             Text(
               _user != null ? email : Constants.drawerHeaderEmail,
-              style: TextStyle(fontSize: 12.0, color: Colors.white70),
+              style: TextStyle(fontSize: 13.0),
             )
           ],
         ),
       ),
-      decoration: BoxDecoration(color: Theme.of(context).primaryColorDark),
     );
   }
 

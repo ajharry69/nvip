@@ -25,7 +25,6 @@ class VaccinesTableDataSource extends DataTableSource {
         DataCell(Text(vaccine.manufacturer)),
         DataCell(Text(vaccine.manufactureDate)),
         DataCell(Text(vaccine.expiryDate)),
-        DataCell(Text(vaccine.description)),
       ],
     );
   }

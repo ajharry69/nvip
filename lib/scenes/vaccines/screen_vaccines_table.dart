@@ -140,13 +140,13 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
                           onSort: (_, __) {},
                         ),
                         DataColumn(
-                          label: Text("VID."),
+                          label: Text("Vaccine ID."),
                           tooltip: "Vaccine ID",
                           onSort: (ci, isAscending) =>
                               _sort<String>((v) => v.batchNo, ci, isAscending),
                         ),
                         DataColumn(
-                          label: Text("BNo."),
+                          label: Text("Batch No."),
                           tooltip: "Batch Number",
                           onSort: (ci, isAscending) =>
                               _sort<String>((v) => v.batchNo, ci, isAscending),
@@ -169,22 +169,16 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
                               (v) => v.manufacturer, ci, isAscending),
                         ),
                         DataColumn(
-                          label: Text("DoM"),
+                          label: Text("Man. Date"),
                           tooltip: "Date of Manufacture",
                           onSort: (ci, isAscending) => _sort<String>(
                               (v) => v.manufactureDate, ci, isAscending),
                         ),
                         DataColumn(
-                          label: Text("DoE"),
+                          label: Text("Expiry Date"),
                           tooltip: "Date of Expiry",
                           onSort: (ci, isAscending) => _sort<String>(
                               (v) => v.expiryDate, ci, isAscending),
-                        ),
-                        DataColumn(
-                          label: Text("Description"),
-                          tooltip: "Description of vaccine",
-                          onSort: (ci, isAscending) => _sort<String>(
-                              (v) => v.description, ci, isAscending),
                         ),
                       ],
                       source: _tableDataSource,

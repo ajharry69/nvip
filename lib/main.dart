@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _firebaseMessaging.onTokenRefresh.listen(
-      (token) async {
+          (token) async {
         try {
           User user = await UserCache().currentUser;
           await UserDataRepo().updateDeviceId(user?.id, token);
@@ -22,8 +22,9 @@ class MyApp extends StatelessWidget {
           print(Constants.refinedExceptionMessage(err));
         }
       },
-    ).onError((err) => print(
-        "${Constants.appName}: ${Constants.refinedExceptionMessage(err)}"));
+    ).onError((err) =>
+        print(
+            "${Constants.appName}: ${Constants.refinedExceptionMessage(err)}"));
 
     _firebaseMessaging.requestNotificationPermissions();
     _firebaseMessaging.configure(
@@ -38,8 +39,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           brightness: Brightness.light,
           primarySwatch: Colors.blue,
+//          primaryColor: Color(0xFF1976d2),
+//          primaryColorDark: Color(0xFF004ba0),
+//          primaryColorLight: Color(0xFF63a4ff),
+//          accentColor: Color(0xFF63a4ff),
           buttonTheme: ButtonThemeData(
-            buttonColor: Theme.of(context).accentColor,
+            buttonColor: Theme
+                .of(context)
+                .accentColor,
             shape: Constants.defaultButtonShape(context),
           ),
           inputDecorationTheme: InputDecorationTheme(

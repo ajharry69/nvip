@@ -10,11 +10,9 @@ import 'package:nvip/models/user.dart';
 class Constants {
   static final encUTF_8 = "charset=UTF-8";
 
-  static Future<Map<String, String>> httpHeaders() async {
-    var token = await UserCache().authToken;
-    print("Bearer $token"); // TODO: Delete this...
-    return {HttpHeaders.authorizationHeader: "Bearer $token"};
-  }
+  static Future<Map<String, String>> httpHeaders() async => {
+        HttpHeaders.authorizationHeader: "Bearer ${await UserCache().authToken}"
+      };
 
   static final List<String> diseaseFilters = <String>[];
   static final List<String> placesFilters = <String>[];

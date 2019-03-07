@@ -159,13 +159,9 @@ class __DiseasesScreenBodyState extends State<_DiseasesScreenBody> {
                         ),
                         DataColumn(
                           label: Text("Name"),
+                          tooltip: "disease name",
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.name, ci, isAscending),
-                        ),
-                        DataColumn(
-                          label: Text("Description"),
-                          onSort: (ci, isAscending) => _sort<String>(
-                              (d) => d.description, ci, isAscending),
                         ),
                       ],
                       source: _tableDataSource,
