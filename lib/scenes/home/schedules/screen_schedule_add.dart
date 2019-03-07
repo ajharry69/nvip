@@ -33,7 +33,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
     _endDateController = TextEditingController();
     _descController = TextEditingController();
 
-    _startDateController.text = dateFormat.format(DateTime.now());
+    _startDateController.text =
+        dateFormat.format(DateTime.now().add(Duration(days: 1)));
     _setEndDate(_startDateController.text);
   }
 
@@ -119,7 +120,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                                                 ? DateTime.tryParse(
                                                     _startDateController.text)
                                                 : DateTime.now(),
-                                        firstDate: DateTime.now(),
+                                        firstDate: DateTime.now()
+                                            .add(Duration(days: 1)),
                                         lastDate: DateTime.now()
                                             .add(Duration(days: 365 * 3)),
                                       ) ??
