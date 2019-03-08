@@ -94,7 +94,7 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
           future: _immunizationList,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.showHasNoDataWidget(
+              return Constants.noDataWidget(
                   context, Constants.refinedExceptionMessage(snapshot.error));
             } else {
               if (snapshot.hasData) {

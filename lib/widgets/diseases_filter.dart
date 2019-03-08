@@ -1,30 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/diseases_repo.dart';
-
-class _DiseaseFilterEntry {
-  final String name;
-
-  _DiseaseFilterEntry(this.name);
-
-  String get initials {
-    var sb = StringBuffer();
-    if (name != null) {
-      var names = name.split(" ");
-      if (names.length >= 2) {
-        var initSet = Set<String>();
-        names.sublist(0, 1).forEach((x) {
-          initSet.add(x.toUpperCase());
-        });
-        sb.writeAll(initSet);
-      } else {
-        sb.write(names.first.toUpperCase());
-      }
-    }
-
-    return sb.toString();
-  }
-}
+import 'package:nvip/models/disease_chip.dart';
 
 class DiseasesFilter extends StatefulWidget {
   @override
@@ -32,11 +9,11 @@ class DiseasesFilter extends StatefulWidget {
 }
 
 class _DiseasesFilterState extends State<DiseasesFilter> {
-  List<_DiseaseFilterEntry> _diseases = List();
+  List<DiseaseChipEntry> _diseases = List();
 
   Iterable<Widget> get diseasesWidgets sync* {
     var _filters = Constants.diseaseFilters;
-    for (_DiseaseFilterEntry disease in _diseases) {
+    for (DiseaseChipEntry disease in _diseases) {
       yield Padding(
         padding: const EdgeInsets.all(4.0),
         child: FilterChip(
@@ -71,7 +48,7 @@ class _DiseasesFilterState extends State<DiseasesFilter> {
       Future(() {
         setState(() {
           diseases.forEach((d) {
-            _diseases.add(_DiseaseFilterEntry(d.name));
+            _diseases.add(DiseaseChipEntry(d.name));
           });
         });
       }).catchError((err) => throw Exception(err));

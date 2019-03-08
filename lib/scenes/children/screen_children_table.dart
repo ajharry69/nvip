@@ -101,7 +101,7 @@ class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
           future: _children,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.showHasNoDataWidget(
+              return Constants.noDataWidget(
                   context,
                   "${Constants.refinedExceptionMessage(snapshot.error)}. "
                   "Press the button below to register your child(ren).");

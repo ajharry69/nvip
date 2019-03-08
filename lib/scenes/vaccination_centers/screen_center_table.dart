@@ -83,7 +83,7 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
           future: _centers,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.showHasNoDataWidget(
+              return Constants.noDataWidget(
                 context,
                 "No vaccination center(s) / place(s) of vaccinations found. "
                     "Press the (+) sign to add a new record.",

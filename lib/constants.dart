@@ -202,7 +202,7 @@ class Constants {
     return utf8.decode(base64Url.decode(output));
   }
 
-  static Widget showHasNoDataWidget(BuildContext context, String message) {
+  static Widget noDataWidget(BuildContext context, String message) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(Constants.defaultPadding * 4),

@@ -91,7 +91,7 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
           future: _vaccines,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.showHasNoDataWidget(
+              return Constants.noDataWidget(
                   context,
                   "${Constants.refinedExceptionMessage(snapshot.error)} "
                   "Press the (+) button to add a new vaccine.");

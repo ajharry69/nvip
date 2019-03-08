@@ -18,8 +18,8 @@ class Schedule {
   String startDate;
   String endDate;
   String datePosted;
-  List<String> diseases;
-  List<String> places;
+  List<dynamic> diseases;
+  List<dynamic> places;
 
   Schedule(
       {this.id = 0,
@@ -52,7 +52,7 @@ class Schedule {
     startDate = scheduleMap[_keyStartDate];
     endDate = scheduleMap[_keyEndDate];
     datePosted = scheduleMap[_keyDatePosted];
-    diseases = jsonDecode(scheduleMap[_keyDiseases]);
+    diseases = jsonDecode(scheduleMap[_keyDiseases].toString());
     places = jsonDecode(scheduleMap[_keyPlaces]);
   }
 }

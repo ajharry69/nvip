@@ -61,7 +61,7 @@ class _ProvidersTableScreenBodyState extends State<_ProvidersTableScreenBody> {
         future: _userList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Constants.showHasNoDataWidget(
+            return Constants.noDataWidget(
                 context, Constants.refinedExceptionMessage(snapshot.error));
           } else {
             if (snapshot.hasData) {
@@ -142,7 +142,7 @@ class _ProvidersTableScreenBodyState extends State<_ProvidersTableScreenBody> {
                   ),
                 );
               } else {
-                return Constants.showHasNoDataWidget(
+                return Constants.noDataWidget(
                     context,
                     "No Health Providers have been registered with "
                     "${Constants.appName}. Please press the 'Add Health Provider'"

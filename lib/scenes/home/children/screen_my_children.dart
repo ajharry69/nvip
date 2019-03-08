@@ -79,7 +79,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
         future: _children,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Constants.showHasNoDataWidget(
+            return Constants.noDataWidget(
                 context,
                 _user != null
                     ? "You have no children registered with ${Constants.appName}. "

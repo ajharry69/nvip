@@ -97,9 +97,7 @@ class _HomePageState extends State<_HomePage>
                       <PopupMenuEntry<_HomeMenuItems>>[
                         PopupMenuItem<_HomeMenuItems>(
                           value: _HomeMenuItems.Settings,
-                          child: ListTile(
-                            title: Text("Settings"),
-                          ),
+                          child: ListTile(title: Text("Settings")),
                         ),
                       ],
                 )
@@ -304,10 +302,10 @@ class _HomePageState extends State<_HomePage>
         Constants.showSnackBar(_scaffoldKey, Constants.connectionLost,
             isNetworkConnected: false);
       }
-      Navigator.pushReplacementNamed(context, Routes.keySignIn);
     } on Exception catch (err) {
       Constants.showSnackBar(
           _scaffoldKey, Constants.refinedExceptionMessage(err));
+    } finally {
       Navigator.pushReplacementNamed(context, Routes.keySignIn);
     }
   }

@@ -61,7 +61,7 @@ class __AdminsTableScreenBodyState extends State<_AdminsTableScreenBody> {
         future: _userList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Constants.showHasNoDataWidget(
+            return Constants.noDataWidget(
                 context, Constants.refinedExceptionMessage(snapshot.error));
           } else {
             if (snapshot.hasData) {
@@ -141,7 +141,7 @@ class __AdminsTableScreenBodyState extends State<_AdminsTableScreenBody> {
                   ),
                 );
               } else {
-                return Constants.showHasNoDataWidget(
+                return Constants.noDataWidget(
                     context,
                     "No Administrator(s) have been registered with "
                     "${Constants.appName}. Please press the 'Add Administrator'"

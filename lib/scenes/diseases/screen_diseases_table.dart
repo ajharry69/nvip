@@ -104,7 +104,7 @@ class __DiseasesScreenBodyState extends State<_DiseasesScreenBody> {
           future: _diseases,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.showHasNoDataWidget(
+              return Constants.noDataWidget(
                   context,
                   "${Constants.refinedExceptionMessage(snapshot.error)} Press "
                   "the (+) button to add a new disease.");

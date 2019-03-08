@@ -19,7 +19,8 @@ class _ScheduleScreenBody extends StatefulWidget {
 
 class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
   var _isRequestSent = false;
-  final firstStartDate = DateTime.now().add(Duration(days: 1));
+  static final oneDayDuration = Duration(days: 1);
+  final firstStartDate = DateTime.now().add(oneDayDuration);
   final dateFormat = DateFormat(Constants.defaultDateFormat);
   var _formKey = GlobalKey<FormState>();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
