@@ -5,6 +5,8 @@ import 'package:nvip/models/educative_post.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/home/educative/screen_educative_post_add.dart';
 
+enum _CardMenuItems { update, delete }
+
 class EducativePostsScreen extends StatelessWidget {
   final User _user;
 
@@ -26,7 +28,7 @@ class _EducativePostsBody extends StatefulWidget {
 class __EducativePostsBodyState extends State<_EducativePostsBody>
     with AutomaticKeepAliveClientMixin<_EducativePostsBody> {
   final defaultImage = "images/no_image.png";
-  final imageHeight = 150.0;
+  final imageHeight = 194.0;
   final defaultPadding = const EdgeInsets.only(
     right: Constants.defaultPadding * 2,
     left: Constants.defaultPadding * 2,
@@ -43,12 +45,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
     for (var post in posts) {
       yield GestureDetector(
         onTap: () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => AddEducativePostScreen(
-                        educativePost: post,
-                      )));
+          // TODO: Add view functionality...
         },
         child: Card(
           margin: const EdgeInsets.only(
@@ -62,21 +59,53 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
+                  backgroundColor: Colors.grey.shade500,
                   child: loadNetworkImage(post.ownerImageUrl),
                 ),
                 title: Text(post.ownerName),
                 subtitle: Text(post.datePosted),
-                trailing: IconButton(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(
-                    top: Constants.defaultPadding,
-                    left: Constants.defaultPadding,
-                    bottom: Constants.defaultPadding,
-                  ),
-                  icon: Icon(Icons.more_vert),
-                  onPressed: () {
-                    Constants.showSnackBar(_scaffoldKey, "REPLACE"); //TODO:
-                  },
+                trailing: Wrap(
+                  alignment: WrapAlignment.end,
+                  runAlignment: WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  children: <Widget>[
+                    IconButton(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(4.0),
+                      tooltip: "Flag as inapropriate",
+                      icon: Icon(Icons.flag),
+                      onPressed: () {
+                        // TODO: Add flag inappropriate post...
+                      },
+                    ),
+                    PopupMenuButton<_CardMenuItems>(
+                      onSelected: (value) {
+                        switch (value) {
+                          case _CardMenuItems.update:
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AddEducativePostScreen(
+                                        educativePost: post,
+                                      ),
+                                ));
+                            break;
+                          case _CardMenuItems.delete:
+                            break;
+                        }
+                      },
+                      itemBuilder: (ctx) => <PopupMenuEntry<_CardMenuItems>>[
+                            PopupMenuItem<_CardMenuItems>(
+                              value: _CardMenuItems.update,
+                              child: Text("Update"),
+                            ),
+                            PopupMenuItem<_CardMenuItems>(
+                              value: _CardMenuItems.delete,
+                              child: Text("Delete"),
+                            ),
+                          ],
+                    ),
+                  ],
                 ),
               ),
               post.imageUrl != null
@@ -94,12 +123,16 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                       fit: BoxFit.fill,
                     ),
               Padding(
-                padding: defaultPadding,
+                padding:
+                    defaultPadding.copyWith(top: Constants.defaultPadding * 2),
                 child: Text(
                   post.title,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.justify,
-                  style: Theme.of(context).textTheme.title,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.title.merge(TextStyle(
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.normal,
+                      )),
                 ),
               ),
               Padding(
@@ -108,7 +141,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                   post.description,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.justify,
+                  textAlign: TextAlign.start,
                 ),
               ),
             ],
@@ -176,7 +209,10 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
         image: url,
       );
     } on Exception catch (_) {
-      return Icon(Icons.person);
+      return Icon(
+        Icons.person,
+        color: Colors.white,
+      );
     }
   }
 

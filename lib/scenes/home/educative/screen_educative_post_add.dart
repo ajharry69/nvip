@@ -31,7 +31,7 @@ class _PostScreenBody extends StatefulWidget {
 class _PostScreenBodyState extends State<_PostScreenBody> {
   final EducativePost educativePost;
   final defaultImage = "images/no_image.png";
-  final imageHeight = 200.0;
+  final imageHeight = 194.0;
   bool _isRequestSent = false;
   File _imageFile;
   Connectivity _connectivity;
@@ -251,16 +251,21 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
     }
   }
 
-  void _fetchImage(BuildContext ctx, ImageSource imgSource) {
-    ImagePicker.pickImage(
-      source: imgSource,
-      maxWidth: 1024.0,
-      maxHeight: 500.0,
-    ).then((file) {
+  void _fetchImage(BuildContext ctx, ImageSource imgSource) async {
+    try {
+      var file = await ImagePicker.pickImage(
+        source: imgSource,
+        maxWidth: 1024.0,
+        maxHeight: 1024.0,
+      );
+
       setState(() {
         _imageFile = file;
       });
-    });
-    Navigator.pop(ctx);
+      Navigator.pop(ctx);
+    } on Exception catch (err) {
+      Constants.showSnackBar(
+          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    }
   }
 }

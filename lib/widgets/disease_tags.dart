@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nvip/constants.dart';
 import 'package:nvip/models/disease_chip.dart';
 
 class DiseasesChipTags extends StatefulWidget {
@@ -19,7 +20,10 @@ class _DiseasesChipTagsState extends State<DiseasesChipTags> {
   Iterable<Widget> get diseasesWidgets sync* {
     for (DiseaseChipEntry disease in _diseases) {
       yield Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.only(
+          top: Constants.defaultPadding / 2,
+          right: Constants.defaultPadding,
+        ),
         child: Chip(
 //          avatar: CircleAvatar(
 //            child: Center(

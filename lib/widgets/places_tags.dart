@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nvip/constants.dart';
 import 'package:nvip/models/place_chip.dart';
 
 class PlacesChipTags extends StatefulWidget {
@@ -19,7 +20,10 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
   Iterable<Widget> get placesWidgets sync* {
     for (PlaceChipEntry place in _places) {
       yield Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.only(
+          top: Constants.defaultPadding / 2,
+          right: Constants.defaultPadding,
+        ),
         child: Chip(
 //          avatar: CircleAvatar(
 //            child: Center(

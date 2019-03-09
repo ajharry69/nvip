@@ -28,8 +28,15 @@ class _SchedulesTableBody extends StatefulWidget {
   _SchedulesTableBodyState createState() => _SchedulesTableBodyState(_user);
 }
 
-class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
+class _SchedulesTableBodyState extends State<_SchedulesTableBody>
+    with AutomaticKeepAliveClientMixin<_SchedulesTableBody> {
   User _user;
+  static const padding16dp = Constants.defaultPadding * 2;
+  static const tagTitleTextStyle = TextStyle(
+    fontFamily: "Roboto",
+    fontWeight: FontWeight.w700,
+    fontStyle: FontStyle.normal,
+  );
   var _isRequestSent = false;
   final Connectivity _connectivity = Connectivity();
   final ScheduleDataRepo scheduleDataRepo = ScheduleDataRepo();
@@ -98,6 +105,12 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
       var places = schedule.places;
 
       yield Card(
+        margin: const EdgeInsets.only(
+          top: Constants.defaultPadding / 2,
+          right: Constants.defaultPadding,
+          left: Constants.defaultPadding,
+          bottom: Constants.defaultPadding / 2,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -135,15 +148,15 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: Constants.defaultPadding,
-                left: Constants.defaultPadding,
+                right: padding16dp,
+                left: padding16dp,
               ),
               child: Text("$description"),
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: Constants.defaultPadding * 2,
-                left: Constants.defaultPadding * 2,
+                right: padding16dp,
+                left: padding16dp,
               ),
               child: Divider(
                 color: Colors.grey.shade600,
@@ -151,29 +164,36 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: Constants.defaultPadding,
-                left: Constants.defaultPadding,
+                right: padding16dp,
+                left: padding16dp,
               ),
-              child: Text("Diseases"),
+              child: Text(
+                "Diseases",
+                style: tagTitleTextStyle,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: Constants.defaultPadding,
-                left: Constants.defaultPadding,
+                right: padding16dp,
+                left: padding16dp,
               ),
               child: DiseasesChipTags(diseases: diseases),
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: Constants.defaultPadding,
-                left: Constants.defaultPadding,
+                right: padding16dp,
+                left: padding16dp,
               ),
-              child: Text("Places"),
+              child: Text(
+                "Places",
+                style: tagTitleTextStyle,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(
-                right: Constants.defaultPadding,
-                left: Constants.defaultPadding,
+                right: padding16dp,
+                left: padding16dp,
+                bottom: Constants.defaultPadding,
               ),
               child: PlacesChipTags(centers: places),
             ),
@@ -206,10 +226,14 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
                     ConnectivityResult cr =
                         await _connectivity.checkConnectivity();
                     if (cr != ConnectivityResult.none) {
-                      var sr = await scheduleDataRepo.deleteSchedule(schedule);
-                      Navigator.of(ctx).pop();
-                      Constants.showSnackBar(_scaffoldKey, sr.message);
-                      setState(() {}); // Refresh page after deleting
+                      if (!_isRequestSent) {
+                        _isRequestSent = true;
+                        var sr =
+                            await scheduleDataRepo.deleteSchedule(schedule);
+                        Navigator.of(ctx).pop();
+                        Constants.showSnackBar(_scaffoldKey, sr.message);
+                        setState(() {}); // Refresh page after deleting
+                      }
                     } else {
                       Constants.showSnackBar(
                           _scaffoldKey, Constants.connectionLost,
@@ -227,6 +251,9 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody> {
           ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 enum _CardMenuItems { update, delete }

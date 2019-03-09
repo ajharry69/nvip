@@ -81,9 +81,10 @@ class __SplashScreenBodyState extends State<_SplashScreenBody>
                       child: Text(
                         Constants.appName,
                         style: TextStyle(
-                            fontSize: 40.0,
-                            fontFamily: "Felipa",
-                            color: Colors.white),
+                          fontSize: 40.0,
+                          fontFamily: "Felipa",
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
