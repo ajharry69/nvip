@@ -65,77 +65,81 @@ class _HomePageState extends State<_HomePage>
       resizeToAvoidBottomPadding: false,
       key: _scaffoldKey,
       drawer: _buildDrawer(context),
-      body: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, isInnerBoxScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              title: Text(widget.title),
-              pinned: true,
-              floating: true,
-              forceElevated: isInnerBoxScrolled,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.exit_to_app),
-                  tooltip: "Signout",
-                  onPressed: () {
+      body: buildScaffoldContent(),
+    );
+  }
+
+  Widget buildScaffoldContent() {
+    return NestedScrollView(
+      controller: _scrollController,
+      headerSliverBuilder: (context, isInnerBoxScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            title: Text(widget.title),
+            pinned: true,
+            floating: true,
+            forceElevated: isInnerBoxScrolled,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.exit_to_app),
+                tooltip: "Signout",
+                onPressed: () {
+                  _signOut(context);
+                },
+              ),
+              PopupMenuButton<_HomeMenuItems>(
+                onSelected: (itemValue) {
+                  if (itemValue == _HomeMenuItems.Logout) {
                     _signOut(context);
-                  },
-                ),
-                PopupMenuButton<_HomeMenuItems>(
-                  onSelected: (itemValue) {
-                    if (itemValue == _HomeMenuItems.Logout) {
-                      _signOut(context);
-                    } else if (itemValue == _HomeMenuItems.Settings) {
+                  } else if (itemValue == _HomeMenuItems.Settings) {
 //                        SystemChannels.platform
 //                            .invokeMethod('SystemNavigator.pop');
-                    } else {
-                      Constants.showSnackBar(_scaffoldKey, "Unknown item");
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<_HomeMenuItems>>[
-                        PopupMenuItem<_HomeMenuItems>(
-                          value: _HomeMenuItems.Settings,
-                          child: ListTile(title: Text("Settings")),
-                        ),
-                      ],
-                )
-              ],
-              bottom: _tabController != null
-                  ? TabBar(
-                      controller: _tabController,
-                      isScrollable: false,
-                      tabs: [
-                        Tab(
-                          icon: Icon(Icons.record_voice_over),
-                          text: Constants.tabTitleEducative,
-                        ),
-                        Tab(
-                          icon: Icon(Icons.schedule),
-                          text: Constants.tabTitleSchedule,
-                        ),
-                        Tab(
-                          icon: Icon(Icons.child_care),
-                          text: Constants.tabTitleChildren,
-                        ),
-                      ],
-                    )
-                  : null,
-            ),
-          ];
-        },
-        body: _tabController != null
-            ? TabBarView(
-                controller: _tabController,
-                children: [
-                  EducativePostsScreen(_user),
-                  SchedulesTableScreen(_user),
-                  MyChildrenScreen(_user),
-                ],
+                  } else {
+                    Constants.showSnackBar(_scaffoldKey, "Unknown item");
+                  }
+                },
+                itemBuilder: (BuildContext context) =>
+                    <PopupMenuEntry<_HomeMenuItems>>[
+                      PopupMenuItem<_HomeMenuItems>(
+                        value: _HomeMenuItems.Settings,
+                        child: ListTile(title: Text("Settings")),
+                      ),
+                    ],
               )
-            : Container(),
-      ),
+            ],
+            bottom: _tabController != null
+                ? TabBar(
+                    controller: _tabController,
+                    isScrollable: false,
+                    tabs: [
+                      Tab(
+                        icon: Icon(Icons.record_voice_over),
+                        text: Constants.tabTitleEducative,
+                      ),
+                      Tab(
+                        icon: Icon(Icons.schedule),
+                        text: Constants.tabTitleSchedule,
+                      ),
+                      Tab(
+                        icon: Icon(Icons.child_care),
+                        text: Constants.tabTitleChildren,
+                      ),
+                    ],
+                  )
+                : null,
+          ),
+        ];
+      },
+      body: _tabController != null
+          ? TabBarView(
+              controller: _tabController,
+              children: [
+                EducativePostsScreen(_user),
+                SchedulesTableScreen(_user),
+                MyChildrenScreen(_user),
+              ],
+            )
+          : Container(),
     );
   }
 

@@ -150,13 +150,16 @@ class Constants {
   static bool isLeapYear(int year) {
     if (year % 4 == 0) {
       return true;
-    } else if (year % 100 == 0) {
+    } else{
       return false;
-    } else if (year % 400 == 0) {
-      return true;
-    } else {
-      return true;
     }
+//    else if (year % 100 == 0) {
+//      return false;
+//    } else if (year % 400 == 0) {
+//      return true;
+//    } else {
+//      return true;
+//    }
   }
 
   static User getUserFromToken(String token) {
@@ -422,8 +425,8 @@ class Routes {
 }
 
 class Urls {
-//  static final String _baseUrl = "https://nvip.krizlaapp.com/";
-  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
+  static final String _baseUrl = "https://nvip.krizlaapp.com/";
+//  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
   static final String _baseAPIUrl = "$_baseUrl/RestAPI";
   static final String _immunizationRoot = "$_baseAPIUrl/immunization";
   static final String _userRoot = "$_baseAPIUrl/user";
