@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/educative_posts_repo.dart';
@@ -27,6 +28,9 @@ class _EducativePostsBody extends StatefulWidget {
 
 class __EducativePostsBodyState extends State<_EducativePostsBody>
     with AutomaticKeepAliveClientMixin<_EducativePostsBody> {
+  var _isRequestSent = false;
+  final _connectivity = Connectivity();
+  EducativePostDataRepo _educativePostDataRepo;
   final defaultImage = "images/no_image.png";
   final imageHeight = 194.0;
   final defaultPadding = const EdgeInsets.only(
@@ -91,6 +95,38 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                                 ));
                             break;
                           case _CardMenuItems.delete:
+                            Constants.showDeleteDialog(
+                              context: context,
+                              dialogContent:
+                                  "Sure you want to delete this post?",
+                              doDelete: () async {
+                                try {
+                                  ConnectivityResult cr =
+                                      await _connectivity.checkConnectivity();
+                                  if (cr != ConnectivityResult.none) {
+                                    if (!_isRequestSent) {
+                                      _isRequestSent = true;
+                                      var sr = await _educativePostDataRepo
+                                          .deletePost(post);
+                                      Navigator.of(context).pop();
+                                      Constants.showSnackBar(
+                                          _scaffoldKey, sr.message);
+                                      setState(
+                                          () {}); // Refresh page after deleting
+                                    }
+                                  } else {
+                                    Constants.showSnackBar(
+                                        _scaffoldKey, Constants.connectionLost,
+                                        isNetworkConnected: false);
+                                  }
+                                } on Exception catch (err) {
+                                  Constants.showSnackBar(_scaffoldKey,
+                                      Constants.refinedExceptionMessage(err));
+                                } finally {
+                                  _isRequestSent = false;
+                                }
+                              },
+                            );
                             break;
                         }
                       },
@@ -154,7 +190,8 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
   @override
   void initState() {
     super.initState();
-    _posts = EducativePostDataRepo().getPosts();
+    _educativePostDataRepo = EducativePostDataRepo();
+    _posts = _educativePostDataRepo.getPosts();
   }
 
   @override

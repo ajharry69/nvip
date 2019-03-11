@@ -83,8 +83,12 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
       floatingActionButton: isUserAdmin
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => AddScheduleScreen()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => AddScheduleScreen(
+                              caller: ScheduleCaller.list,
+                            )));
               },
               child: Icon(Icons.add),
               tooltip: "Add an immunization schedule",
@@ -100,7 +104,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
       var description = schedule.description;
       var startDate = schedule.startDate;
       var endDate = schedule.endDate;
-      var datePosted = schedule.datePosted;
+//      var datePosted = schedule.datePosted;
       var diseases = schedule.diseases;
       var places = schedule.places;
 
@@ -123,10 +127,45 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                 onSelected: (value) {
                   switch (value) {
                     case _CardMenuItems.update:
-                      // TODO: Show update
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => AddScheduleScreen(
+                                schedule: schedule,
+                                caller: ScheduleCaller.list,
+                              )));
                       break;
                     case _CardMenuItems.delete:
-                      _doDelete(context, schedule);
+                      Constants.showDeleteDialog(
+                        context: context,
+                        dialogContent: "Sure you want to delete this post?",
+                        doDelete: () async {
+                          try {
+                            ConnectivityResult cr =
+                                await _connectivity.checkConnectivity();
+                            if (cr != ConnectivityResult.none) {
+                              if (!_isRequestSent) {
+                                _isRequestSent = true;
+                                var sr = await scheduleDataRepo
+                                    .deleteSchedule(schedule);
+                                Navigator.of(context).pop();
+                                Constants.showSnackBar(
+                                    _scaffoldKey, sr.message);
+                                setState(() {}); // Refresh page after deleting
+                              }
+                            } else {
+                              Constants.showSnackBar(
+                                  _scaffoldKey, Constants.connectionLost,
+                                  isNetworkConnected: false);
+                            }
+                          } on Exception catch (err) {
+                            Constants.showSnackBar(_scaffoldKey,
+                                Constants.refinedExceptionMessage(err));
+                          } finally {
+                            _isRequestSent = false;
+                          }
+                        },
+                      );
                       break;
                   }
                 },
@@ -201,55 +240,6 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
         ),
       );
     }
-  }
-
-  void _doDelete(BuildContext context, Schedule schedule) async {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-            title: Text(
-              "Confirm!",
-              style: Theme.of(ctx).textTheme.title,
-            ),
-            content: Text("Sure you want to delete this schedule?"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("Delete"),
-                onPressed: () async {
-                  try {
-                    ConnectivityResult cr =
-                        await _connectivity.checkConnectivity();
-                    if (cr != ConnectivityResult.none) {
-                      if (!_isRequestSent) {
-                        _isRequestSent = true;
-                        var sr =
-                            await scheduleDataRepo.deleteSchedule(schedule);
-                        Navigator.of(ctx).pop();
-                        Constants.showSnackBar(_scaffoldKey, sr.message);
-                        setState(() {}); // Refresh page after deleting
-                      }
-                    } else {
-                      Constants.showSnackBar(
-                          _scaffoldKey, Constants.connectionLost,
-                          isNetworkConnected: false);
-                    }
-                  } on Exception catch (err) {
-                    Constants.showSnackBar(
-                        _scaffoldKey, Constants.refinedExceptionMessage(err));
-                  } finally {
-                    _isRequestSent = false;
-                  }
-                },
-              )
-            ],
-          ),
-    );
   }
 
   @override

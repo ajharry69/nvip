@@ -52,7 +52,7 @@ class Schedule {
     startDate = scheduleMap[_keyStartDate];
     endDate = scheduleMap[_keyEndDate];
     datePosted = scheduleMap[_keyDatePosted];
-    diseases = jsonDecode(scheduleMap[_keyDiseases].toString());
+    diseases = jsonDecode(scheduleMap[_keyDiseases]);
     places = jsonDecode(scheduleMap[_keyPlaces]);
   }
 }

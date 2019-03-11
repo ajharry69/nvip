@@ -4,15 +4,20 @@ import 'package:nvip/data_repo/network/centers_repo.dart';
 import 'package:nvip/models/place_chip.dart';
 
 class PlacesFilter extends StatefulWidget {
+  final List<String> filters;
+
+  const PlacesFilter({Key key, this.filters}) : super(key: key);
   @override
-  _PlacesFilterState createState() => _PlacesFilterState();
+  _PlacesFilterState createState() => _PlacesFilterState(filters);
 }
 
 class _PlacesFilterState extends State<PlacesFilter> {
+  final List<String> filters;
   List<PlaceChipEntry> _places = List();
 
+  _PlacesFilterState(this.filters);
+
   Iterable<Widget> get placesWidgets sync* {
-    var _filters = Constants.placesFilters;
     for (PlaceChipEntry place in _places) {
       yield Padding(
         padding: const EdgeInsets.all(4.0),
@@ -26,13 +31,13 @@ class _PlacesFilterState extends State<PlacesFilter> {
 //            ),
 //          ),
           label: Text(place.name),
-          selected: _filters.contains(place.name),
+          selected: filters.contains(place.name),
           onSelected: (bool value) {
             setState(() {
               if (value) {
-                _filters.add(place.name);
+                filters.add(place.name);
               } else {
-                _filters.removeWhere((String name) => name == place.name);
+                filters.removeWhere((String name) => name == place.name);
               }
             });
           },

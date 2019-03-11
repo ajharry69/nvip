@@ -7,17 +7,39 @@ import 'package:nvip/models/immunization_schedule.dart';
 import 'package:nvip/widgets/diseases_filter.dart';
 import 'package:nvip/widgets/places_filter.dart';
 
+enum ScheduleCaller { dashboard, list }
+
 class AddScheduleScreen extends StatelessWidget {
+  final Schedule schedule;
+  final ScheduleCaller caller;
+
+  const AddScheduleScreen({Key key, this.schedule, this.caller})
+      : super(key: key);
+
   @override
-  Widget build(BuildContext context) => _ScheduleScreenBody();
+  Widget build(BuildContext context) => _ScheduleScreenBody(
+        schedule: schedule,
+        caller: caller,
+      );
 }
 
 class _ScheduleScreenBody extends StatefulWidget {
+  final Schedule schedule;
+  final ScheduleCaller caller;
+
+  const _ScheduleScreenBody({Key key, this.schedule, this.caller})
+      : super(key: key);
+
   @override
-  __ScheduleScreenBodyState createState() => __ScheduleScreenBodyState();
+  __ScheduleScreenBodyState createState() =>
+      __ScheduleScreenBodyState(schedule, caller);
 }
 
 class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
+  final List<String> diseaseFilters = List();
+  final List<String> placesFilters = List();
+  final Schedule schedule;
+  final ScheduleCaller caller;
   var _isRequestSent = false;
   static final oneDayDuration = Duration(days: 1);
   final firstStartDate = DateTime.now().add(oneDayDuration);
@@ -29,6 +51,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
       _endDateController,
       _descController;
 
+  __ScheduleScreenBodyState(this.schedule, this.caller);
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +62,16 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
     _descController = TextEditingController();
 
     _startDateController.text = dateFormat.format(firstStartDate);
+
+    if (schedule != null) {
+      _titleController.text = schedule.title;
+      _startDateController.text = schedule.startDate;
+      _endDateController.text = schedule.endDate;
+      _descController.text = schedule.description;
+      schedule.diseases.forEach((d) => diseaseFilters.add("$d"));
+      schedule.places.forEach((p) => placesFilters.add("$p"));
+    }
+
     _setEndDate(_startDateController.text);
   }
 
@@ -269,13 +303,13 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                       ),
                     ),
                   ),
-                  DiseasesFilter(),
-                  PlacesFilter(),
+                  DiseasesFilter(filters: diseaseFilters),
+                  PlacesFilter(filters: placesFilters),
                   Container(
                     margin: EdgeInsets.only(bottom: Constants.defaultPadding),
                     child: RaisedButton(
                       child: Text(
-                        'Submit'.toUpperCase(),
+                        (schedule == null ? 'Submit' : 'Update').toUpperCase(),
                         textScaleFactor: Constants.defaultScaleFactor,
                         style: Styles.btnTextStyle,
                       ),
@@ -307,8 +341,6 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
       String description = _descController.text;
       String startDate = _startDateController.text.trimLeft().trimRight();
       String endDate = _endDateController.text.trimLeft().trimRight();
-      var diseases = Constants.diseaseFilters;
-      var places = Constants.placesFilters;
 
       var result = await Connectivity().checkConnectivity();
 
@@ -318,13 +350,15 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
           description: description,
           startDate: startDate,
           endDate: endDate,
-          diseases: diseases,
-          places: places,
+          diseases: diseaseFilters,
+          places: placesFilters,
         );
 
         if (!_isRequestSent) {
           _isRequestSent = true;
-          var sr = await ScheduleDataRepo().addSchedule(schedule);
+          var sr = await (schedule == null
+              ? ScheduleDataRepo().addSchedule(schedule)
+              : ScheduleDataRepo().updateSchedule(schedule));
 
           Constants.showSnackBar(_scaffoldKey, sr.message);
         }

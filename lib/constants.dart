@@ -14,9 +14,6 @@ class Constants {
         HttpHeaders.authorizationHeader: "Bearer ${await UserCache().authToken}"
       };
 
-  static final List<String> diseaseFilters = <String>[];
-  static final List<String> placesFilters = <String>[];
-
   // REST API json response keys
   // Constant Standardized
   static final String keyIsError = 'isError';
@@ -150,7 +147,7 @@ class Constants {
   static bool isLeapYear(int year) {
     if (year % 4 == 0) {
       return true;
-    } else{
+    } else {
       return false;
     }
 //    else if (year % 100 == 0) {
@@ -237,6 +234,34 @@ class Constants {
               )
             : null,
       ),
+    );
+  }
+
+  static void showDeleteDialog(
+      {BuildContext context,
+      String dialogContent = "Sure you want to delete?",
+      Function doDelete}) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+            title: Text(
+              "Confirm!",
+              style: Theme.of(ctx).textTheme.title,
+            ),
+            content: Text(dialogContent),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("Delete"),
+                onPressed: doDelete,
+              )
+            ],
+          ),
     );
   }
 
@@ -425,8 +450,9 @@ class Routes {
 }
 
 class Urls {
-  static final String _baseUrl = "https://nvip.krizlaapp.com/";
-//  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
+//  static final String _baseUrl = "https://nvip.krizlaapp.com/";
+
+  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
   static final String _baseAPIUrl = "$_baseUrl/RestAPI";
   static final String _immunizationRoot = "$_baseAPIUrl/immunization";
   static final String _userRoot = "$_baseAPIUrl/user";

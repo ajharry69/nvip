@@ -38,7 +38,6 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
   var _formKey = GlobalKey<FormState>();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController _titleController;
-
   TextEditingController _descController;
 
   _PostScreenBodyState(this.educativePost);
@@ -198,7 +197,8 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                   margin: EdgeInsets.only(bottom: Constants.defaultPadding),
                   child: RaisedButton(
                     child: Text(
-                      'Submit'.toUpperCase(),
+                      (educativePost == null ? 'Submit' : 'Update')
+                          .toUpperCase(),
                       textScaleFactor: Constants.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
@@ -235,7 +235,11 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
 
         if (!_isRequestSent) {
           _isRequestSent = true;
-          await EducativePostDataRepo().addPost(post);
+
+          var educativePostDataRepo = EducativePostDataRepo();
+          await (educativePost == null
+              ? educativePostDataRepo.addPost(post)
+              : educativePostDataRepo.updatePost(post));
 
           Navigator.pushReplacementNamed(context, Routes.keyHome);
         }

@@ -4,15 +4,21 @@ import 'package:nvip/data_repo/network/diseases_repo.dart';
 import 'package:nvip/models/disease_chip.dart';
 
 class DiseasesFilter extends StatefulWidget {
+  final List<String> filters;
+
+  const DiseasesFilter({Key key, this.filters}) : super(key: key);
+
   @override
-  _DiseasesFilterState createState() => _DiseasesFilterState();
+  _DiseasesFilterState createState() => _DiseasesFilterState(filters);
 }
 
 class _DiseasesFilterState extends State<DiseasesFilter> {
+  final List<String> filters;
   List<DiseaseChipEntry> _diseases = List();
 
+  _DiseasesFilterState(this.filters);
+
   Iterable<Widget> get diseasesWidgets sync* {
-    var _filters = Constants.diseaseFilters;
     for (DiseaseChipEntry disease in _diseases) {
       yield Padding(
         padding: const EdgeInsets.all(4.0),
@@ -26,13 +32,13 @@ class _DiseasesFilterState extends State<DiseasesFilter> {
 //            ),
 //          ),
           label: Text(disease.name),
-          selected: _filters.contains(disease.name),
+          selected: filters.contains(disease.name),
           onSelected: (bool value) {
             setState(() {
               if (value) {
-                _filters.add(disease.name);
+                filters.add(disease.name);
               } else {
-                _filters.removeWhere((String name) => name == disease.name);
+                filters.removeWhere((String name) => name == disease.name);
               }
             });
           },
