@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:nvip/constants.dart';
-import 'package:nvip/models/immunization_schedule.dart';
+import 'package:nvip/models/schedule.dart';
 import 'package:nvip/models/server_response.dart';
 import 'package:nvip/utils/network_utils.dart';
 

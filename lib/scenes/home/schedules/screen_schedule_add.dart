@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/schedules_repo.dart';
-import 'package:nvip/models/immunization_schedule.dart';
+import 'package:nvip/models/schedule.dart';
 import 'package:nvip/widgets/diseases_filter.dart';
 import 'package:nvip/widgets/places_filter.dart';
 

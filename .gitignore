@@ -1,5 +1,5 @@
 # NVIP Related
-/lib/scenes/_demo/
+**/lib/scenes/_demo/
 # Miscellaneous
 *.class
 *.lock
