@@ -302,13 +302,13 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
       builder: (ctx) => AlertDialog(
             actions: <Widget>[
               FlatButton(
-                child: Text("Cancel"),
+                child: Text("Cancel".toUpperCase()),
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
               ),
               FlatButton(
-                child: Text("Sort"),
+                child: Text("Sort".toUpperCase()),
                 onPressed: () {
                   Navigator.of(context).pop();
                   setState(() {
@@ -336,8 +336,20 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Sort By",
+                      style: TextStyle(
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
                   RadioListTile<SortBy>(
                     title: Text("Title"),
+                    isThreeLine: false,
+                    selected: _sortBy == SortBy.title,
                     value: SortBy.title,
                     groupValue: _sortBy,
                     onChanged: (sb) {
@@ -349,6 +361,8 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                   RadioListTile<SortBy>(
                     title: Text("Date posted"),
                     value: SortBy.datePosted,
+                    isThreeLine: false,
+                    selected: _sortBy == SortBy.datePosted,
                     groupValue: _sortBy,
                     onChanged: (sb) {
                       setState(() {
@@ -358,6 +372,8 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                   ),
                   RadioListTile<SortBy>(
                     title: Text("Start date"),
+                    isThreeLine: false,
+                    selected: _sortBy == SortBy.startDate,
                     value: SortBy.startDate,
                     groupValue: _sortBy,
                     onChanged: (sb) {
@@ -368,6 +384,8 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                   ),
                   RadioListTile<SortBy>(
                     title: Text("End date"),
+                    isThreeLine: false,
+                    selected: _sortBy == SortBy.endDate,
                     value: SortBy.endDate,
                     groupValue: _sortBy,
                     onChanged: (sb) {
@@ -376,10 +394,22 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                       });
                     },
                   ),
-                  Row(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Sort Order",
+                      style: TextStyle(
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Wrap(
                     children: <Widget>[
                       RadioListTile<SortOrder>(
                         title: Text("Ascending"),
+                        isThreeLine: false,
+                        selected: _sortOrder == SortOrder.ascending,
                         value: SortOrder.ascending,
                         groupValue: _sortOrder,
                         onChanged: (so) {
@@ -390,6 +420,8 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                       ),
                       RadioListTile<SortOrder>(
                         title: Text("Descending"),
+                        isThreeLine: false,
+                        selected: _sortOrder == SortOrder.descending,
                         value: SortOrder.descending,
                         groupValue: _sortOrder,
                         onChanged: (so) {
