@@ -112,7 +112,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                             Icons.delete,
                             color: Colors.grey.shade700,
                           ),
-                          onPressed: null,
+                          onPressed: () {},
                         ),
                       ],
                     ),

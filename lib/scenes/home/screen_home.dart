@@ -261,33 +261,49 @@ class _HomePageState extends State<_HomePage>
         .trimRight();
     String email = _user?.email;
     return DrawerHeader(
-      child: Container(
-        decoration: BoxDecoration(color: blueShade700),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            CircleAvatar(
-              radius: 25.0,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.blue.shade800,
+            Colors.lightBlueAccent,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: CircleAvatar(
+              radius: 30.0,
               child: Icon(Icons.person),
               backgroundColor: Theme.of(context).primaryColorLight,
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: Constants.defaultPadding,
-                bottom: Constants.defaultPadding,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: Constants.defaultPadding),
+            child: Text(
+              _user != null ? name : Constants.drawerHeaderName,
+              style: TextStyle(
+                fontFamily: "Kalam",
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.8,
               ),
-              child: Text(
-                _user != null ? name : Constants.drawerHeaderName,
-                style: TextStyle(fontSize: 13.0),
-              ),
+              maxLines: 1,
             ),
-            Text(
-              _user != null ? email : Constants.drawerHeaderEmail,
-              style: TextStyle(fontSize: 13.0),
-            )
-          ],
-        ),
+          ),
+          Text(
+            _user != null ? email : Constants.drawerHeaderEmail,
+            style: TextStyle(
+              fontFamily: "Kalam",
+              fontWeight: FontWeight.w400,
+              letterSpacing: 2.5,
+            ),
+          )
+        ],
       ),
     );
   }
