@@ -248,8 +248,10 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
             isNetworkConnected: false);
       }
     } on Exception catch (err) {
-      Constants.showSnackBar(
-          _scaffoldKey, Constants.refinedExceptionMessage(err));
+      var errorMessage = Constants.refinedExceptionMessage(err);
+      errorMessage.contains(Constants.tokenErrorType)
+          ? Constants.showSignInRequestDialog(ctx: context)
+          : Constants.showSnackBar(_scaffoldKey, errorMessage);
     } finally {
       _isRequestSent = false;
     }

@@ -445,7 +445,10 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
   void _resetPage({bool isError, String message}) {
     setState(() {
       _isRequestSent = false;
-      Constants.showSnackBar(_scaffoldKey, message);
+
+      message.contains(Constants.tokenErrorType)
+          ? Constants.showSignInRequestDialog(ctx: context)
+          : Constants.showSnackBar(_scaffoldKey, message);
       if (!isError) {
         _vIdNoTextController.text = '';
         _batchNoTextController.text = '';

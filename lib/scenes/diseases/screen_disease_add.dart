@@ -153,7 +153,9 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
   void _onResponseReceived({bool isError = true, String message}) {
     setState(() {
       _isRequestSent = false;
-      Constants.showSnackBar(_scaffoldKey, message);
+      message.contains(Constants.tokenErrorType)
+          ? Constants.showSignInRequestDialog(ctx: context)
+          : Constants.showSnackBar(_scaffoldKey, message);
       if (!isError) {
         _nameController.text = '';
         _descriptionController.text = '';

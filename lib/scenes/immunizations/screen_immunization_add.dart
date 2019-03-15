@@ -348,7 +348,9 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
           },
         );
       } else {
-        Constants.showSnackBar(_scaffoldKey, message);
+        message.contains(Constants.tokenErrorType)
+            ? Constants.showSignInRequestDialog(ctx: context)
+            : Constants.showSnackBar(_scaffoldKey, message);
       }
       if (!isError) {
         _birthCertController.text = '';

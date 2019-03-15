@@ -138,13 +138,17 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
       }
     } on Exception catch (err) {
       _onResponseReceived(message: Constants.refinedExceptionMessage(err));
+    } finally{
+      _isRequestSent = false;
     }
   }
 
   void _onResponseReceived({bool isError = true, String message}) {
     setState(() {
       _isRequestSent = false;
-      Constants.showSnackBar(_scaffoldKey, message);
+      message.contains(Constants.tokenErrorType)
+          ? Constants.showSignInRequestDialog(ctx: context)
+          : Constants.showSnackBar(_scaffoldKey, message);
       if (!isError) {
         _nameController.text = '';
       }

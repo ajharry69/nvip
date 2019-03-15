@@ -392,13 +392,17 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
     } on Exception catch (err) {
       _resetPage(
           isError: true, message: Constants.refinedExceptionMessage(err));
+    } finally{
+      _isRequestSent = false;
     }
   }
 
   void _resetPage({bool isError, String message}) {
     setState(() {
       _isRequestSent = false;
-      Constants.showSnackBar(_scaffoldKey, message);
+      message.contains(Constants.tokenErrorType)
+          ? Constants.showSignInRequestDialog(ctx: context)
+          : Constants.showSnackBar(_scaffoldKey, message);
       if (!isError) {
         _birthCertNoController.text = '';
         _sNameController.text = '';
