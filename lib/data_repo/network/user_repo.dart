@@ -42,7 +42,7 @@ class UserDataRepo {
       var response = await _networkUtils.post(Urls.userSignIn, body: {
         _keyUsername: username,
         _keyPassword: password,
-        _keyDeviceId: deviceId
+        _keyDeviceId: deviceId ?? Constants.defaultDeviceToken
       });
 
       var sr = ServerResponse.fromMap(response);
@@ -81,7 +81,11 @@ class UserDataRepo {
       String userId, String vCode, String deviceId) async {
     try {
       var response = await _networkUtils.post(Urls.userVerifyAccount,
-          body: {_keyId: userId, _keyVCode: vCode, _keyDeviceId: deviceId},
+          body: {
+            _keyId: userId,
+            _keyVCode: vCode,
+            _keyDeviceId: deviceId ?? Constants.defaultDeviceToken
+          },
           headers: await Constants.httpHeaders());
 
       var sr = ServerResponse.fromMap(response);
@@ -105,7 +109,7 @@ class UserDataRepo {
         _keyEmail: email,
         _keyTempPassword: tempPass,
         _keyNewPassword: newPass,
-        _keyDeviceId: deviceId
+        _keyDeviceId: deviceId ?? Constants.defaultDeviceToken
       });
 
       var sr = ServerResponse.fromMap(response);
@@ -156,7 +160,8 @@ class UserDataRepo {
   }
 
   Future<bool> updateDeviceId(
-      [String userId = "", String deviceId = ""]) async {
+      [String userId = "",
+      String deviceId = Constants.defaultDeviceToken]) async {
     try {
       var response = await _networkUtils.post(Urls.userUpdateDeviceId,
           body: {_keyId: userId, _keyDeviceId: deviceId},

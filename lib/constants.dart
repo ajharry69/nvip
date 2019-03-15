@@ -54,7 +54,8 @@ class Constants {
   static final String connectionLost =
       "Connection lost. Please enable cellular data or WIFI.";
   static final tokenExpired =
-      "Auth token is expired. Kindly sign in again to get a new one.";
+      "Session is expired. Kindly sign in again to start a new session.";
+  static const defaultDeviceToken = "deviceId";
   static String tokenErrorType = "UnauthorizedRequestException";
   static final double dividerSize = 5.0;
   static final int initialTimeout = 30;

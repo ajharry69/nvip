@@ -10,7 +10,7 @@ abstract class AuthContract {
 }
 
 class AuthPresenter {
-  String deviceId = "deviceId";
+  String deviceId = Constants.defaultDeviceToken;
   AuthContract _authContract;
   UserDataRepo _userDataRepo = UserDataRepo();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
