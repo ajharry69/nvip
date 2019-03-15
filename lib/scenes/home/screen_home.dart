@@ -30,7 +30,7 @@ class _HomePage extends StatefulWidget {
 
 class _HomePageState extends State<_HomePage>
     with SingleTickerProviderStateMixin {
-  final Color blueShade700 = Colors.blue.shade700;
+  final Color blueShade800 = Colors.blue.shade800;
   User _user;
   UserCache _userCache;
   Connectivity _connectivity;
@@ -144,10 +144,12 @@ class _HomePageState extends State<_HomePage>
   }
 
   Drawer _buildDrawer(BuildContext context) {
-    var isAdmin = _user?.role == Constants.privilegeAdmin;
+    var userRole = _user?.role;
+    var isAdmin = userRole == Constants.privilegeAdmin;
+    var isProvider = userRole == Constants.privilegeProvider;
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(color: blueShade700),
+        decoration: BoxDecoration(color: blueShade800),
         child: ListView(
           children: <Widget>[
             _buildDrawerHeader(),
@@ -159,7 +161,7 @@ class _HomePageState extends State<_HomePage>
                 Navigator.pushReplacementNamed(context, Routes.keyProfile);
               },
             ),
-            isAdmin
+            isAdmin || isProvider
                 ? ListTile(
                     leading: Icon(Icons.list),
                     title: Text("Immunizations"),
@@ -201,7 +203,7 @@ class _HomePageState extends State<_HomePage>
                     },
                   )
                 : Container(),
-            isAdmin
+            isAdmin || isProvider
                 ? ListTile(
                     leading: Icon(Icons.child_care),
                     title: Text("Children"),
@@ -216,7 +218,7 @@ class _HomePageState extends State<_HomePage>
                     },
                   )
                 : Container(),
-            isAdmin
+            isAdmin || isProvider
                 ? ListTile(
                     leading: Icon(Icons.table_chart),
                     title: Text("Vaccines"),

@@ -79,6 +79,12 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
         future: _children,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            if (snapshot.error
+                .toString()
+                .contains("UnauthorizedRequestException")) {
+              Constants.showSnackBar(_scaffoldKey, Constants.tokenExpired,
+                  isTokenExpired: true, context: context);
+            }
             return Constants.noDataWidget(
                 context,
                 _user != null

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nvip/constants.dart';
 import 'package:nvip/exceptions/unauthorized_request.dart';
+import 'package:nvip/models/server_response.dart';
 
 class NetworkUtils {
   static NetworkUtils _instance = NetworkUtils.internal();
@@ -25,15 +26,21 @@ class NetworkUtils {
 
                   print("Response: $responseBody"); // TODO: Delete...
 
-                  if (status == 401) throw UnauthorizedRequestException();
-
                   if (status != 200 && json == null) {
                     throw Exception(
                       "Error while fetching data. Please try again.",
                     );
                   }
 
-                  return _jsonDecoder.convert(responseBody);
+                  var parsedResponse = _jsonDecoder.convert(responseBody);
+                  var sr = ServerResponse.fromMap(parsedResponse);
+                  if (sr.debugMessage
+                      .toString()
+                      .toLowerCase()
+                      .contains("401: Token".toLowerCase()))
+                    throw UnauthorizedRequestException();
+
+                  return parsedResponse;
                 },
               ).catchError((err) => throw Exception(err)),
         )
@@ -56,15 +63,21 @@ class NetworkUtils {
 
                   print("Response: $responseBody"); // TODO: Delete...
 
-                  if (status == 401) throw UnauthorizedRequestException();
-
                   if (status != 200 && json == null) {
                     throw Exception(
                       "Error while fetching data. Please try again.",
                     );
                   }
 
-                  return _jsonDecoder.convert(responseBody);
+                  var parsedResponse = _jsonDecoder.convert(responseBody);
+                  var sr = ServerResponse.fromMap(parsedResponse);
+                  if (sr.debugMessage
+                      .toString()
+                      .toLowerCase()
+                      .contains("401: Token".toLowerCase()))
+                    throw UnauthorizedRequestException();
+
+                  return parsedResponse;
                 },
               ).catchError((err) => throw Exception(err)),
         )

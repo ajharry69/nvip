@@ -53,6 +53,8 @@ class Constants {
   static final String tabTitleChildren = "My Children".toUpperCase();
   static final String connectionLost =
       "Connection lost. Please enable cellular data or WIFI.";
+  static final tokenExpired =
+      "Auth token is expired. Kindly sign in again to get a new one.";
   static final double dividerSize = 5.0;
   static final int initialTimeout = 30;
   static final double buttonRadius = 5.0;
@@ -202,35 +204,42 @@ class Constants {
     return utf8.decode(base64Url.decode(output));
   }
 
-  static Widget noDataWidget(BuildContext context, String message) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Constants.defaultPadding * 4),
-        child: Text(
-          message,
-          style: Theme.of(context).textTheme.body1,
-          textAlign: TextAlign.center,
+  static Widget noDataWidget(BuildContext context, String message) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(Constants.defaultPadding * 4),
+          child: Text(
+            message,
+            style: Theme.of(context).textTheme.body1,
+            textAlign: TextAlign.center,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   static void showSnackBar(GlobalKey<ScaffoldState> scaffoldKey, String message,
-      {bool isNetworkConnected = true,
+      {BuildContext context,
+      bool isTokenExpired = false,
+      bool isNetworkConnected = true,
       bool showActionButton = false,
       String actionLabel,
       Function action}) {
     assert(showActionButton ? actionLabel != null : true);
+    assert(isTokenExpired ? context != null : true);
     scaffoldKey.currentState.hideCurrentSnackBar();
     scaffoldKey.currentState.showSnackBar(
       SnackBar(
         content: Text(isNetworkConnected ? message : Constants.connectionLost),
-        duration:
-            isNetworkConnected ? Duration(seconds: 4) : Duration(seconds: 4),
-        action: showActionButton
+        duration: isTokenExpired
+            ? Duration(seconds: 15)
+            : isNetworkConnected ? Duration(seconds: 4) : Duration(seconds: 4),
+        action: showActionButton || isTokenExpired
             ? SnackBarAction(
-                label: actionLabel.toUpperCase(),
-                onPressed: action,
+                label: isTokenExpired ? "SIGN IN" : actionLabel.toUpperCase(),
+                onPressed: isTokenExpired
+                    ? () {
+                        Navigator.pushReplacementNamed(
+                            context, Routes.keySignIn);
+                      }
+                    : action,
               )
             : null,
       ),
@@ -251,17 +260,44 @@ class Constants {
             content: Text(dialogContent),
             actions: <Widget>[
               FlatButton(
-                child: Text("Cancel"),
+                child: Text("Cancel".toUpperCase()),
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
               ),
               FlatButton(
-                child: Text("Delete"),
+                child: Text("Delete".toUpperCase()),
                 onPressed: doDelete,
               )
             ],
           ),
+    );
+  }
+
+  static Future<Widget> showSignInRequestDialog({BuildContext ctx}) async {
+    return await showDialog(
+      context: ctx,
+      builder: (context1) {
+        return AlertDialog(
+          title: Text("Action Required!"),
+          content: Text(tokenExpired),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Cancel".toUpperCase()),
+              onPressed: () {
+                Navigator.of(context1, rootNavigator: true).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("Sign In".toUpperCase()),
+              onPressed: () {
+                Navigator.of(context1, rootNavigator: true).pop();
+                Navigator.pushReplacementNamed(context1, Routes.keySignIn);
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -343,6 +379,7 @@ class Constants {
       print(refinedExceptionMessage(e));
     }
   }
+
 }
 
 class Styles {
