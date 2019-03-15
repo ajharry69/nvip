@@ -18,218 +18,186 @@ class UserDataRepo {
 
   NetworkUtils _networkUtils = NetworkUtils();
 
-  Future<String> signUp(User user, String password) {
-    return _networkUtils
-        .post(Urls.userSignUp, body: user.toMapForSignUp(password))
-        .then(
-          (dynamic response) => Future(
-                () async {
-                  var sr = ServerResponse.fromMap(response);
+  Future<String> signUp(User user, String password) async {
+    try {
+      var response = await _networkUtils.post(Urls.userSignUp,
+          body: user.toMapForSignUp(password));
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  String token = response[Constants.keyToken];
-                  return token;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      String token = response[Constants.keyToken];
+      return token;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
-  Future<String> signIn(String username, String password, String deviceId) {
-    return _networkUtils
-        .post(Urls.userSignIn, body: {
-          _keyUsername: username,
-          _keyPassword: password,
-          _keyDeviceId: deviceId
-        })
-        .then(
-          (dynamic response) => Future(
-                () async {
-                  var sr = ServerResponse.fromMap(response);
+  Future<String> signIn(
+      String username, String password, String deviceId) async {
+    try {
+      var response = await _networkUtils.post(Urls.userSignIn, body: {
+        _keyUsername: username,
+        _keyPassword: password,
+        _keyDeviceId: deviceId
+      });
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  String token = response[Constants.keyToken];
-                  return token;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      String token = response[Constants.keyToken];
+      return token;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
+  }
+
+  Future<String> updateProfile(User user, String image) async {
+    try {
+      var response = await _networkUtils.post(Urls.userUpdateProfile,
+          body: user.toMapForProfileUpdate(image: image),
+          headers: await Constants.httpHeaders());
+
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      String token = response[Constants.keyToken];
+      return token;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
   Future<String> verifyAccount(
       String userId, String vCode, String deviceId) async {
-    return _networkUtils
-        .post(Urls.userVerifyAccount,
-            body: {_keyId: userId, _keyVCode: vCode, _keyDeviceId: deviceId},
-            headers: await Constants.httpHeaders())
-        .then(
-          (dynamic response) => Future(
-                () async {
-                  var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.post(Urls.userVerifyAccount,
+          body: {_keyId: userId, _keyVCode: vCode, _keyDeviceId: deviceId},
+          headers: await Constants.httpHeaders());
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  String token = response[Constants.keyToken];
-                  return token;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      String token = response[Constants.keyToken];
+      return token;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
   Future<String> changePassword(String opType, String email, String tempPass,
-      String newPass, String deviceId) {
-    return _networkUtils
-        .post(Urls.userResetPass, body: {
-          _keyPROpType: opType,
-          _keyEmail: email,
-          _keyTempPassword: tempPass,
-          _keyNewPassword: newPass,
-          _keyDeviceId: deviceId
-        })
-        .then(
-          (dynamic response) => Future(
-                () async {
-                  var sr = ServerResponse.fromMap(response);
+      String newPass, String deviceId) async {
+    try {
+      var response = await _networkUtils.post(Urls.userResetPass, body: {
+        _keyPROpType: opType,
+        _keyEmail: email,
+        _keyTempPassword: tempPass,
+        _keyNewPassword: newPass,
+        _keyDeviceId: deviceId
+      });
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  String token = response[Constants.keyToken];
-                  return token;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      String token = response[Constants.keyToken];
+      return token;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
   Future<List<User>> getUsers() async {
-    return _networkUtils
-        .get(Urls.getUsers(), headers: await Constants.httpHeaders())
-        .then(
-          (dynamic response) => Future(() {
-                var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.get(Urls.getUsers(),
+          headers: await Constants.httpHeaders());
+      var sr = ServerResponse.fromMap(response);
 
-                if (sr.isError) {
-                  print(sr.debugMessage);
-                  throw Exception(sr.message);
-                }
-                List list = response[Constants.keyUsers];
-                return list.map((userMap) => User.fromMap(userMap)).toList();
-              }).catchError((err) => throw Exception(err)),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      List list = response[Constants.keyUsers];
+      return list.map((userMap) => User.fromMap(userMap)).toList();
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
   Future<bool> signOut(User user) async {
-    return _networkUtils
-        .post(Urls.userSignOut,
-            body: {_keyId: user != null ? user.id : ""},
-            headers: await Constants.httpHeaders())
-        .then(
-          (response) => Future(
-                () {
-                  var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.post(Urls.userSignOut,
+          body: {_keyId: user != null ? user.id : ""},
+          headers: await Constants.httpHeaders());
+      var sr = ServerResponse.fromMap(response);
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  return true;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
-  }
-
-  Future<bool> updateProfile(User user, String image) async {
-    return _networkUtils
-        .post(Urls.userUpdateProfile,
-            body: user.toMapForProfileUpdate(image: image),
-            headers: await Constants.httpHeaders())
-        .then(
-          (response) => Future(
-                () {
-                  var sr = ServerResponse.fromMap(response);
-
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  return true;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      return true;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
   Future<bool> updateDeviceId(
       [String userId = "", String deviceId = ""]) async {
-    return _networkUtils
-        .post(Urls.userUpdateDeviceId,
-            body: {_keyId: userId, _keyDeviceId: deviceId},
-            headers: await Constants.httpHeaders())
-        .then(
-          (response) => Future(
-                () {
-                  var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.post(Urls.userUpdateDeviceId,
+          body: {_keyId: userId, _keyDeviceId: deviceId},
+          headers: await Constants.httpHeaders());
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  return true;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      return true;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
   Future<bool> removeUser(String userId) async {
-    return _networkUtils
-        .post(Urls.userRemove,
-            body: {_keyId: userId}, headers: await Constants.httpHeaders())
-        .then(
-          (response) => Future(
-                () {
-                  var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.post(Urls.userRemove,
+          body: {_keyId: userId}, headers: await Constants.httpHeaders());
 
-                  if (sr.isError) {
-                    print(sr.debugMessage);
-                    throw Exception(sr.message);
-                  }
-                  return true;
-                },
-              ),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      return true;
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 
-  Future<ServerResponse> requestPasswordReset(String email) {
-    return _networkUtils
-        .post(Urls.mailSendTempPass, body: {RestKeys.keyEmail: email})
-        .then(
-          (response) => Future(() => ServerResponse.fromMap(response)),
-        )
-        .catchError(
-            (err) => throw Exception(Constants.refinedExceptionMessage(err)));
+  Future<ServerResponse> requestPasswordReset(String email) async {
+    try {
+      var response = await _networkUtils
+          .post(Urls.mailSendTempPass, body: {RestKeys.keyEmail: email});
+      return ServerResponse.fromMap(response);
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 }
