@@ -3,6 +3,8 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/vaccines_repo.dart';
 import 'package:nvip/data_repo/tables/data_source_vaccines.dart';
 import 'package:nvip/models/vaccine.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 class VaccinesTableScreen extends StatelessWidget {
   @override
@@ -91,10 +93,17 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
           future: _vaccines,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.noDataWidget(
-                  context,
+              var errorMessage =
                   "${Constants.refinedExceptionMessage(snapshot.error)} "
-                  "Press the (+) button to add a new vaccine.");
+                  "Press the (+) button to add a new vaccine.";
+
+              var isTokenError = snapshot.error
+                  .toString()
+                  .contains(Constants.tokenErrorType);
+
+              return isTokenError
+                  ? TokenErrorWidget()
+                  : DataFetchErrorWidget(message: errorMessage);
             } else {
               if (snapshot.hasData) {
                 var vaccineList = snapshot.data;

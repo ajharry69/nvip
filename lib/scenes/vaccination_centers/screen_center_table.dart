@@ -3,6 +3,8 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/centers_repo.dart';
 import 'package:nvip/data_repo/tables/data_source_centers.dart';
 import 'package:nvip/models/vaccination_center.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 class VaccinationCentersTableScreen extends StatelessWidget {
   @override
@@ -83,11 +85,17 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
           future: _centers,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.noDataWidget(
-                context,
-                "No vaccination center(s) / place(s) of vaccinations found. "
-                    "Press the (+) sign to add a new record.",
-              );
+              var errorMessage =
+                  "No vaccination center(s) / place(s) of vaccinations found. "
+                  "Press the (+) sign to add a new record.";
+
+              var isTokenError = snapshot.error
+                  .toString()
+                  .contains(Constants.tokenErrorType);
+
+              return isTokenError
+                  ? TokenErrorWidget()
+                  : DataFetchErrorWidget(message: errorMessage);
             } else {
               if (snapshot.hasData) {
                 var centerList = snapshot.data;

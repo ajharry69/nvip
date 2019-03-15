@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/tables/data_source_users.dart';
 import 'package:nvip/models/user.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 class ProvidersTableScreen extends StatelessWidget {
   final Future<List<User>> userList;
@@ -61,8 +63,16 @@ class _ProvidersTableScreenBodyState extends State<_ProvidersTableScreenBody> {
         future: _userList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Constants.noDataWidget(
-                context, Constants.refinedExceptionMessage(snapshot.error));
+            var errorMessage =
+                Constants.refinedExceptionMessage(snapshot.error);
+
+            var isTokenError = snapshot.error
+                .toString()
+                .contains("UnauthorizedRequestException");
+
+            return isTokenError
+                ? TokenErrorWidget()
+                : DataFetchErrorWidget(message: errorMessage);
           } else {
             if (snapshot.hasData) {
               var userList = snapshot.data;
@@ -142,11 +152,18 @@ class _ProvidersTableScreenBodyState extends State<_ProvidersTableScreenBody> {
                   ),
                 );
               } else {
-                return Constants.noDataWidget(
-                    context,
+                var errorMessage =
                     "No Health Providers have been registered with "
                     "${Constants.appName}. Please press the 'Add Health Provider'"
-                    " button above to register a Health Provider.");
+                    " button above to register a Health Provider.";
+
+                var isTokenError = snapshot.error
+                    .toString()
+                    .contains(Constants.tokenErrorType);
+
+                return isTokenError
+                    ? TokenErrorWidget()
+                    : DataFetchErrorWidget(message: errorMessage);
               }
             }
           }

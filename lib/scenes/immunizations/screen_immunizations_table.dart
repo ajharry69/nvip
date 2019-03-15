@@ -4,6 +4,8 @@ import 'package:nvip/data_repo/network/immunization_repo.dart';
 import 'package:nvip/data_repo/tables/data_source_immunization.dart';
 import 'package:nvip/models/immunization.dart';
 import 'package:nvip/models/user.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 class ImmunizationsTableScreen extends StatelessWidget {
   final User user;
@@ -94,8 +96,16 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
           future: _immunizationList,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.noDataWidget(
-                  context, Constants.refinedExceptionMessage(snapshot.error));
+              var errorMessage =
+                  Constants.refinedExceptionMessage(snapshot.error);
+
+              var isTokenError = snapshot.error
+                  .toString()
+                  .contains(Constants.tokenErrorType);
+
+              return isTokenError
+                  ? TokenErrorWidget()
+                  : DataFetchErrorWidget(message: errorMessage);
             } else {
               if (snapshot.hasData) {
                 var _immunizations = snapshot.data;

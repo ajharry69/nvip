@@ -5,6 +5,8 @@ import 'package:nvip/data_repo/tables/data_source_children.dart';
 import 'package:nvip/models/child.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/children/screen_child_register.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 class MyChildrenScreen extends StatelessWidget {
   final User _user;
@@ -79,19 +81,19 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
         future: _children,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            if (snapshot.error
+            var isTokenError = snapshot.error
                 .toString()
-                .contains("UnauthorizedRequestException")) {
-              Constants.showSnackBar(_scaffoldKey, Constants.tokenExpired,
-                  isTokenExpired: true, context: context);
-            }
-            return Constants.noDataWidget(
-                context,
-                _user != null
-                    ? "You have no children registered with ${Constants.appName}. "
-                        "Press the button below to register your child(ren)."
-                    : "You must be a registered ${Constants.appName} to access "
-                    "to access this service.");
+                .contains(Constants.tokenErrorType);
+
+            return isTokenError
+                ? TokenErrorWidget()
+                : DataFetchErrorWidget(
+                    message: _user != null
+                        ? "You have no children registered with ${Constants.appName}. "
+                            "Press the button below to register your child(ren)."
+                        : "You must be a registered ${Constants.appName} to access "
+                        "to access this service.",
+                  );
           } else {
             if (snapshot.hasData) {
               var childrenList = snapshot.data;

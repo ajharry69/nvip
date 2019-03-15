@@ -5,6 +5,8 @@ import 'package:nvip/data_repo/tables/data_source_children.dart';
 import 'package:nvip/models/child.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/children/screen_child_register.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 class ChildrenTableScreen extends StatelessWidget {
   final User user;
@@ -101,10 +103,17 @@ class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
           future: _children,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Constants.noDataWidget(
-                  context,
+              var errorMessage =
                   "${Constants.refinedExceptionMessage(snapshot.error)}. "
-                  "Press the button below to register your child(ren).");
+                  "Press the button below to register your child(ren).";
+
+              var isTokenError = snapshot.error
+                  .toString()
+                  .contains(Constants.tokenErrorType);
+
+              return isTokenError
+                  ? TokenErrorWidget()
+                  : DataFetchErrorWidget(message: errorMessage);
             } else {
               if (snapshot.hasData) {
                 var childrenList = snapshot.data;

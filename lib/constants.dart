@@ -55,6 +55,7 @@ class Constants {
       "Connection lost. Please enable cellular data or WIFI.";
   static final tokenExpired =
       "Auth token is expired. Kindly sign in again to get a new one.";
+  static String tokenErrorType = "UnauthorizedRequestException";
   static final double dividerSize = 5.0;
   static final int initialTimeout = 30;
   static final double buttonRadius = 5.0;
@@ -203,17 +204,6 @@ class Constants {
 
     return utf8.decode(base64Url.decode(output));
   }
-
-  static Widget noDataWidget(BuildContext context, String message) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(Constants.defaultPadding * 4),
-          child: Text(
-            message,
-            style: Theme.of(context).textTheme.body1,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
 
   static void showSnackBar(GlobalKey<ScaffoldState> scaffoldKey, String message,
       {BuildContext context,
@@ -379,7 +369,6 @@ class Constants {
       print(refinedExceptionMessage(e));
     }
   }
-
 }
 
 class Styles {

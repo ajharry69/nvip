@@ -5,8 +5,10 @@ import 'package:nvip/data_repo/network/schedules_repo.dart';
 import 'package:nvip/models/schedule.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/home/schedules/screen_schedule_add.dart';
+import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/disease_tags.dart';
 import 'package:nvip/widgets/places_tags.dart';
+import 'package:nvip/widgets/token_error_widget.dart';
 
 enum _CardMenuItems { update, delete }
 enum SortBy { title, startDate, endDate, datePosted }
@@ -66,11 +68,16 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
         future: _schedules,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Constants.noDataWidget(
-              context,
-              "${Constants.refinedExceptionMessage(snapshot.error)}. "
-                  "Press the button below to add a new post.",
-            );
+            var errorMessage = "${Constants.refinedExceptionMessage(snapshot.error)}. "
+                "Press the button below to add a new post.";
+
+            var isTokenError = snapshot.error
+                .toString()
+                .contains(Constants.tokenErrorType);
+
+            return isTokenError
+                ? TokenErrorWidget()
+                : DataFetchErrorWidget(message: errorMessage);
           } else {
             if (snapshot.hasData) {
               var scheduleList = snapshot.data;
