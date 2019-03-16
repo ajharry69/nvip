@@ -3,7 +3,7 @@ class Immunization {
   static final String _keyDoi = 'doi';
   static final String _keyBirthCert = 'birthCert';
   static final String _keyChildName = 'childName';
-  static final String _keyVaccineBatch = 'vaccineBatch';
+  static final String _keyVaccineId = 'vaccineId';
   static final String _keyDiseaseName = 'diseaseName';
   static final String _keyPov = 'pov';
   static final String _keyHpId = 'hpId';
@@ -43,7 +43,7 @@ class Immunization {
     this._doi = immunizationMap[_keyDoi];
     this._birthCert = immunizationMap[_keyBirthCert];
     this._childName = immunizationMap[_keyChildName];
-    this._vaccineBatch = immunizationMap[_keyVaccineBatch];
+    this._vaccineBatch = immunizationMap[_keyVaccineId];
     this._diseaseName = immunizationMap[_keyDiseaseName];
     this._pov = immunizationMap[_keyPov];
     this._hpId = immunizationMap[_keyHpId];
@@ -57,7 +57,7 @@ class Immunization {
     map[_keyDoi] = this.doi;
     map[_keyBirthCert] = this.birthCert;
     map[_keyChildName] = this.childName;
-    map[_keyVaccineBatch] = this.vaccineBatch;
+    map[_keyVaccineId] = this.vaccineBatch;
     map[_keyDiseaseName] = this.diseaseName;
     map[_keyPov] = this.pov;
     map[_keyHpId] = this.hpId;

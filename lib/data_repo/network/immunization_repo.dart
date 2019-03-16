@@ -16,7 +16,7 @@ class ImmunizationDataRepo {
           body: immunization.toMap(),
           headers: await Constants.httpHeaders()));
     } on Exception catch (err) {
-      throw Exception(err);
+      throw Exception(Constants.refinedExceptionMessage(err));
     }
   }
 
@@ -27,7 +27,7 @@ class ImmunizationDataRepo {
           body: immunization.toMap(),
           headers: await Constants.httpHeaders()));
     } on Exception catch (err) {
-      throw Exception(err);
+      throw Exception(Constants.refinedExceptionMessage(err));
     }
   }
 
@@ -38,30 +38,30 @@ class ImmunizationDataRepo {
           body: immunization.toMap(),
           headers: await Constants.httpHeaders()));
     } on Exception catch (err) {
-      throw Exception(err);
+      throw Exception(Constants.refinedExceptionMessage(err));
     }
   }
 
   Future<List<Immunization>> getImmunizations(
       [String no = Constants.immunizationRecNoAll]) async {
-    return _networkUtils
-        .get(
-            Urls.getImmunizations(
-                userId: (await UserCache().currentUser).id, no: no),
-            headers: await Constants.httpHeaders())
-        .then(
-      (response) {
-        var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.get(
+          Urls.getImmunizations(
+              userId: (await UserCache().currentUser).id, no: no),
+          headers: await Constants.httpHeaders());
 
-        if (sr.isError) {
-          print(sr.debugMessage);
-          throw Exception(sr.message);
-        }
-        List netImmunizations = response[Constants.keyImmunizations];
-        return netImmunizations
-            .map((immunizationMap) => Immunization.fromMap(immunizationMap))
-            .toList();
-      },
-    ).catchError((err) => throw Exception(err.toString()));
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      List netImmunizations = response[Constants.keyImmunizations];
+      return netImmunizations
+          .map((immunizationMap) => Immunization.fromMap(immunizationMap))
+          .toList();
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 }

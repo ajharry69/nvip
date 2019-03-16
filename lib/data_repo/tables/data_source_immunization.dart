@@ -32,7 +32,7 @@ class ImmunizationsTableDataSource extends DataTableSource {
         DataCell(Text(immunization.pov)),
         DataCell(Text(immunization.hpId)),
         DataCell(Text(immunization.hpName)),
-        DataCell(Text(immunization.notes)),
+//        DataCell(Text(immunization.notes)),
       ],
     );
   }

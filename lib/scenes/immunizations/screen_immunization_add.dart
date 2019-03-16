@@ -136,12 +136,12 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                   child: TextFormField(
                     controller: _vaccineBatchController,
                     decoration: InputDecoration(
-                      labelText: "Vaccine Batch No.*",
-                      helperText: "vaccine batch number",
+                      labelText: "Vaccine ID*",
+                      helperText: "vaccine identification code",
                     ),
                     validator: (val) {
                       if (val.isEmpty) {
-                        return "vaccine batch no. is required";
+                        return "vaccine ID is required";
                       } else {
                         return null;
                       }
@@ -174,7 +174,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                           },
                           validator: (val) {
                             if (val.isEmpty) {
-                              return "vaccine name is required";
+                              return "vaccination center is required";
                             } else {
                               return null;
                             }
@@ -189,9 +189,9 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                   child: _diseaseList.length > 0
                       ? DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: "Vaccine Preventable Disease*",
+                            labelText: "Disease*",
                             helperText:
-                                "select 'disease' being immunization is to prevent",
+                                "select 'disease' immunization is to prevent",
                           ),
                           items: _diseaseList.map((disease) {
                             var name = disease.name;

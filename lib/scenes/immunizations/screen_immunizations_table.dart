@@ -187,10 +187,10 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
                           label: Text("Provider Name"),
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.hpName, ci, isAscending)),
-                      DataColumn(
-                          label: Text("Notes"),
-                          onSort: (ci, isAscending) =>
-                              _sort<String>((d) => d.notes, ci, isAscending)),
+//                      DataColumn(
+//                          label: Text("Notes"),
+//                          onSort: (ci, isAscending) =>
+//                              _sort<String>((d) => d.notes, ci, isAscending)),
                     ],
                     source: _tableDataSource,
                   ),
