@@ -69,20 +69,28 @@ class _HomePageState extends State<_HomePage>
     );
   }
 
-  Widget buildScaffoldContent() {
-    return NestedScrollView(
+  Widget buildScaffoldContent() => NestedScrollView(
       controller: _scrollController,
       headerSliverBuilder: (context, isInnerBoxScrolled) {
+        var isSignedIn = _user != null;
         return <Widget>[
           SliverAppBar(
-            title: Text(widget.title),
+            title: Text(
+              widget.title,
+              textScaleFactor: Constants.defaultScaleFactor,
+              style: TextStyle(
+                fontFamily: "Kalam",
+                letterSpacing: 5.5,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             pinned: true,
             floating: true,
             forceElevated: isInnerBoxScrolled,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.exit_to_app),
-                tooltip: "Signout",
+                icon: Icon(isSignedIn ? Icons.exit_to_app : Icons.person_add),
+                tooltip: isSignedIn ? "Signout" : "Sign In / Create Account",
                 onPressed: () {
                   _signOut(context);
                 },
@@ -141,7 +149,6 @@ class _HomePageState extends State<_HomePage>
             )
           : Container(),
     );
-  }
 
   Drawer _buildDrawer(BuildContext context) {
     var userRole = _user?.role;
