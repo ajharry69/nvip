@@ -46,15 +46,16 @@ class Constants {
 
   // App Dependent Constants
   static final String appName = "NVIP";
-  static final String drawerHeaderName = "username";
-  static final String drawerHeaderEmail = "email@address.com";
+  static final String drawerHeaderName = "Guest Account";
+  static final String drawerHeaderEmail = "email@guest.com";
   static final String tabTitleEducative = "Educative".toUpperCase();
   static final String tabTitleSchedule = "Schedules".toUpperCase();
   static final String tabTitleChildren = "My Children".toUpperCase();
   static final String connectionLost =
       "Connection lost. Please enable cellular data or WIFI.";
-  static final tokenExpired =
-      "Session is expired. Kindly sign in again to start a new session.";
+  static const tokenExpired =
+      "You are either not signed in or your sign in session is expired. "
+      "Kindly sign in again using the button labeled 'SIGN IN' to start a new session.";
   static const defaultDeviceToken = "deviceId";
   static String tokenErrorType = "UnauthorizedRequestException";
   static final double dividerSize = 5.0;
@@ -265,22 +266,27 @@ class Constants {
     );
   }
 
-  static Future<Widget> showSignInRequestDialog({BuildContext ctx}) async {
+  static Future<Widget> showSignInRequestDialog({
+    BuildContext ctx,
+    String denialButtonText = "Cancel",
+    String acceptanceButtonText = "Sign In",
+    String message = tokenExpired,
+  }) async {
     return await showDialog(
       context: ctx,
       builder: (context1) {
         return AlertDialog(
           title: Text("Action Required!"),
-          content: Text(tokenExpired),
+          content: Text(message),
           actions: <Widget>[
             FlatButton(
-              child: Text("Cancel".toUpperCase()),
+              child: Text(denialButtonText.toUpperCase()),
               onPressed: () {
                 Navigator.of(context1, rootNavigator: true).pop();
               },
             ),
             FlatButton(
-              child: Text("Sign In".toUpperCase()),
+              child: Text(acceptanceButtonText.toUpperCase()),
               onPressed: () {
                 Navigator.of(context1, rootNavigator: true).pop();
                 Navigator.pushReplacementNamed(context1, Routes.keySignIn);
@@ -528,6 +534,7 @@ class Urls {
 
   static String getAllEducativePosts() => "$_educativePostsRoot/getAll.php";
   static final String educativeAdd = "$_educativePostsRoot/add.php";
+  static final String educativeFlagPost = "$_educativePostsRoot/flagPost.php";
   static final String educativeDelete = "$_educativePostsRoot/delete.php";
   static final String educativeUpdate = "$_educativePostsRoot/update.php";
 

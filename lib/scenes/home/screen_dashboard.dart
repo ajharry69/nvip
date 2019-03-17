@@ -11,8 +11,12 @@ class _DashBoardScreenBody extends StatefulWidget {
 }
 
 class __DashBoardScreenBodyState extends State<_DashBoardScreenBody> {
+  final GlobalKey _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      key: _scaffoldKey,
+    );
   }
 }
