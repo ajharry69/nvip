@@ -5,7 +5,9 @@ import 'package:nvip/data_repo/network/educative_posts_repo.dart';
 import 'package:nvip/models/educative_post.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/home/educative/screen_educative_post_add.dart';
+import 'package:nvip/scenes/home/educative/screen_educative_post_details.dart';
 import 'package:nvip/widgets/data_fetch_error_widget.dart';
+import 'package:nvip/widgets/post_image_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
 
 enum _CardMenuItems { update, delete }
@@ -33,8 +35,10 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
   var _isRequestSent = false;
   final _connectivity = Connectivity();
   EducativePostDataRepo _educativePostDataRepo;
-  final defaultImage = "images/no_image.png";
-  final imageHeight = 194.0;
+  final accountError =
+      "You need to have an ${Constants.appName} account and signed in to flag"
+      " a post. Would you like to sign in or create an ${Constants.appName}"
+      " account?";
   final defaultPadding = const EdgeInsets.only(
     right: Constants.defaultPadding * 2,
     left: Constants.defaultPadding * 2,
@@ -46,12 +50,20 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
 
   __EducativePostsBodyState([this._user]);
 
-  Iterable<Widget> _postsWidget(
-      BuildContext context, List<EducativePost> posts) sync* {
+  Iterable<Widget> _postsWidget(BuildContext context, List<EducativePost> posts,
+      bool isPrivileged) sync* {
     for (var post in posts) {
+      var isFlaggedInappropriate =
+          _user != null && post.flaggers.contains(_user.id);
       yield GestureDetector(
         onTap: () {
-          // TODO: Add view functionality...
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => EducativePostDetailsScreen(
+                        post: post,
+                        user: _user,
+                      )));
         },
         child: Card(
           margin: const EdgeInsets.only(
@@ -78,11 +90,20 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                     IconButton(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(4.0),
-                      tooltip: "Flag as inapropriate",
-                      icon: Icon(Icons.flag),
-                      onPressed: () {
-                        // TODO: Add flag inappropriate post...
-                      },
+                      tooltip: isFlaggedInappropriate
+                          ? "Flag as apropriate"
+                          : "Flag as inapropriate",
+                      icon: Icon(Icons.flag,
+                          color: isFlaggedInappropriate
+                              ? Colors.redAccent
+                              : Colors.grey.shade600),
+                      onPressed: _isRequestSent
+                          ? null
+                          : () {
+                              setState(() {
+                                flagOrUnflagPost(post);
+                              });
+                            },
                     ),
                     PopupMenuButton<_CardMenuItems>(
                       onSelected: (value) {
@@ -97,38 +118,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                                 ));
                             break;
                           case _CardMenuItems.delete:
-                            Constants.showDeleteDialog(
-                              context: context,
-                              dialogContent:
-                                  "Sure you want to delete this post?",
-                              doDelete: () async {
-                                try {
-                                  ConnectivityResult cr =
-                                      await _connectivity.checkConnectivity();
-                                  if (cr != ConnectivityResult.none) {
-                                    if (!_isRequestSent) {
-                                      _isRequestSent = true;
-                                      var sr = await _educativePostDataRepo
-                                          .deletePost(post);
-                                      Navigator.of(context).pop();
-                                      Constants.showSnackBar(
-                                          _scaffoldKey, sr.message);
-                                      setState(
-                                          () {}); // Refresh page after deleting
-                                    }
-                                  } else {
-                                    Constants.showSnackBar(
-                                        _scaffoldKey, Constants.connectionLost,
-                                        isNetworkConnected: false);
-                                  }
-                                } on Exception catch (err) {
-                                  Constants.showSnackBar(_scaffoldKey,
-                                      Constants.refinedExceptionMessage(err));
-                                } finally {
-                                  _isRequestSent = false;
-                                }
-                              },
-                            );
+                            deletePost(isPrivileged, context, post);
                             break;
                         }
                       },
@@ -146,20 +136,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                   ],
                 ),
               ),
-              post.imageUrl != null
-                  ? FadeInImage.assetNetwork(
-                      placeholder: defaultImage,
-                      image: post.imageUrl,
-                      width: double.maxFinite,
-                      height: imageHeight,
-                      fit: BoxFit.fill,
-                    )
-                  : Image.asset(
-                      defaultImage,
-                      width: double.maxFinite,
-                      height: imageHeight,
-                      fit: BoxFit.fill,
-                    ),
+              CustomFadeInImageView(imageUrl: post.imageUrl),
               Padding(
                 padding:
                     defaultPadding.copyWith(top: Constants.defaultPadding * 2),
@@ -189,6 +166,43 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
     }
   }
 
+  Future deletePost(
+      bool isPrivileged, BuildContext context, EducativePost post) async {
+    if (isPrivileged) {
+      Constants.showDeleteDialog(
+        context: context,
+        dialogContent: "Sure you want to delete this post?",
+        doDelete: () async {
+          try {
+            ConnectivityResult cr = await _connectivity.checkConnectivity();
+            if (cr != ConnectivityResult.none) {
+              if (!_isRequestSent) {
+                _isRequestSent = true;
+                var sr = await _educativePostDataRepo.deletePost(post);
+                Navigator.of(context).pop();
+                Constants.showSnackBar(_scaffoldKey, sr.message);
+                setState(() {}); // Refresh page after deleting
+              }
+            } else {
+              Constants.showSnackBar(_scaffoldKey, Constants.connectionLost,
+                  isNetworkConnected: false);
+            }
+          } on Exception catch (err) {
+            Constants.showSnackBar(
+                _scaffoldKey, Constants.refinedExceptionMessage(err));
+          } finally {
+            _isRequestSent = false;
+          }
+        },
+      );
+    } else {
+      _user == null
+          ? signInRequest()
+          : Constants.showSnackBar(_scaffoldKey,
+              "Administrative privileges are required to delete a post");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -199,6 +213,9 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
   @override
   Widget build(BuildContext context) {
     var isUserAdmin = _user != null && _user.role == Constants.privilegeAdmin;
+    var isUserProvider =
+        _user != null && _user.role == Constants.privilegeProvider;
+    var isPrivileged = isUserAdmin || isUserProvider;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
@@ -210,9 +227,8 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                 "${Constants.refinedExceptionMessage(snapshot.error)}. "
                 "Press the button below to add a new post.";
 
-            var isTokenError = snapshot.error
-                .toString()
-                .contains(Constants.tokenErrorType);
+            var isTokenError =
+                snapshot.error.toString().contains(Constants.tokenErrorType);
 
             return isTokenError
                 ? TokenErrorWidget()
@@ -223,7 +239,8 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
               return SingleChildScrollView(
                 reverse: postList.length > 15,
                 child: Column(
-                  children: _postsWidget(context, postList).toList(),
+                  children:
+                      _postsWidget(context, postList, isPrivileged).toList(),
                 ),
               );
             }
@@ -232,7 +249,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
           return Center(child: CircularProgressIndicator());
         },
       ),
-      floatingActionButton: isUserAdmin
+      floatingActionButton: isPrivileged
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.pushReplacement(
@@ -245,6 +262,42 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
             )
           : null,
     );
+  }
+
+  void flagOrUnflagPost(EducativePost post) async {
+    try {
+      if (_user != null) {
+        ConnectivityResult cr = await _connectivity.checkConnectivity();
+        if (cr != ConnectivityResult.none) {
+          if (!_isRequestSent) {
+            _isRequestSent = true;
+
+            setState(() {
+              _posts = _educativePostDataRepo
+                  .flagOrUnflagPost(PostFlag.withNamedParams(postId: post.id));
+            }); // Refresh page after deleting
+          }
+        } else {
+          Constants.showSnackBar(_scaffoldKey, Constants.connectionLost,
+              isNetworkConnected: false);
+        }
+      } else {
+        signInRequest();
+      }
+    } on Exception catch (err) {
+      Constants.showSnackBar(
+          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    } finally {
+      _isRequestSent = false;
+    }
+  }
+
+  void signInRequest() {
+    Constants.showSignInRequestDialog(
+        ctx: context,
+        message: accountError,
+        denialButtonText: "No",
+        acceptanceButtonText: "Yes");
   }
 
   Widget loadNetworkImage(String url) {

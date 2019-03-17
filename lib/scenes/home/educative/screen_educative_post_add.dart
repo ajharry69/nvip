@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/educative_posts_repo.dart';
 import 'package:nvip/models/educative_post.dart';
+import 'package:nvip/widgets/post_image_widget.dart';
 
 class AddEducativePostScreen extends StatelessWidget {
   final EducativePost educativePost;
@@ -101,28 +102,31 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                         builder: (ctx) => AlertDialog(
                               content: SingleChildScrollView(
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    ListTile(
-                                      title: Text("Capture from Camera"),
+                                    GestureDetector(
+                                      child: Text("Capture from Camera"),
                                       onTap: () {
                                         _fetchImage(ctx, ImageSource.camera);
                                       },
                                     ),
-                                    ListTile(
-                                      title: Text("Pick from Gallery"),
+                                    Divider(color: Colors.black54),
+                                    GestureDetector(
+                                      child: Text("Pick from Gallery"),
                                       onTap: () {
                                         _fetchImage(ctx, ImageSource.gallery);
                                       },
                                     ),
-                                    ListTile(
-                                      title: Text("Remove Image"),
+                                    Divider(color: Colors.black54),
+                                    GestureDetector(
+                                      child: Text("Remove Image"),
                                       onTap: () {
                                         setState(() {
                                           _imageFile = null;
                                         });
                                         Navigator.pop(ctx);
                                       },
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -130,25 +134,14 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                       );
                     },
                     child: _imageFile == null
-                        ? educativePost != null &&
-                                educativePost.imageUrl != null
-                            ? FadeInImage.assetNetwork(
-                                placeholder: defaultImage,
-                                image: educativePost.imageUrl,
-                                width: double.maxFinite,
-                                height: imageHeight,
-                                fit: BoxFit.fill,
-                              )
-                            : Image.asset(
-                                defaultImage,
-                                width: double.maxFinite,
-                                height: imageHeight,
-                                fit: BoxFit.fill,
-                              )
+                        ? CustomFadeInImageView(
+                            imageUrl: educativePost != null
+                                ? educativePost.imageUrl
+                                : null)
                         : Image.file(
                             _imageFile,
                             width: double.maxFinite,
-                            height: 200.0,
+                            height: imageHeight,
                             fit: BoxFit.fill,
                           ),
                   ),
@@ -269,9 +262,9 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
         _imageFile = file;
       });
       Navigator.pop(ctx);
-    } on Exception catch (err) {
-      Constants.showSnackBar(
-          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    } on Exception catch (_) {
+//      Constants.showSnackBar(
+//          _scaffoldKey, Constants.refinedExceptionMessage(err));
     }
   }
 }

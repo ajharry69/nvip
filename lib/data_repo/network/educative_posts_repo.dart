@@ -40,22 +40,38 @@ class EducativePostDataRepo {
   }
 
   Future<List<EducativePost>> getPosts() async {
-    return _networkUtils
-        .get(Urls.getAllEducativePosts(),
-            headers: await Constants.httpHeaders())
-        .then(
-      (response) {
-        var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.get(Urls.getAllEducativePosts(),
+          headers: await Constants.httpHeaders());
+      var sr = ServerResponse.fromMap(response);
 
-        if (sr.isError) {
-          print(sr.debugMessage);
-          throw Exception(sr.message);
-        }
-        List netPosts = response[Constants.keyEducativePosts];
-        return netPosts
-            .map((postMap) => EducativePost.fromMap(postMap))
-            .toList();
-      },
-    ).catchError((err) => throw Exception(err.toString()));
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+
+      List netPosts = response[Constants.keyEducativePosts];
+      return netPosts.map((postMap) => EducativePost.fromMap(postMap)).toList();
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
+  }
+
+  Future<List<EducativePost>> flagOrUnflagPost(PostFlag post) async {
+    try {
+      var response = await _networkUtils.post(Urls.educativeFlagPost,
+          headers: await Constants.httpHeaders(), body: post.toMap());
+      var sr = ServerResponse.fromMap(response);
+
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+
+      List netPosts = response[Constants.keyEducativePosts];
+      return netPosts.map((postMap) => EducativePost.fromMap(postMap)).toList();
+    } on Exception catch (err) {
+      throw Exception(Constants.refinedExceptionMessage(err));
+    }
   }
 }
