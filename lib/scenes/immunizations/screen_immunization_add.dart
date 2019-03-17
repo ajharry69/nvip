@@ -41,7 +41,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
         setState(() {
           _centersList = centers;
           if (_centersList.length > 0) {
-            _selectedCenter = _centersList[0].name;
+            _selectedCenter = _centersList[0].county;
           }
         });
       }).catchError((err) => throw Exception(err));
@@ -160,7 +160,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                                 "select vaccination center A.K.A place of vaccination",
                           ),
                           items: _centersList.map((center) {
-                            var name = center.name;
+                            var name = center.county;
                             return DropdownMenuItem<String>(
                               child: Text(name),
                               value: name,

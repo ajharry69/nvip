@@ -99,9 +99,8 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
               var errorMessage =
                   Constants.refinedExceptionMessage(snapshot.error);
 
-              var isTokenError = snapshot.error
-                  .toString()
-                  .contains(Constants.tokenErrorType);
+              var isTokenError =
+                  snapshot.error.toString().contains(Constants.tokenErrorType);
 
               return isTokenError
                   ? TokenErrorWidget()
@@ -168,7 +167,7 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.doi, ci, isAscending)),
                       DataColumn(
-                          label: Text("Vaccine Batch"),
+                          label: Text("Vaccine ID"),
                           onSort: (ci, isAscending) => _sort<String>(
                               (d) => d.vaccineBatch, ci, isAscending)),
                       DataColumn(
@@ -180,11 +179,13 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.pov, ci, isAscending)),
                       DataColumn(
-                          label: Text("Provider Id"),
+                          label: Text("PID No"),
+                          tooltip: "Providers ID Number",
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.hpId, ci, isAscending)),
                       DataColumn(
-                          label: Text("Provider Name"),
+                          label: Text("PName"),
+                          tooltip: "Prividers name",
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.hpName, ci, isAscending)),
 //                      DataColumn(
