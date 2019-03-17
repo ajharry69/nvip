@@ -151,7 +151,7 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
                         DataColumn(
                           label: Text("Name"),
                           onSort: (ci, isSortAscending) =>
-                              _sort<String>((c) => c.name, ci, isSortAscending),
+                              _sort<String>((c) => c.county, ci, isSortAscending),
                         ),
                       ],
                       source: _tableDataSource,
@@ -173,7 +173,7 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
                                 : Theme.of(context).textTheme.body1.color,
                           ),
                         ),
-                        title: Text(center.name),
+                        title: Text(center.county),
                         selected: center.isSelected,
                         onTap: () {
                           // TODO: Implement update...

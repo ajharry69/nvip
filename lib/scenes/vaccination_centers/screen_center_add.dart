@@ -52,7 +52,7 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
     _centersDataRepo = VaccineCentersDataRepo();
 
     setState(() {
-      _nameController.text = center != null ? center.name : "";
+      _nameController.text = center != null ? center.county : "";
     });
   }
 

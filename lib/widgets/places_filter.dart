@@ -54,7 +54,7 @@ class _PlacesFilterState extends State<PlacesFilter> {
         setState(() {
           _places.add(PlaceChipEntry("Nation-wide"));
           centers.forEach((c) {
-            _places.add(PlaceChipEntry(c.name));
+            _places.add(PlaceChipEntry(c.county));
           });
         });
       }).catchError((err) => throw Exception(err));

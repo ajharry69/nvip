@@ -18,7 +18,7 @@ class CentersTableDataSource extends DataTableSource {
       onSelectChanged: (selected) => onRowSelected(center, selected),
       cells: <DataCell>[
         DataCell(Text("${index + 1}")),
-        DataCell(Text(center.name)),
+        DataCell(Text(center.county)),
       ],
     );
   }
