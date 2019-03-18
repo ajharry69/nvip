@@ -57,7 +57,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
           _user != null && post.flaggers.contains(_user.id);
       yield GestureDetector(
         onTap: () {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (_) => EducativePostDetailsScreen(

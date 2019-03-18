@@ -4,6 +4,7 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/educative_posts_repo.dart';
 import 'package:nvip/models/educative_post.dart';
 import 'package:nvip/models/user.dart';
+import 'package:nvip/scenes/home/screen_home.dart';
 import 'package:nvip/widgets/post_image_widget.dart';
 
 class EducativePostDetailsScreen extends StatelessWidget {
@@ -71,7 +72,9 @@ class __EducativePostDetailsBodyState extends State<_EducativePostDetailsBody> {
     var textTheme = theme.textTheme;
     return WillPopScope(
       onWillPop: () {
-        Navigator.pop(context);
+        // On Back pressed
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HomeScreen()));
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -102,7 +105,9 @@ class __EducativePostDetailsBodyState extends State<_EducativePostDetailsBody> {
                         isBackGroundDark ? Colors.white : Colors.grey.shade800,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    // On back pressed
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (_) => HomeScreen()));
                   },
                 ),
                 actions: <Widget>[
