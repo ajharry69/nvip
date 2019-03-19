@@ -19,7 +19,7 @@ class _CustomFadeInImageViewState extends State<CustomFadeInImageView> {
 
   @override
   Widget build(BuildContext context) {
-    return imageUrl != null
+    return imageUrl != null && imageUrl != ""
         ? FadeInImage.assetNetwork(
             placeholder: defaultImage,
             image: imageUrl,

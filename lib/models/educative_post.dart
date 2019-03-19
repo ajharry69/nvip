@@ -87,6 +87,8 @@ class PostFlag {
   }
 
   PostFlag.fromMap(dynamic flagMap) {
+//    this._id = int.tryParse(flagMap[_keyId]);
+//    this._postId = int.tryParse(flagMap[_keyPostId]);
     this._id = flagMap[_keyId];
     this._postId = flagMap[_keyPostId];
     this._flaggedBy = flagMap[_keyFlaggedBy];

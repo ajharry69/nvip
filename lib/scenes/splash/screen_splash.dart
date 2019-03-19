@@ -6,11 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _SplashScreenBody(),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(body: _SplashScreenBody());
 }
 
 class _SplashScreenBody extends StatefulWidget {
@@ -22,30 +18,31 @@ class __SplashScreenBodyState extends State<_SplashScreenBody>
     implements AuthStateListener {
   AuthStateProvider _authStateProvider;
 
+  Future _checkAuthStatus() async {
+    try {
+      var pref = await SharedPreferences.getInstance();
+      if (pref.getKeys().contains(PreferenceKeys.keySkipSignIn)) {
+        var skipSignIn = pref.getBool(PreferenceKeys.keySkipSignIn);
+
+        if (skipSignIn) {
+          Navigator.pushReplacementNamed(context, Routes.keyHome);
+        } else {
+          _authStateProvider.subscribe(this);
+        }
+      } else {
+        _authStateProvider.subscribe(this);
+      }
+    } on Exception catch (_) {
+      _authStateProvider.subscribe(this);
+    }
+  }
+
   @override
   void initState() {
+    super.initState();
     SystemChannels.textInput.invokeMethod(Constants.hideKbMethod);
     _authStateProvider = AuthStateProvider();
-    SharedPreferences.getInstance()
-        .then(
-          (pref) => Future(
-                () {
-                  if (pref.getKeys().contains(PreferenceKeys.keySkipSignIn)) {
-                    var skipSignIn = pref.getBool(PreferenceKeys.keySkipSignIn);
-
-                    if (skipSignIn) {
-                      Navigator.pushReplacementNamed(context, Routes.keyHome);
-                    } else {
-                      _authStateProvider.subscribe(this);
-                    }
-                  } else {
-                    _authStateProvider.subscribe(this);
-                  }
-                },
-              ),
-        )
-        .catchError((err) => _authStateProvider.subscribe(this));
-    super.initState();
+    _checkAuthStatus();
   }
 
   @override
@@ -54,9 +51,7 @@ class __SplashScreenBodyState extends State<_SplashScreenBody>
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(color: primaryColor),
-        ),
+        Container(decoration: BoxDecoration(color: primaryColor)),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[

@@ -236,8 +236,14 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
           } else {
             if (snapshot.hasData) {
               var postList = snapshot.data;
+//              return ListView(
+//                reverse: true,
+//                padding: const EdgeInsets.only(top: 0.0),
+//                children:
+//                    _postsWidget(context, postList, isPrivileged).toList(),
+//              );
               return SingleChildScrollView(
-                reverse: postList.length > 15,
+                reverse: false,
                 child: Column(
                   children:
                       _postsWidget(context, postList, isPrivileged).toList(),

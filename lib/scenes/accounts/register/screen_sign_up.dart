@@ -89,8 +89,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                       bottom: Constants.defaultPadding * 2),
                   child: TextFormField(
                     controller: _sNameController,
-                    decoration:
-                        InputDecoration(labelText: 'Sir Name', filled: true),
+                    decoration: InputDecoration(labelText: 'Sir Name'),
                     validator: (String val) => null,
                   ),
                 ),
@@ -99,8 +98,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                       bottom: Constants.defaultPadding * 2),
                   child: TextFormField(
                     controller: _fNameController,
-                    decoration:
-                        InputDecoration(labelText: 'First Name*', filled: true),
+                    decoration: InputDecoration(labelText: 'First Name*'),
                     validator: (String val) {
                       if (val.isEmpty) {
                         return 'first name is required.';
@@ -115,8 +113,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                       bottom: Constants.defaultPadding * 2),
                   child: TextFormField(
                     controller: _lNameController,
-                    decoration:
-                        InputDecoration(labelText: 'Last Name', filled: true),
+                    decoration: InputDecoration(labelText: 'Last Name'),
                     validator: (String val) => null,
                   ),
                 ),
@@ -129,7 +126,6 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                     decoration: InputDecoration(
                       labelText: 'ID Number*',
                       helperText: 'input national ID number',
-                      filled: true,
                     ),
                     validator: (String val) {
                       if (val.isEmpty) {
@@ -156,8 +152,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                   child: TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
-                    decoration:
-                        InputDecoration(labelText: 'Email*', filled: true),
+                    decoration: InputDecoration(labelText: 'Email*'),
                     validator: (String val) {
                       if (!val.contains('@')) {
                         return 'invalid email address';
@@ -177,7 +172,6 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                     obscureText: _isPassObscure,
                     decoration: InputDecoration(
                       labelText: 'Password*',
-                      filled: true,
                       suffixIcon: IconButton(
                         icon: _isPassObscure
                             ? Icon(
@@ -203,9 +197,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(
-                    top: Constants.defaultPadding,
-                  ),
+                  margin: EdgeInsets.only(top: Constants.defaultPadding * 2),
                   child: RaisedButton(
                     child: Text(
                       'Sign Up'.toUpperCase(),

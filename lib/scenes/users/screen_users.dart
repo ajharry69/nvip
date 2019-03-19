@@ -3,6 +3,7 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/user_repo.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/users/admins/screen_admins.dart';
+import 'package:nvip/scenes/users/parents/screen_parents.dart';
 import 'package:nvip/scenes/users/providers/screen_providers.dart';
 
 class UsersListScreen extends StatelessWidget {
@@ -36,7 +37,7 @@ class __UserListScreenBodyState extends State<_UserListScreenBody>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     setState(() {
       _userList = UserDataRepo().getUsers();
     });
@@ -64,6 +65,7 @@ class __UserListScreenBodyState extends State<_UserListScreenBody>
             tabs: [
               Tab(text: "Admins"),
               Tab(text: "Providers"),
+              Tab(text: "Parents"),
             ],
           ),
         ),
@@ -76,6 +78,9 @@ class __UserListScreenBodyState extends State<_UserListScreenBody>
             ProvidersTableScreen(
               userList: getUsersByRole(Constants.privilegeProvider),
             ),
+            ParentsTableScreen(
+              userList: getUsersByRole(Constants.privilegeParent),
+            ),
           ],
         ),
       ),
@@ -83,12 +88,12 @@ class __UserListScreenBodyState extends State<_UserListScreenBody>
   }
 
   Future<List<User>> getUsersByRole(String role) async {
-    List<User> adminList = List();
-    List<User> providerList = List();
-    List<User> parentList = List();
     try {
+      final List<User> adminList = List();
+      final List<User> providerList = List();
+      final List<User> parentList = List();
       var userList = await _userList;
-      userList.forEach((user) {
+      for (User user in userList) {
         if (user.role == Constants.privilegeAdmin) {
           adminList.add(user);
         } else if (user.role == Constants.privilegeProvider) {
@@ -96,17 +101,17 @@ class __UserListScreenBodyState extends State<_UserListScreenBody>
         } else {
           parentList.add(user);
         }
-      });
+      }
+
+      if (role == Constants.privilegeAdmin) {
+        return adminList;
+      } else if (role == Constants.privilegeProvider) {
+        return providerList;
+      } else {
+        return userList;
+      }
     } on Exception catch (err) {
       throw Exception(Constants.refinedExceptionMessage(err));
-    }
-
-    if (role == Constants.privilegeAdmin) {
-      return adminList;
-    } else if (user.role == Constants.privilegeProvider) {
-      return providerList;
-    } else {
-      return parentList;
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
+import 'package:nvip/scenes/_demo/charts/group_chart.dart';
 
 class ChartsScreen extends StatelessWidget {
   @override
@@ -33,8 +34,9 @@ class __ChartsScreenBodyState extends State<_ChartsScreenBody> {
             },
           ),
         ),
-        body: ListView(
-          children: <Widget>[],
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GroupedBarChart.withSampleData(),
         ),
       ),
     );

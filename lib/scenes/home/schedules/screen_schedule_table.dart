@@ -43,9 +43,11 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
   );
+  static SortBy _sortBy = SortBy.datePosted;
+  static SortOrder _sortOrder = SortOrder.ascending;
   var _isRequestSent = false;
-  SortBy _sortBy = SortBy.datePosted;
-  SortOrder _sortOrder = SortOrder.ascending;
+  var _isSortOrderAscSelected = true;
+  var _isSortOrderDescSelected = false;
   final Connectivity _connectivity = Connectivity();
   final ScheduleDataRepo scheduleDataRepo = ScheduleDataRepo();
   Future<List<Schedule>> _schedules;
@@ -68,12 +70,12 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
         future: _schedules,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            var errorMessage = "${Constants.refinedExceptionMessage(snapshot.error)}. "
+            var errorMessage =
+                "${Constants.refinedExceptionMessage(snapshot.error)}. "
                 "Press the button below to add a new post.";
 
-            var isTokenError = snapshot.error
-                .toString()
-                .contains(Constants.tokenErrorType);
+            var isTokenError =
+                snapshot.error.toString().contains(Constants.tokenErrorType);
 
             return isTokenError
                 ? TokenErrorWidget()
@@ -359,11 +361,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                     selected: _sortBy == SortBy.title,
                     value: SortBy.title,
                     groupValue: _sortBy,
-                    onChanged: (sb) {
-                      setState(() {
-                        _sortBy = sb;
-                      });
-                    },
+                    onChanged: _handleSortByValueChange,
                   ),
                   RadioListTile<SortBy>(
                     title: Text("Date posted"),
@@ -371,11 +369,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                     isThreeLine: false,
                     selected: _sortBy == SortBy.datePosted,
                     groupValue: _sortBy,
-                    onChanged: (sb) {
-                      setState(() {
-                        _sortBy = sb;
-                      });
-                    },
+                    onChanged: _handleSortByValueChange,
                   ),
                   RadioListTile<SortBy>(
                     title: Text("Start date"),
@@ -383,11 +377,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                     selected: _sortBy == SortBy.startDate,
                     value: SortBy.startDate,
                     groupValue: _sortBy,
-                    onChanged: (sb) {
-                      setState(() {
-                        _sortBy = sb;
-                      });
-                    },
+                    onChanged: _handleSortByValueChange,
                   ),
                   RadioListTile<SortBy>(
                     title: Text("End date"),
@@ -395,11 +385,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                     selected: _sortBy == SortBy.endDate,
                     value: SortBy.endDate,
                     groupValue: _sortBy,
-                    onChanged: (sb) {
-                      setState(() {
-                        _sortBy = sb;
-                      });
-                    },
+                    onChanged: _handleSortByValueChange,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -416,26 +402,18 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                       RadioListTile<SortOrder>(
                         title: Text("Ascending"),
                         isThreeLine: false,
-                        selected: _sortOrder == SortOrder.ascending,
+                        selected: _isSortOrderAscSelected,
                         value: SortOrder.ascending,
                         groupValue: _sortOrder,
-                        onChanged: (so) {
-                          setState(() {
-                            _sortOrder = so;
-                          });
-                        },
+                        onChanged: _handleSortOrderValueChange,
                       ),
                       RadioListTile<SortOrder>(
                         title: Text("Descending"),
                         isThreeLine: false,
-                        selected: _sortOrder == SortOrder.descending,
+                        selected: _isSortOrderDescSelected,
                         value: SortOrder.descending,
                         groupValue: _sortOrder,
-                        onChanged: (so) {
-                          setState(() {
-                            _sortOrder = so;
-                          });
-                        },
+                        onChanged: _handleSortOrderValueChange,
                       ),
                     ],
                   )
@@ -448,6 +426,40 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
 
   @override
   bool get wantKeepAlive => true;
+
+  void _handleSortByValueChange(SortBy value) {
+    setState(() {
+      _sortBy = value;
+
+      switch (value) {
+        case SortBy.datePosted:
+          break;
+        case SortBy.endDate:
+          break;
+        case SortBy.startDate:
+          break;
+        case SortBy.title:
+          break;
+      }
+    });
+  }
+
+  void _handleSortOrderValueChange(SortOrder value) {
+    setState(() {
+      _sortOrder = value;
+
+      switch (value) {
+        case SortOrder.ascending:
+          _isSortOrderAscSelected = true;
+          _isSortOrderDescSelected = false;
+          break;
+        case SortOrder.descending:
+          _isSortOrderDescSelected = true;
+          _isSortOrderAscSelected = false;
+          break;
+      }
+    });
+  }
 
   void _sort<T>(
       {List<Schedule> schedules,

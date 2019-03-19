@@ -484,7 +484,6 @@ class Routes {
 
 class Urls {
 //  static final String _baseUrl = "https://nvip.krizlaapp.com/";
-
   static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
   static final String _baseAPIUrl = "$_baseUrl/RestAPI";
   static final String _immunizationRoot = "$_baseAPIUrl/immunization";

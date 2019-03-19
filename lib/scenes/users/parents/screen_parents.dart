@@ -5,10 +5,10 @@ import 'package:nvip/models/user.dart';
 import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
 
-class ProvidersTableScreen extends StatelessWidget {
+class ParentsTableScreen extends StatelessWidget {
   final Future<List<User>> userList;
 
-  const ProvidersTableScreen({Key key, this.userList}) : super(key: key);
+  const ParentsTableScreen({Key key, this.userList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _ProvidersTableScreenBody(
@@ -149,10 +149,7 @@ class _ProvidersTableScreenBodyState extends State<_ProvidersTableScreenBody> {
                   ),
                 );
               } else {
-                var errorMessage =
-                    "No Health Providers have been registered with "
-                    "${Constants.appName}. Please press the 'Add Health Provider'"
-                    " button above to register a Health Provider.";
+                var errorMessage = "No parents found.";
 
                 var isTokenError = snapshot.error
                     .toString()
