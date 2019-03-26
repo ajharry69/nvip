@@ -4,7 +4,7 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/chart_data_repo.dart';
 import 'package:nvip/models/county_data.dart';
 import 'package:nvip/models/disease_data.dart';
-import 'package:nvip/scenes/_demo/charts/bar_group_stacked.dart';
+import 'package:nvip/widgets/charts/bar_group_stacked.dart';
 import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
 
