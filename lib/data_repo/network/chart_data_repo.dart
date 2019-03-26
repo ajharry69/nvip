@@ -1,6 +1,6 @@
 import 'package:nvip/constants.dart';
-import 'package:nvip/models/county_data.dart';
-import 'package:nvip/models/disease_data.dart';
+import 'package:nvip/models/chart_data/annual_nation_wide.dart';
+import 'package:nvip/models/chart_data/county.dart';
 import 'package:nvip/models/server_response.dart';
 import 'package:nvip/utils/network_utils.dart';
 
@@ -25,7 +25,7 @@ class ChartDataRepo {
     }
   }
 
-  Future<List<DiseaseChartData>> get nationChartData async {
+  Future<List<AnnualChartData>> get nationChartData async {
     try {
       var response = await _networkUtils.get(Urls.nationChartData,
           headers: await Constants.httpHeaders());
@@ -38,7 +38,7 @@ class ChartDataRepo {
       }
 
       List data = response[Constants.keyChartData];
-      return data.map((dataMap) => DiseaseChartData.fromMap(dataMap)).toList();
+      return data.map((dataMap) => AnnualChartData.fromMap(dataMap)).toList();
     } on Exception catch (err) {
       throw Exception(Constants.refinedExceptionMessage(err));
     }

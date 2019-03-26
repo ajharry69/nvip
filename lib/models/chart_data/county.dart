@@ -1,4 +1,4 @@
-import 'package:nvip/models/disease_data.dart';
+import 'package:nvip/models/chart_data/disease.dart';
 
 class CountyChartData {
   static final _keyCounty = "county";

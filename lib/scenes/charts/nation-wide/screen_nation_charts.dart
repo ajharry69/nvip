@@ -1,7 +1,9 @@
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/chart_data_repo.dart';
-import 'package:nvip/models/disease_data.dart';
+import 'package:nvip/models/chart_data/annual_nation_wide.dart';
+import 'package:nvip/models/chart_data/disease.dart';
 import 'package:nvip/widgets/charts/bar_group_stacked.dart';
 import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
@@ -18,7 +20,7 @@ class _NationChartsBody extends StatefulWidget {
 
 class __NationChartsBodyState extends State<_NationChartsBody> {
   int _currentStep = 0;
-  Future<List<DiseaseChartData>> _chartData;
+  Future<List<AnnualChartData>> _chartData;
 
   Future getChartData() async {
     try {
@@ -28,12 +30,67 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
     }
   }
 
-  Iterable<Step> _getChartWidgets(List<DiseaseChartData> chartData) sync* {
-    for (DiseaseChartData cd in chartData) {
+  List<DiseaseChartData> _getDiseaseXSortedByYear(
+      List<DiseaseChartData> diseaseData, String diseaseName) {
+    List<DiseaseChartData> diseases = List();
+
+    diseaseData.forEach((d) {
+      if (d.disease == diseaseName) diseases.add(d);
+    });
+
+    _sort<num>(
+        diseaseData: diseases, getField: (d) => d.year, isAscending: true);
+    return diseases;
+  }
+
+  void _sort<T>(
+      {List<DiseaseChartData> diseaseData,
+      Comparable<T> getField(DiseaseChartData d),
+      bool isAscending}) {
+    diseaseData.sort((a, b) {
+      if (!isAscending) {
+        final DiseaseChartData c = a;
+        a = b;
+        b = c;
+      }
+
+      final Comparable<T> aValue = getField(a);
+      final Comparable<T> bValue = getField(b);
+      return Comparable.compare(aValue, bValue);
+    });
+  }
+
+  Iterable<charts.Series<DiseaseChartData, String>> _getChartDiseasesData(
+      List<DiseaseChartData> diseaseData) sync* {
+    for (var chartDatum in diseaseData) {
+      var disease = chartDatum.disease;
+      var chartData = _getDiseaseXSortedByYear(diseaseData, disease);
+      yield charts.Series<DiseaseChartData, String>(
+        id: "$disease(NI)",
+        seriesCategory: disease,
+        measureFn: (datum, _) => datum.legible - datum.immunized,
+        domainFn: (datum, _) => "${datum.year}",
+        data: chartData,
+      );
+      yield charts.Series<DiseaseChartData, String>(
+        id: "$disease(I)",
+        seriesCategory: disease,
+        measureFn: (datum, _) => datum.immunized,
+        domainFn: (datum, _) => "${datum.year}",
+        data: chartData,
+      );
+    }
+  }
+
+  Iterable<Step> _getChartWidgets(List<AnnualChartData> chartData) sync* {
+    for (AnnualChartData cd in chartData) {
       yield Step(
         content: SizedBox(
           height: Constants.graphHeight,
-          child: GroupedStackedBarChart.withSampleData(),
+          child: GroupedStackedBarChart(
+            _getChartDiseasesData(cd.diseaseChartData).toList(),
+            animate: true,
+          ),
         ),
         title: Text(cd.year.toString()),
         isActive: true,
@@ -48,7 +105,7 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder<List<DiseaseChartData>>(
+  Widget build(BuildContext context) => FutureBuilder<List<AnnualChartData>>(
         future: _chartData,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
