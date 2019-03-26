@@ -110,9 +110,8 @@ class __DiseasesScreenBodyState extends State<_DiseasesScreenBody> {
                   "${Constants.refinedExceptionMessage(snapshot.error)} Press "
                   "the (+) button to add a new disease.";
 
-              var isTokenError = snapshot.error
-                  .toString()
-                  .contains(Constants.tokenErrorType);
+              var isTokenError =
+                  snapshot.error.toString().contains(Constants.tokenErrorType);
 
               return isTokenError
                   ? TokenErrorWidget()
@@ -172,6 +171,24 @@ class __DiseasesScreenBodyState extends State<_DiseasesScreenBody> {
                           onSort: (ci, isAscending) =>
                               _sort<String>((d) => d.name, ci, isAscending),
                         ),
+                        DataColumn(
+                          label: Text("Vaccine"),
+                          tooltip: "vaccine",
+                          onSort: (ci, isAscending) =>
+                              _sort<String>((d) => d.vaccine, ci, isAscending),
+                        ),
+                        DataColumn(
+                          label: Text("Spread By"),
+                          tooltip: "methods disease is spread",
+                        ),
+                        DataColumn(
+                          label: Text("Symptoms"),
+                          tooltip: "symptoms of contacting disease",
+                        ),
+                        DataColumn(
+                          label: Text("Complications"),
+                          tooltip: "complications of contacting disease",
+                        ),
                       ],
                       source: _tableDataSource,
                     ),
@@ -191,7 +208,8 @@ class __DiseasesScreenBodyState extends State<_DiseasesScreenBody> {
                           ),
                         ),
                         title: Text(disease.name),
-                        subtitle: Text(disease.description),
+                        subtitle: Text(disease.name),
+                        // TODO: Replace...
                         selected: disease.isSelected,
                         onTap: () {
                           // TODO: Implement update...

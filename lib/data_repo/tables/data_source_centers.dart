@@ -7,6 +7,11 @@ class CentersTableDataSource extends DataTableSource {
 
   CentersTableDataSource(this._centers);
 
+//  Iterable<Widget> subCountiesWidget(VaccineCenter center)sync*{
+//    yield
+//    for()
+//  }
+
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
@@ -19,6 +24,7 @@ class CentersTableDataSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text("${index + 1}")),
         DataCell(Text(center.county)),
+//        DataCell(Text(center.subCounty)),
       ],
     );
   }

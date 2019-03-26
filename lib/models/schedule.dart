@@ -11,15 +11,15 @@ class Schedule {
   static final _keyDiseases = 'diseases';
   static final _keyPlaces = 'places';
 
-  int id;
-  String scheduler;
-  String title;
-  String description;
-  String startDate;
-  String endDate;
-  String datePosted;
-  List<dynamic> diseases;
-  List<dynamic> places;
+  final int id;
+  final String scheduler;
+  final String title;
+  final String description;
+  final String startDate;
+  final String endDate;
+  final String datePosted;
+  final List<String> diseases;
+  final List<String> places;
 
   Schedule(
       {this.id = 0,
@@ -44,15 +44,19 @@ class Schedule {
         _keyPlaces: jsonEncode(places)
       };
 
-  Schedule.fromMap(dynamic scheduleMap) {
-    id = scheduleMap[_keyId];
-    scheduler = scheduleMap[_keyScheduler];
-    title = scheduleMap[_keyTitle];
-    description = scheduleMap[_keyDescription];
-    startDate = scheduleMap[_keyStartDate];
-    endDate = scheduleMap[_keyEndDate];
-    datePosted = scheduleMap[_keyDatePosted];
-    diseases = jsonDecode(scheduleMap[_keyDiseases]);
-    places = jsonDecode(scheduleMap[_keyPlaces]);
+  factory Schedule.fromMap(dynamic scheduleMap) {
+    List _diseases = jsonDecode(scheduleMap[_keyDiseases]);
+    List _places = jsonDecode(scheduleMap[_keyPlaces]);
+    return Schedule(
+      id: scheduleMap[_keyId],
+      scheduler: scheduleMap[_keyScheduler],
+      title: scheduleMap[_keyTitle],
+      description: scheduleMap[_keyDescription],
+      startDate: scheduleMap[_keyStartDate],
+      endDate: scheduleMap[_keyEndDate],
+      datePosted: scheduleMap[_keyDatePosted],
+      diseases: _diseases.cast<String>(),
+      places: _places.cast<String>(),
+    );
   }
 }

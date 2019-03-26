@@ -7,6 +7,9 @@ class Vaccine {
   static final String _keyManufacturer = 'manufacturer';
   static final String _keyManDate = 'manDate';
   static final String _keyExpDate = 'expDate';
+  static final String _keyDeliveryMode = 'deliveryMode';
+  static final String _keyIsShared = 'isShared';
+  static final String _keyIsUsed = 'isUsed';
   static final String _keyDescription = 'description';
 
   int _id = 0;
@@ -17,6 +20,9 @@ class Vaccine {
   String _manufacturer;
   String _manufactureDate;
   String _expiryDate;
+  String _deliveryMode;
+  bool _isShared = false;
+  bool _isUsed = false;
   String _description;
   bool isSelected = false;
 
@@ -29,6 +35,9 @@ class Vaccine {
     this._manufacturer,
     this._manufactureDate,
     this._expiryDate,
+    this._deliveryMode,
+    this._isShared,
+    this._isUsed,
     this._description,
     this.isSelected,
   );
@@ -41,6 +50,8 @@ class Vaccine {
     this._manufacturer,
     this._manufactureDate,
     this._expiryDate,
+    this._deliveryMode,
+    this._isShared,
     this._description,
   );
 
@@ -53,6 +64,9 @@ class Vaccine {
     this._manufacturer = vaccineMap[_keyManufacturer];
     this._manufactureDate = vaccineMap[_keyManDate];
     this._expiryDate = vaccineMap[_keyExpDate];
+    this._deliveryMode = vaccineMap[_keyDeliveryMode];
+    this._isShared = vaccineMap[_keyIsShared];
+    this._isUsed = vaccineMap[_keyIsUsed];
     this._description = vaccineMap[_keyDescription];
   }
 
@@ -66,12 +80,16 @@ class Vaccine {
     map[_keyManufacturer] = this.manufacturer;
     map[_keyManDate] = this.manufactureDate;
     map[_keyExpDate] = this.expiryDate;
+    map[_keyDeliveryMode] = this.deliveryMode;
+    map[_keyIsShared] = this.isShared ? "1" : "0";
     map[_keyDescription] = this.description;
 
     return map;
   }
 
   String get description => this._description;
+
+  String get deliveryMode => _deliveryMode;
 
   String get expiryDate => this._expiryDate;
 
@@ -88,4 +106,8 @@ class Vaccine {
   String get vIdNo => this._vIdNo;
 
   int get id => this._id;
+
+  bool get isShared => _isShared;
+
+  bool get isUsed => _isUsed;
 }

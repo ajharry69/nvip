@@ -89,9 +89,8 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
                   "No vaccination center(s) / place(s) of vaccinations found. "
                   "Press the (+) sign to add a new record.";
 
-              var isTokenError = snapshot.error
-                  .toString()
-                  .contains(Constants.tokenErrorType);
+              var isTokenError =
+                  snapshot.error.toString().contains(Constants.tokenErrorType);
 
               return isTokenError
                   ? TokenErrorWidget()
@@ -149,10 +148,15 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
                           onSort: (ci, isSortAscending) {},
                         ),
                         DataColumn(
-                          label: Text("Name"),
-                          onSort: (ci, isSortAscending) =>
-                              _sort<String>((c) => c.county, ci, isSortAscending),
+                          label: Text("County"),
+                          onSort: (ci, isSortAscending) => _sort<String>(
+                              (c) => c.county, ci, isSortAscending),
                         ),
+//                        DataColumn(
+//                          label: Text("Sub County"),
+//                          onSort: (ci, isSortAscending) => _sort<String>(
+//                              (c) => c.subCounty, ci, isSortAscending),
+//                        ),
                       ],
                       source: _tableDataSource,
                     ),

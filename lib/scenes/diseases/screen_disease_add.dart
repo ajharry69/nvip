@@ -38,8 +38,11 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
   bool _isRequestSent = false;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
-  TextEditingController _nameController;
-  TextEditingController _descriptionController;
+  TextEditingController _nameController,
+      _vaccineController,
+      _spreadByController,
+      _symptomsController,
+      _complicationsController;
 
   __DiseaseScreenBodyState(this.callerId, this.disease);
 
@@ -47,7 +50,10 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
   void initState() {
     super.initState();
     _nameController = TextEditingController();
-    _descriptionController = TextEditingController();
+    _vaccineController = TextEditingController();
+    _spreadByController = TextEditingController();
+    _symptomsController = TextEditingController();
+    _complicationsController = TextEditingController();
 
     setState(() {
       _nameController.text = disease?.name;
@@ -57,7 +63,10 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
   @override
   void dispose() {
     _nameController.dispose();
-    _descriptionController.dispose();
+    _vaccineController.dispose();
+    _spreadByController.dispose();
+    _symptomsController.dispose();
+    _complicationsController.dispose();
     super.dispose();
   }
 
@@ -103,11 +112,67 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
                 padding:
                     const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
                 child: TextFormField(
-                  controller: _descriptionController,
+                  controller: _vaccineController,
+                  decoration: InputDecoration(
+                    labelText: "Vaccine*",
+                    helperText: "name of vaccine for preventing disease",
+                  ),
+                  validator: (val) {
+                    if (val.isEmpty) {
+                      return "vaccine name is required";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                child: TextFormField(
+                  controller: _spreadByController,
                   maxLines: 3,
                   decoration: InputDecoration(
-                    labelText: "Description",
-                    helperText: "brief description of disease",
+                    labelText: "Spread By*",
+                    helperText:
+                        "way disease is spread (separated by comma ',')",
+                  ),
+                  validator: (val) {
+                    if (val.isEmpty) {
+                      return "disease spreading methods is required";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                child: TextFormField(
+                  controller: _symptomsController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: "Symptoms*",
+                    helperText:
+                        "signs and symptoms of disease (separated by comma ',')",
+                  ),
+                  validator: (val) {
+                    if (val.isEmpty) {
+                      return "disease symptoms is required";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                child: TextFormField(
+                  controller: _complicationsController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: "Complications",
+                    helperText:
+                        "complications brought by the disease (separated by comma ',')",
                   ),
                   validator: (val) => null,
                 ),
@@ -138,10 +203,17 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
   void _submitDisease() async {
     try {
       String name = _nameController.text;
-      String description = _descriptionController.text;
+      String vaccine = _vaccineController.text;
+      List<String> spreadBy =
+          Constants.getCompactedCSV(_spreadByController.text).split(',');
+      List<String> symptoms =
+          Constants.getCompactedCSV(_symptomsController.text).split(',');
+      List<String> complications =
+          Constants.getCompactedCSV(_complicationsController.text).split(',');
 
       var user = await UserCache().currentUser;
-      var disease = Disease.serverParams(name, description);
+      var disease = Disease.serverParams(
+          name, vaccine, spreadBy, symptoms, complications);
       var sr = await DiseaseDataRepo().addDisease(disease, user.id);
       _onResponseReceived(isError: sr.isError, message: sr.message);
     } on Exception catch (err) {
@@ -158,7 +230,10 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
           : Constants.showSnackBar(_scaffoldKey, message);
       if (!isError) {
         _nameController.text = '';
-        _descriptionController.text = '';
+        _vaccineController.text = '';
+        _spreadByController.text = '';
+        _symptomsController.text = '';
+        _complicationsController.text = '';
       }
     });
   }

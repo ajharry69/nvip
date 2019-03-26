@@ -12,6 +12,18 @@ class DiseasesTableDataSource extends DataTableSource {
     assert(index >= 0);
     if (index >= _diseases.length) return null;
     final Disease disease = _diseases[index];
+    String spreadBy = "";
+    String symptoms = "";
+    String complications = "";
+    disease.spreadBy.forEach((s) {
+      spreadBy += "- $s\n";
+    });
+    disease.symptoms.forEach((s) {
+      symptoms += "- $s\n";
+    });
+    disease.complications.forEach((c) {
+      complications += "- $c\n";
+    });
     return DataRow.byIndex(
       index: index,
       selected: disease.isSelected,
@@ -19,6 +31,10 @@ class DiseasesTableDataSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text("${index + 1}")),
         DataCell(Text(disease.name)),
+        DataCell(Text(disease.vaccine)),
+        DataCell(Text(spreadBy)),
+        DataCell(Text(symptoms)),
+        DataCell(Text(complications)),
 //        DataCell(Text(disease.description ?? "")),
       ],
     );

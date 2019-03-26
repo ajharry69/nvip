@@ -199,9 +199,7 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
               }
             }
 
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return Center(child: CircularProgressIndicator());
           },
         ),
       ),

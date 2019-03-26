@@ -20,6 +20,7 @@ class Constants {
   static final String keyMessage = 'message';
   static final String keyDebugMsg = 'debugMsg';
   static final String keyToken = 'token';
+  static final String keyChartData = 'chartData';
 
   // Constant Dependent
   static final String keyUser = 'user';
@@ -58,6 +59,7 @@ class Constants {
       "Kindly sign in again using the button labeled 'SIGN IN' to start a new session.";
   static const defaultDeviceToken = "deviceId";
   static String tokenErrorType = "UnauthorizedRequestException";
+  static final graphHeight = 300.0;
   static final double dividerSize = 5.0;
   static final int initialTimeout = 30;
   static final double buttonRadius = 5.0;
@@ -85,8 +87,16 @@ class Constants {
 
   static final List<int> monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 
-  /// @param isTrue: a condition that MUST return true in order for the
-  /// @param customMessage to be thrown as an error message
+  static String getCompactedCSV(String preProcessed) {
+    String csv = preProcessed != null && preProcessed != "" ? preProcessed : "";
+    while (csv.contains(', ')) {
+      csv = csv.replaceAll(', ', ',');
+    }
+    return csv;
+  }
+
+  /// @param [isTrue] a condition that MUST return true in order for the
+  /// @param [customMessage] to be thrown as an error message
   static String isDateAndFormatCorrect({
     @required String date,
     @required String emptyDateMessage,
@@ -498,6 +508,10 @@ class Urls {
   static final String _educativePostsRoot = "$_postsRoot/educative";
   static final String _schedulePostsRoot = "$_postsRoot/schedules";
   static final String mailSendTempPass = "$_baseAPIUrl/mail/sendTempPass.php";
+
+  static String get countyChartData => "$_baseAPIUrl/charts/countyWide.php";
+
+  static String get nationChartData => "$_baseAPIUrl/charts/countryWide.php";
 
   static String getImmunizations(
           {String userId, String no = Constants.immunizationRecNoAll}) =>

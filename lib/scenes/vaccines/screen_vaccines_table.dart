@@ -97,9 +97,8 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
                   "${Constants.refinedExceptionMessage(snapshot.error)} "
                   "Press the (+) button to add a new vaccine.";
 
-              var isTokenError = snapshot.error
-                  .toString()
-                  .contains(Constants.tokenErrorType);
+              var isTokenError =
+                  snapshot.error.toString().contains(Constants.tokenErrorType);
 
               return isTokenError
                   ? TokenErrorWidget()
@@ -117,7 +116,13 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
                       : _defaultRowsPerPage;
                   return SingleChildScrollView(
                     child: PaginatedDataTable(
-                      header: Text("Vaccines"),
+                      header: Text(
+                        "Vaccines Table",
+                        style: Theme.of(context).textTheme.title.merge(
+                            TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w700)),
+                      ),
                       sortColumnIndex: _columnIndex,
                       sortAscending: _isSortAscending,
                       onSelectAll: (isAllChecked) =>
@@ -188,6 +193,20 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
                           tooltip: "Date of Expiry",
                           onSort: (ci, isAscending) => _sort<String>(
                               (v) => v.expiryDate, ci, isAscending),
+                        ),
+                        DataColumn(
+                          label: Text("Delivery Mode"),
+                          tooltip: "Delivery Mode",
+                          onSort: (ci, isAscending) => _sort<String>(
+                              (v) => v.deliveryMode, ci, isAscending),
+                        ),
+                        DataColumn(
+                          label: Text("Shareable"),
+                          tooltip: "Can be shared",
+                        ),
+                        DataColumn(
+                          label: Text("Used"),
+                          tooltip: "is used",
                         ),
                       ],
                       source: _tableDataSource,

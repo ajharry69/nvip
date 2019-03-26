@@ -11,8 +11,7 @@ class DiseaseDataRepo {
   Future<ServerResponse> addDisease(Disease disease, String userId) async {
     try {
       return ServerResponse.fromMap(await _networkUtils.post(Urls.diseaseAdd,
-          body: disease.toMapAdd(userId),
-          headers: await Constants.httpHeaders()));
+          body: disease.toMap(), headers: await Constants.httpHeaders()));
     } on Exception catch (err) {
       throw Exception(err);
     }

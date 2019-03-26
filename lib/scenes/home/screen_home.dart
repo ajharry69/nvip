@@ -70,85 +70,85 @@ class _HomePageState extends State<_HomePage>
   }
 
   Widget buildScaffoldContent() => NestedScrollView(
-      controller: _scrollController,
-      headerSliverBuilder: (context, isInnerBoxScrolled) {
-        var isSignedIn = _user != null;
-        return <Widget>[
-          SliverAppBar(
-            title: Text(
-              widget.title,
-              textScaleFactor: Constants.defaultScaleFactor,
-              style: TextStyle(
-                fontFamily: "Kalam",
-                letterSpacing: 5.5,
-                fontWeight: FontWeight.w700,
+        controller: _scrollController,
+        headerSliverBuilder: (context, isInnerBoxScrolled) {
+          var isSignedIn = _user != null;
+          return <Widget>[
+            SliverAppBar(
+              title: Text(
+                widget.title,
+                textScaleFactor: Constants.defaultScaleFactor,
+                style: TextStyle(
+                  fontFamily: "Kalam",
+                  letterSpacing: 5.5,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-            pinned: true,
-            floating: true,
-            forceElevated: isInnerBoxScrolled,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(isSignedIn ? Icons.exit_to_app : Icons.person_add),
-                tooltip: isSignedIn ? "Signout" : "Sign In / Create Account",
-                onPressed: () {
-                  _signOut(context);
-                },
-              ),
-              PopupMenuButton<_HomeMenuItems>(
-                onSelected: (itemValue) {
-                  if (itemValue == _HomeMenuItems.Logout) {
+              pinned: true,
+              floating: true,
+              forceElevated: isInnerBoxScrolled,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(isSignedIn ? Icons.exit_to_app : Icons.person_add),
+                  tooltip: isSignedIn ? "Signout" : "Sign In / Create Account",
+                  onPressed: () {
                     _signOut(context);
-                  } else if (itemValue == _HomeMenuItems.Settings) {
+                  },
+                ),
+                PopupMenuButton<_HomeMenuItems>(
+                  onSelected: (itemValue) {
+                    if (itemValue == _HomeMenuItems.Logout) {
+                      _signOut(context);
+                    } else if (itemValue == _HomeMenuItems.Settings) {
 //                        SystemChannels.platform
 //                            .invokeMethod('SystemNavigator.pop');
-                  } else {
-                    Constants.showSnackBar(_scaffoldKey, "Unknown item");
-                  }
-                },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<_HomeMenuItems>>[
-                      PopupMenuItem<_HomeMenuItems>(
-                        value: _HomeMenuItems.Settings,
-                        child: ListTile(title: Text("Settings")),
-                      ),
-                    ],
-              )
-            ],
-            bottom: _tabController != null
-                ? TabBar(
-                    controller: _tabController,
-                    isScrollable: false,
-                    tabs: [
-                      Tab(
-                        icon: Icon(Icons.record_voice_over),
-                        text: Constants.tabTitleEducative,
-                      ),
-                      Tab(
-                        icon: Icon(Icons.schedule),
-                        text: Constants.tabTitleSchedule,
-                      ),
-                      Tab(
-                        icon: Icon(Icons.child_care),
-                        text: Constants.tabTitleChildren,
-                      ),
-                    ],
-                  )
-                : null,
-          ),
-        ];
-      },
-      body: _tabController != null
-          ? TabBarView(
-              controller: _tabController,
-              children: [
-                EducativePostsScreen(_user),
-                SchedulesTableScreen(_user),
-                MyChildrenScreen(_user),
+                    } else {
+                      Constants.showSnackBar(_scaffoldKey, "Unknown item");
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<_HomeMenuItems>>[
+                        PopupMenuItem<_HomeMenuItems>(
+                          value: _HomeMenuItems.Settings,
+                          child: ListTile(title: Text("Settings")),
+                        ),
+                      ],
+                )
               ],
-            )
-          : Container(),
-    );
+              bottom: _tabController != null
+                  ? TabBar(
+                      controller: _tabController,
+                      isScrollable: false,
+                      tabs: [
+                        Tab(
+                          icon: Icon(Icons.record_voice_over),
+                          text: Constants.tabTitleEducative,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.schedule),
+                          text: Constants.tabTitleSchedule,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.child_care),
+                          text: Constants.tabTitleChildren,
+                        ),
+                      ],
+                    )
+                  : null,
+            ),
+          ];
+        },
+        body: _tabController != null
+            ? TabBarView(
+                controller: _tabController,
+                children: [
+                  EducativePostsScreen(_user),
+                  SchedulesTableScreen(_user),
+                  MyChildrenScreen(_user),
+                ],
+              )
+            : Container(),
+      );
 
   Drawer _buildDrawer(BuildContext context) {
     var userRole = _user?.role;
@@ -171,7 +171,7 @@ class _HomePageState extends State<_HomePage>
             isAdmin || isProvider
                 ? ListTile(
                     leading: Icon(Icons.list),
-                    title: Text("Immunizations"),
+                    title: Text("Immunizations Records"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacement(
@@ -187,10 +187,47 @@ class _HomePageState extends State<_HomePage>
             isAdmin
                 ? ListTile(
                     leading: Icon(Icons.pie_chart),
-                    title: Text("Charts"),
+                    title: Text("Immunization Charts & Reports"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(context, Routes.keyCharts);
+                    },
+                  )
+                : Container(),
+            isAdmin || isProvider
+                ? ListTile(
+                    leading: Icon(Icons.child_care),
+                    title: Text("Children Records"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ChildrenTableScreen(
+                                    user: _user,
+                                  )));
+                    },
+                  )
+                : Container(),
+            isAdmin || isProvider
+                ? ListTile(
+                    leading: Icon(Icons.table_chart),
+                    title: Text("Vaccines Records"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                          context, Routes.keyVaccinesTable);
+                    },
+                  )
+                : Container(),
+            isAdmin
+                ? ListTile(
+                    leading: Icon(Icons.hdr_weak),
+                    title: Text("Vaccine-Preventable Diseases"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                          context, Routes.keyDiseasesTable);
                     },
                   )
                 : Container(),
@@ -210,32 +247,6 @@ class _HomePageState extends State<_HomePage>
                     },
                   )
                 : Container(),
-            isAdmin || isProvider
-                ? ListTile(
-                    leading: Icon(Icons.child_care),
-                    title: Text("Children"),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => ChildrenTableScreen(
-                                    user: _user,
-                                  )));
-                    },
-                  )
-                : Container(),
-            isAdmin || isProvider
-                ? ListTile(
-                    leading: Icon(Icons.table_chart),
-                    title: Text("Vaccines"),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(
-                          context, Routes.keyVaccinesTable);
-                    },
-                  )
-                : Container(),
             isAdmin
                 ? ListTile(
                     leading: Icon(Icons.place),
@@ -244,17 +255,6 @@ class _HomePageState extends State<_HomePage>
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(
                           context, Routes.keyPovsTable);
-                    },
-                  )
-                : Container(),
-            isAdmin
-                ? ListTile(
-                    leading: Icon(Icons.hdr_weak),
-                    title: Text("Diseases"),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(
-                          context, Routes.keyDiseasesTable);
                     },
                   )
                 : Container(),

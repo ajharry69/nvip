@@ -41,6 +41,7 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
   TextEditingController _nameController;
+  TextEditingController _subCountyController;
 
   __CenterScreenBodyState(this.callerId, this.center);
 
@@ -49,17 +50,22 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
     super.initState();
     _connectivity = Connectivity();
     _nameController = TextEditingController();
+    _subCountyController = TextEditingController();
     _centersDataRepo = VaccineCentersDataRepo();
 
-    setState(() {
-      _nameController.text = center != null ? center.county : "";
-    });
+    if (center != null) {
+      setState(() {
+        _nameController.text = center.county;
+        _subCountyController.text = center.subCounty;
+      });
+    }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _nameController.dispose();
+    _subCountyController.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,12 +95,29 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
                 child: TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: "Name",
-                    helperText: "name of vaccination center",
+                    labelText: "County*",
+                    helperText: "name of county",
                   ),
                   validator: (val) {
                     if (val.isEmpty) {
-                      return "center name is required";
+                      return "county name is required";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                child: TextFormField(
+                  controller: _subCountyController,
+                  decoration: InputDecoration(
+                    labelText: "Sub County*",
+                    helperText: "name of sub-county in the county above",
+                  ),
+                  validator: (val) {
+                    if (val.isEmpty) {
+                      return "sub-county name is required";
                     }
                     return null;
                   },
@@ -127,7 +150,8 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
     try {
       var result = await _connectivity.checkConnectivity();
       if (result != ConnectivityResult.none) {
-        var center = VaccineCenter.serverParams(_nameController.text);
+        var center = VaccineCenter.serverParams(
+            _nameController.text, _subCountyController.text);
         if (!_isRequestSent) {
           _isRequestSent = true;
           var sr = await _centersDataRepo.addCenter(center);
@@ -138,7 +162,7 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
       }
     } on Exception catch (err) {
       _onResponseReceived(message: Constants.refinedExceptionMessage(err));
-    } finally{
+    } finally {
       _isRequestSent = false;
     }
   }

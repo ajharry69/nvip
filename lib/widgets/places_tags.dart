@@ -24,16 +24,46 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
           top: Constants.defaultPadding / 2,
           right: Constants.defaultPadding,
         ),
-        child: Chip(
+        child: ActionChip(
 //          avatar: CircleAvatar(
 //            child: Center(
 //              child: Text(
-//                disease.initials,
+//                place.initials,
 //                textAlign: TextAlign.center,
 //              ),
 //            ),
 //          ),
           label: Text(place.name),
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Wrap(
+                    children: _getSubCountyWidgets([
+                      "Starehe",
+                      "Kasarani",
+                      "Roysambu",
+                      "Starehe",
+                      "Kasarani",
+                      "Roysambu"
+                    ]).toList(),
+                  );
+                });
+          },
+        ),
+      );
+    }
+  }
+
+  Iterable<Widget> _getSubCountyWidgets(List<String> subCounties) sync* {
+    for (String subCounty in subCounties) {
+      yield Padding(
+        padding: const EdgeInsets.only(
+          top: Constants.defaultPadding / 2,
+          right: Constants.defaultPadding,
+        ),
+        child: Chip(
+          label: Text(subCounty),
         ),
       );
     }

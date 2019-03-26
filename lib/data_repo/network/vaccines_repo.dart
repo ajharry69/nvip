@@ -27,21 +27,21 @@ class VaccineDataRepo {
   }
 
   Future<List<Vaccine>> getVaccines() async {
-    return _networkUtils
-        .get(Urls.getVaccines(), headers: await Constants.httpHeaders())
-        .then(
-      (response) {
-        var sr = ServerResponse.fromMap(response);
+    try {
+      var response = await _networkUtils.get(Urls.getVaccines(),
+          headers: await Constants.httpHeaders());
+      var sr = ServerResponse.fromMap(response);
 
-        if (sr.isError) {
-          print(sr.debugMessage);
-          throw Exception(sr.message);
-        }
-        List netVaccines = response[Constants.keyVaccines];
-        return netVaccines
-            .map((vaccineMap) => Vaccine.fromMap(vaccineMap))
-            .toList();
-      },
-    ).catchError((err) => throw Exception(err.toString()));
+      if (sr.isError) {
+        print(sr.debugMessage);
+        throw Exception(sr.message);
+      }
+      List netVaccines = response[Constants.keyVaccines];
+      return netVaccines
+          .map((vaccineMap) => Vaccine.fromMap(vaccineMap))
+          .toList();
+    } on Exception catch (err) {
+      throw Exception(err.toString());
+    }
   }
 }

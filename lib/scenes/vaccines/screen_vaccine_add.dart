@@ -52,6 +52,8 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
   final VaccineCallerId callerId;
   final PageOperation pageOp;
   List<Disease> _diseaseList = List();
+  final List<String> _deliveryModes = ['Oral', 'Injection', 'Nasal Spray'];
+  final List<String> _shareableStates = ['Yes', 'No'];
 
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
@@ -62,9 +64,26 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
       _manDateTextController,
       _expDateTextController,
       _diseaseTextController,
+      _deliveryModeTextController,
+      _isSharedTextController,
       _descriptionTextController;
 
   __VaccineScreenBodyState(this.vaccine, this.callerId, this.pageOp);
+
+  Future _getDiseases() async {
+    try {
+      var diseases = await DiseaseDataRepo().getDiseases();
+      setState(() {
+        _diseaseList = diseases;
+        if (_diseaseList.length > 0) {
+          _diseaseTextController.text = _diseaseList[0].name;
+        }
+      });
+    } on Exception catch (err) {
+      Constants.showSnackBar(
+          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    }
+  }
 
   @override
   void initState() {
@@ -77,6 +96,8 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
     _manDateTextController = TextEditingController();
     _expDateTextController = TextEditingController();
     _diseaseTextController = TextEditingController();
+    _deliveryModeTextController = TextEditingController();
+    _isSharedTextController = TextEditingController();
     _descriptionTextController = TextEditingController();
 
     setState(() {
@@ -84,17 +105,9 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
       _manDateTextController.text = defaultDate;
     });
 
-    DiseaseDataRepo().getDiseases().then((diseases) {
-      Future(() {
-        setState(() {
-          _diseaseList = diseases;
-          if (_diseaseList.length > 0) {
-            _diseaseTextController.text = _diseaseList[0].name;
-          }
-        });
-      }).catchError((err) => throw Exception(err));
-    }).catchError((err) => Constants.showSnackBar(
-        _scaffoldKey, Constants.refinedExceptionMessage(err)));
+    _deliveryModeTextController.text = _deliveryModes[0];
+    _isSharedTextController.text = _shareableStates[0];
+    _getDiseases();
   }
 
   @override
@@ -107,6 +120,8 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
     _manDateTextController.dispose();
     _expDateTextController.dispose();
     _diseaseTextController.dispose();
+    _deliveryModeTextController.dispose();
+    _isSharedTextController.dispose();
     _descriptionTextController.dispose();
   }
 
@@ -367,6 +382,75 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
+                      bottom: Constants.defaultPadding * 2),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelText: "Delivery Mode*",
+                              helperText: "select vaccine delivery mode",
+                            ),
+                            items: _deliveryModes.map((delivery) {
+                              return DropdownMenuItem<String>(
+                                child: Text(delivery),
+                                value: delivery,
+                              );
+                            }).toList(),
+                            value: _deliveryModeTextController.text,
+                            onChanged: (String selDelivery) {
+                              setState(() {
+                                _deliveryModeTextController.text = selDelivery;
+                              });
+                            },
+                            validator: (val) {
+                              if (val.isEmpty) {
+                                return "vaccine delivery mode is required";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelText: "Is Shareable?*",
+                              helperText: "is vaccine shareable",
+                            ),
+                            items: _shareableStates.map((shared) {
+                              return DropdownMenuItem<String>(
+                                child: Text(shared),
+                                value: shared,
+                              );
+                            }).toList(),
+                            value: _isSharedTextController.text,
+                            onChanged: (String shared) {
+                              setState(() {
+                                _isSharedTextController.text = shared;
+                              });
+                            },
+                            validator: (val) {
+                              if (val.isEmpty) {
+                                return "shareable state required";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
                     bottom: Constants.defaultPadding * 2,
                   ),
                   child: TextFormField(
@@ -416,6 +500,8 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
     String _manufacturer = _manufacturerTextController.text;
     String _manufactureDate = _manDateTextController.text;
     String _expiryDate = _expDateTextController.text;
+    String _deliveryMode = _deliveryModeTextController.text.toUpperCase();
+    bool _isShared = _isSharedTextController.text == 'Yes';
     String _description = _descriptionTextController.text;
     Vaccine vaccine = Vaccine.serverParams(
         _uIdNo,
@@ -425,6 +511,8 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
         _manufacturer,
         _manufactureDate,
         _expiryDate,
+        _deliveryMode,
+        _isShared,
         _description);
     try {
       var result = await Connectivity().checkConnectivity();
