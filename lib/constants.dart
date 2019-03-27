@@ -59,7 +59,7 @@ class Constants {
       "Kindly sign in again using the button labeled 'SIGN IN' to start a new session.";
   static const defaultDeviceToken = "deviceId";
   static String tokenErrorType = "UnauthorizedRequestException";
-  static final graphHeight = 300.0;
+  static final graphHeight = 375.0;
   static final double dividerSize = 5.0;
   static final int initialTimeout = 30;
   static final double buttonRadius = 5.0;
