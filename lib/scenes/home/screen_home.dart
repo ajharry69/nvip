@@ -187,7 +187,7 @@ class _HomePageState extends State<_HomePage>
             isAdmin
                 ? ListTile(
                     leading: Icon(Icons.pie_chart),
-                    title: Text("Immunization Charts & Reports"),
+                    title: Text("Charts & Reports"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(context, Routes.keyCharts);
@@ -223,7 +223,7 @@ class _HomePageState extends State<_HomePage>
             isAdmin
                 ? ListTile(
                     leading: Icon(Icons.hdr_weak),
-                    title: Text("Vaccine-Preventable Diseases"),
+                    title: Text("V-P Diseases Records"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(
@@ -234,7 +234,7 @@ class _HomePageState extends State<_HomePage>
             isAdmin
                 ? ListTile(
                     leading: Icon(Icons.people),
-                    title: Text("Users"),
+                    title: Text("Users Records"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacement(
@@ -250,7 +250,7 @@ class _HomePageState extends State<_HomePage>
             isAdmin
                 ? ListTile(
                     leading: Icon(Icons.place),
-                    title: Text("Centers"),
+                    title: Text("Centers Records"),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushReplacementNamed(

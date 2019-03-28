@@ -107,9 +107,8 @@ class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
                   "${Constants.refinedExceptionMessage(snapshot.error)}. "
                   "Press the button below to register your child(ren).";
 
-              var isTokenError = snapshot.error
-                  .toString()
-                  .contains(Constants.tokenErrorType);
+              var isTokenError =
+                  snapshot.error.toString().contains(Constants.tokenErrorType);
 
               return isTokenError
                   ? TokenErrorWidget()
@@ -117,7 +116,8 @@ class __ChildrenScreenBodyState extends State<_ChildrenScreenBody> {
             } else {
               if (snapshot.hasData) {
                 var childrenList = snapshot.data;
-                _childrenDataSource = ChildrenTableDataSource(childrenList);
+                _childrenDataSource = ChildrenTableDataSource(
+                    children: childrenList, context: context);
                 var tableItemsCount = _childrenDataSource.rowCount;
                 var isRowCountLessDefaultRowsPerPage =
                     tableItemsCount < _defaultRowsPerPage;

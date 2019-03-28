@@ -81,9 +81,8 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
         future: _children,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            var isTokenError = snapshot.error
-                .toString()
-                .contains(Constants.tokenErrorType);
+            var isTokenError =
+                snapshot.error.toString().contains(Constants.tokenErrorType);
 
             return isTokenError
                 ? TokenErrorWidget()
@@ -97,7 +96,8 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
           } else {
             if (snapshot.hasData) {
               var childrenList = snapshot.data;
-              _childrenDataSource = ChildrenTableDataSource(childrenList);
+              _childrenDataSource = ChildrenTableDataSource(
+                  children: childrenList, context: context);
               var tableItemsCount = _childrenDataSource.rowCount;
               var isRowCountLessDefaultRowsPerPage =
                   tableItemsCount < _defaultRowsPerPage;

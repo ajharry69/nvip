@@ -91,26 +91,8 @@ class __CountyChartsBodyState extends State<_CountyChartsBody> {
       if (d.disease == diseaseName) diseases.add(d);
     });
 
-    _sort<num>(
-        diseaseData: diseases, getField: (d) => d.year, isAscending: true);
-    return diseases;
-  }
-
-  void _sort<T>(
-      {List<DiseaseChartData> diseaseData,
-      Comparable<T> getField(DiseaseChartData d),
-      bool isAscending}) {
-    diseaseData.sort((a, b) {
-      if (!isAscending) {
-        final DiseaseChartData c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+    return Constants.getSorted<DiseaseChartData, num>(
+        list: diseases, getField: (d) => d.year, isAscending: true);
   }
 
   Iterable<charts.Series<DiseaseChartData, String>> _getChartDiseasesData(

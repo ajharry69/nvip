@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:nvip/constants.dart';
 import 'package:nvip/models/immunization.dart';
 
 class ImmunizationsTableDataSource extends DataTableSource {
-  final List<Immunization> _immunizations;
+  final List<Immunization> immunizations;
   int _noRowsSelected = 0;
 
-  ImmunizationsTableDataSource(this._immunizations);
+  ImmunizationsTableDataSource(this.immunizations);
 
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= _immunizations.length) return null;
-    final Immunization immunization = _immunizations[index];
+    if (index >= immunizations.length) return null;
+    final Immunization immunization = immunizations[index];
     return DataRow.byIndex(
       index: index,
       selected: immunization.isSelected,
@@ -41,31 +42,22 @@ class ImmunizationsTableDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _immunizations.length;
+  int get rowCount => immunizations.length;
 
   @override
   int get selectedRowCount => _noRowsSelected;
 
   void sort<T>(Comparable<T> getField(Immunization d), bool isAscending) {
-    _immunizations.sort((a, b) {
-      if (isAscending) {
-        final Immunization c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+    Constants.getSorted<Immunization, T>(
+        list: immunizations, getField: getField, isAscending: isAscending);
 
     notifyListeners();
   }
 
   void selectAll(bool isAllChecked) {
-    _immunizations
+    immunizations
         .forEach((immunization) => immunization.isSelected = isAllChecked);
-    _noRowsSelected = isAllChecked ? _immunizations.length : 0;
+    _noRowsSelected = isAllChecked ? immunizations.length : 0;
     notifyListeners();
   }
 }

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:nvip/constants.dart';
 import 'package:nvip/models/user.dart';
 
 class UsersTableDataSource extends DataTableSource {
-  final List<User> _users;
+  final List<User> users;
   int _numOfRowsSelected = 0;
 
-  UsersTableDataSource(this._users);
+  UsersTableDataSource(this.users);
 
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= _users.length) return null;
-    final User user = _users[index];
+    if (index >= users.length) return null;
+    final User user = users[index];
     return DataRow.byIndex(
       index: index,
       selected: user.isSelected,
@@ -51,29 +52,20 @@ class UsersTableDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _users.length;
+  int get rowCount => users.length;
 
   @override
   int get selectedRowCount => _numOfRowsSelected;
 
   void sort<T>(Comparable<T> getField(User d), bool isAscending) {
-    _users.sort((a, b) {
-      if (isAscending) {
-        final User c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+    Constants.getSorted<User, T>(
+        list: users, getField: getField, isAscending: isAscending);
     notifyListeners();
   }
 
   void selectAll(bool isAllChecked) {
-    _users.forEach((user) => user.isSelected = isAllChecked);
-    _numOfRowsSelected = isAllChecked ? _users.length : 0;
+    users.forEach((user) => user.isSelected = isAllChecked);
+    _numOfRowsSelected = isAllChecked ? users.length : 0;
     notifyListeners();
   }
 }

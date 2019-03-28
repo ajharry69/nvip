@@ -89,6 +89,26 @@ class Constants {
 
   static final List<int> monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 
+  static List<T> getSorted<T extends dynamic, X>(
+      {@required List<T> list,
+      @required Comparable<X> getField(T t),
+      bool isAscending = true}) {
+    list.sort((T a, T b) {
+      if (!isAscending) {
+        final T c = a;
+        a = b;
+        b = c;
+      }
+
+      final Comparable<X> c1 = getField(a);
+      final Comparable<X> c2 = getField(b);
+
+      return Comparable.compare(c1, c2);
+    });
+
+    return list;
+  }
+
   static String getCompactedCSV(String preProcessed) {
     String csv = preProcessed != null && preProcessed != "" ? preProcessed : "";
     while (csv.contains(', ')) {
@@ -106,11 +126,11 @@ class Constants {
   }
 
   static String wordInitials(
-      {String str,
-        String delimiter = ' ',
-        bool isResultUpperCase = true,
-        bool isCaseDefault = false,
-        int count = 2}) {
+      {@required String str,
+      String delimiter = ' ',
+      bool isResultUpperCase = true,
+      bool isCaseDefault = false,
+      int count = 2}) {
     if (str == null) throw NullPointerException("String should not be null");
     if (str == '')
       throw NullPointerException("String should not be an empty string");
@@ -118,8 +138,7 @@ class Constants {
       throw DelimiterNotFoundException(
           "'$delimiter' not part of the string '$str'");
 
-    if(delimiter == ' ' && !str.contains(delimiter))
-      delimiter = '';
+    if (delimiter == ' ' && !str.contains(delimiter)) delimiter = '';
 
     var strList = str.split(delimiter);
     var strCharCount = strList.length;

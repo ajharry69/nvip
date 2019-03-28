@@ -44,7 +44,7 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
                     color: Colors.transparent,
                     padding: const EdgeInsets.symmetric(
                       vertical: Constants.defaultPadding,
-                      horizontal: Constants.defaultPadding,
+                      horizontal: Constants.defaultPadding * 2,
                     ),
                     child: Wrap(
                       children: _getSubCountyWidgets([

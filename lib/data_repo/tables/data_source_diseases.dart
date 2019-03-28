@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:nvip/constants.dart';
 import 'package:nvip/models/disease.dart';
 
 class DiseasesTableDataSource extends DataTableSource {
-  final List<Disease> _diseases;
+  final List<Disease> diseases;
   int _numOfRowsSelected = 0;
 
-  DiseasesTableDataSource(this._diseases);
+  DiseasesTableDataSource(this.diseases);
 
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= _diseases.length) return null;
-    final Disease disease = _diseases[index];
+    if (index >= diseases.length) return null;
+    final Disease disease = diseases[index];
     String spreadBy = "";
     String symptoms = "";
     String complications = "";
@@ -44,23 +45,14 @@ class DiseasesTableDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _diseases.length;
+  int get rowCount => diseases.length;
 
   @override
   int get selectedRowCount => _numOfRowsSelected;
 
   void sort<T>(Comparable<T> getField(Disease d), bool isAscending) {
-    _diseases.sort((a, b) {
-      if (isAscending) {
-        final Disease c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+    Constants.getSorted<Disease, T>(
+        list: diseases, getField: getField, isAscending: isAscending);
     notifyListeners();
   }
 
@@ -73,8 +65,8 @@ class DiseasesTableDataSource extends DataTableSource {
   }
 
   void selectAll(bool isAllChecked) {
-    _diseases.forEach((d) => d.isSelected = isAllChecked);
-    _numOfRowsSelected = isAllChecked ? _diseases.length : 0;
+    diseases.forEach((d) => d.isSelected = isAllChecked);
+    _numOfRowsSelected = isAllChecked ? diseases.length : 0;
     notifyListeners();
   }
 }

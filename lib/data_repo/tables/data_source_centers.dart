@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:nvip/constants.dart';
 import 'package:nvip/models/vaccination_center.dart';
 
 class CentersTableDataSource extends DataTableSource {
-  final List<VaccineCenter> _centers;
+  final List<VaccineCenter> centers;
   int _rowsSelectedCount = 0;
 
-  CentersTableDataSource(this._centers);
+  CentersTableDataSource(this.centers);
 
 //  Iterable<Widget> subCountiesWidget(VaccineCenter center)sync*{
 //    yield
@@ -15,8 +16,8 @@ class CentersTableDataSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= _centers.length) return null;
-    final VaccineCenter center = _centers[index];
+    if (index >= centers.length) return null;
+    final VaccineCenter center = centers[index];
     return DataRow.byIndex(
       index: index,
       selected: center.isSelected,
@@ -33,24 +34,14 @@ class CentersTableDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _centers.length;
+  int get rowCount => centers.length;
 
   @override
   int get selectedRowCount => _rowsSelectedCount;
 
-  void sort<T extends Object>(
-      Comparable<T> getField(VaccineCenter d), bool isAscending) {
-    _centers.sort((a, b) {
-      if (isAscending) {
-        final VaccineCenter c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+  void sort<T>(Comparable<T> getField(VaccineCenter d), bool isAscending) {
+    Constants.getSorted<VaccineCenter, T>(
+        list: centers, getField: getField, isAscending: isAscending);
     notifyListeners();
   }
 
@@ -63,8 +54,8 @@ class CentersTableDataSource extends DataTableSource {
   }
 
   void selectAll(bool isAllChecked) {
-    _centers.forEach((center) => center.isSelected = isAllChecked);
-    _rowsSelectedCount = isAllChecked ? _centers.length : 0;
+    centers.forEach((center) => center.isSelected = isAllChecked);
+    _rowsSelectedCount = isAllChecked ? centers.length : 0;
     notifyListeners();
   }
 }

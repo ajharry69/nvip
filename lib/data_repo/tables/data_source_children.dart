@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/models/child.dart';
+import 'package:nvip/models/immunization_dose.dart';
+import 'package:rounded_modal/rounded_modal.dart';
 
 class ChildrenTableDataSource extends DataTableSource {
-  final List<Child> _children;
+  final List<Child> children;
+  final BuildContext context;
   int _childrenSelectedCount = 0;
 
-  ChildrenTableDataSource(this._children);
+  ChildrenTableDataSource({this.children, this.context});
 
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= _children.length) return null;
-    final Child child = _children[index];
+    if (index >= children.length) return null;
+    final Child child = children[index];
     return DataRow.byIndex(
       index: index,
       selected: child.isSelected,
@@ -25,24 +28,15 @@ class ChildrenTableDataSource extends DataTableSource {
       },
       cells: <DataCell>[
         DataCell(Text("${index + 1}")),
-        DataCell(Text(child.birthCertNo),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.sName),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.fName),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.lName),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.gender),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.dob),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.aor),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.fatherId),
-            onTap: () => Constants.showToast(child.fName)),
-        DataCell(Text(child.motherId),
-            onTap: () => Constants.showToast(child.fName)),
+        DataCell(Text(child.birthCertNo), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.sName), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.fName), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.lName), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.gender), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.dob), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.aor), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.fatherId), onTap: () => _onRowSelected(child)),
+        DataCell(Text(child.motherId), onTap: () => _onRowSelected(child)),
       ],
     );
   }
@@ -51,29 +45,124 @@ class ChildrenTableDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _children.length;
+  int get rowCount => children.length;
 
   @override
   int get selectedRowCount => _childrenSelectedCount;
 
   void sort<T>(Comparable<T> getField(Child d), bool isAscending) {
-    _children.sort((Child a, Child b) {
-      if (!isAscending) {
-        final Child c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+    Constants.getSorted<Child, T>(
+        list: children, getField: getField, isAscending: isAscending);
     notifyListeners();
   }
 
   void selectAll(bool isAllChecked) {
-    _children.forEach((child) => child.isSelected = isAllChecked);
-    _childrenSelectedCount = isAllChecked ? _children.length : 0;
+    children.forEach((child) => child.isSelected = isAllChecked);
+    _childrenSelectedCount = isAllChecked ? children.length : 0;
     notifyListeners();
+  }
+
+  void _onRowSelected(Child child) {
+    showRoundedModalBottomSheet(
+      radius: 16,
+      context: context,
+      builder: (BuildContext context) {
+        var sortedDoseList = Constants.getSorted<ImmunizationDose, String>(
+          list: child.immunizationDoses,
+          getField: (d) => d.nextImmunizationDate,
+        );
+        return Container(
+          padding: EdgeInsets.symmetric(
+            vertical: Constants.defaultPadding * 2,
+            horizontal: Constants.defaultPadding * 2,
+          ),
+          child: ListView(
+            children: _listWidgets(child, sortedDoseList).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  Iterable<Widget> _listWidgets(
+      Child child, List<ImmunizationDose> doseList) sync* {
+    var childName =
+        "${child.sName} ${child.fName} ${child.lName}".trimRight().trimLeft();
+    yield Container(
+      padding: EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+      child: Center(
+        child: Text(
+          childName,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.display1.merge(
+                TextStyle(
+                  fontFamily: "Bree_Serif",
+                  fontWeight: FontWeight.w400,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+        ),
+      ),
+    );
+    for (var i = 0; i < doseList.length; i++) {
+      var dose = doseList[i];
+      var diseaseInitials = Constants.wordInitials(str: dose.disease);
+      var lastImmunizationDate = dose.lastImmunizationDate;
+      var nextImmunizationDate = dose.nextImmunizationDate;
+      yield ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.grey.shade300,
+          child: Center(
+            child: Text(
+              diseaseInitials,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              "${dose.disease}(${dose.vaccine})",
+              style: Theme.of(context).textTheme.subhead.merge(
+                    TextStyle(
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+            ),
+            Text(
+              "(${dose.administered}/${dose.recommended} doses)",
+              style: Theme.of(context).textTheme.subhead.merge(
+                    TextStyle(
+                      fontFamily: "Courgette",
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+            ),
+          ],
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                lastImmunizationDate != null && lastImmunizationDate != ''
+                    ? lastImmunizationDate
+                    : "YYYY-MM-DD",
+                style: Theme.of(context).textTheme.body1,
+              ),
+              Text(
+                nextImmunizationDate != null && nextImmunizationDate != ''
+                    ? nextImmunizationDate
+                    : "YYYY-MM-DD",
+                style: Theme.of(context).textTheme.body1,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

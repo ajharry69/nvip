@@ -38,26 +38,8 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
       if (d.disease == diseaseName) diseases.add(d);
     });
 
-    _sort<String>(
-        diseaseData: diseases, getField: (d) => d.disease, isAscending: true);
-    return diseases;
-  }
-
-  void _sort<T>(
-      {List<DiseaseChartData> diseaseData,
-      Comparable<T> getField(DiseaseChartData d),
-      bool isAscending}) {
-    diseaseData.sort((a, b) {
-      if (!isAscending) {
-        final DiseaseChartData c = a;
-        a = b;
-        b = c;
-      }
-
-      final Comparable<T> aValue = getField(a);
-      final Comparable<T> bValue = getField(b);
-      return Comparable.compare(aValue, bValue);
-    });
+    return Constants.getSorted<DiseaseChartData, String>(
+        list: diseases, getField: (d) => d.disease, isAscending: true);
   }
 
   Iterable<charts.Series<DiseaseChartData, String>> _getChartDiseasesData(
