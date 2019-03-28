@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nvip/auth/auth_listener.dart';
 import 'package:nvip/data_repo/cache_db/user_cache.dart';
+import 'package:nvip/exceptions/delimiter_not_found_exception.dart';
+import 'package:nvip/exceptions/null_pointer_exception.dart';
 import 'package:nvip/models/user.dart';
 
 class Constants {
@@ -93,6 +95,56 @@ class Constants {
       csv = csv.replaceAll(', ', ',');
     }
     return csv;
+  }
+
+  static String getCompactedString(String preProcessed) {
+    String str = preProcessed != null && preProcessed != "" ? preProcessed : "";
+    while (str.contains(' ')) {
+      str = str.replaceAll(' ', '');
+    }
+    return str;
+  }
+
+  static String wordInitials(
+      {String str,
+        String delimiter = ' ',
+        bool isResultUpperCase = true,
+        bool isCaseDefault = false,
+        int count = 2}) {
+    if (str == null) throw NullPointerException("String should not be null");
+    if (str == '')
+      throw NullPointerException("String should not be an empty string");
+    if (!str.contains(delimiter) && delimiter != ' ')
+      throw DelimiterNotFoundException(
+          "'$delimiter' not part of the string '$str'");
+
+    if(delimiter == ' ' && !str.contains(delimiter))
+      delimiter = '';
+
+    var strList = str.split(delimiter);
+    var strCharCount = strList.length;
+
+    var c = count;
+    if (c > strCharCount) c = strCharCount;
+
+    var rs = '';
+    for (var i = 0; i < c; i++) {
+      final s = getCompactedString(strList[i]);
+      if (s == null) {
+        ++c;
+        continue;
+      }
+      if (s == '') {
+        ++c;
+        continue;
+      }
+      if (c > strCharCount) break;
+      rs += s.substring(0, 1);
+    }
+
+    return isCaseDefault
+        ? rs
+        : isResultUpperCase ? rs.toUpperCase() : rs.toLowerCase();
   }
 
   /// @param [isTrue] a condition that MUST return true in order for the

@@ -4,6 +4,7 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/chart_data_repo.dart';
 import 'package:nvip/models/chart_data/annual_nation_wide.dart';
 import 'package:nvip/models/chart_data/disease.dart';
+import 'package:nvip/widgets/charts/bar_stacked.dart';
 import 'package:nvip/widgets/charts/bar_group_stacked.dart';
 import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
@@ -38,8 +39,8 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
       if (d.disease == diseaseName) diseases.add(d);
     });
 
-    _sort<num>(
-        diseaseData: diseases, getField: (d) => d.year, isAscending: true);
+    _sort<String>(
+        diseaseData: diseases, getField: (d) => d.disease, isAscending: true);
     return diseases;
   }
 
@@ -69,14 +70,14 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
         id: "$disease(NI)",
         seriesCategory: disease,
         measureFn: (datum, _) => datum.legible - datum.immunized,
-        domainFn: (datum, _) => "${datum.year}",
+        domainFn: (datum, _) => Constants.wordInitials(str: datum.disease),
         data: chartData,
       );
       yield charts.Series<DiseaseChartData, String>(
         id: "$disease(I)",
         seriesCategory: disease,
         measureFn: (datum, _) => datum.immunized,
-        domainFn: (datum, _) => "${datum.year}",
+        domainFn: (datum, _) => Constants.wordInitials(str: datum.disease),
         data: chartData,
       );
     }
@@ -87,7 +88,7 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
       yield Step(
         content: SizedBox(
           height: Constants.graphHeight,
-          child: GroupedStackedBarChart(
+          child: StackedBarChart(
             _getChartDiseasesData(cd.diseaseChartData).toList(),
             animate: true,
           ),
