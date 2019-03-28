@@ -1,3 +1,5 @@
+import 'package:nvip/models/immunization_dose.dart';
+
 class Child {
   static final String _keyId = 'cuid';
   static final String _keyBirthCertNo = 'birthCertNo';
@@ -9,6 +11,7 @@ class Child {
   static final String _keyAor = 'aor';
   static final String _keyFatherId = 'fatherId';
   static final String _keyMotherId = 'motherId';
+  static final _keyImmunizationDoses = 'immunizationDoses';
 
   String _id = "";
   String _birthCertNo = "";
@@ -20,16 +23,29 @@ class Child {
   String _aor = "";
   String _fatherId = "";
   String _motherId = "";
+  List<ImmunizationDose> _immunizationDoses = List();
 
   bool isSelected = false;
 
-  Child(this._id, this._birthCertNo, this._sName, this._fName, this._lName,
-      this._gender, this._dob, this._aor, this._fatherId, this._motherId);
+  Child(
+      this._id,
+      this._birthCertNo,
+      this._sName,
+      this._fName,
+      this._lName,
+      this._gender,
+      this._dob,
+      this._aor,
+      this._fatherId,
+      this._motherId,
+      this._immunizationDoses);
 
   Child.serverParams(this._birthCertNo, this._sName, this._fName, this._lName,
-      this._gender, this._dob, this._aor, this._fatherId, this._motherId);
+      this._gender, this._dob, this._aor, this._fatherId, this._motherId,
+      [this._immunizationDoses]);
 
   Child.fromMap(dynamic childMap) {
+    List doses = childMap[_keyImmunizationDoses];
     this._id = childMap[_keyId];
     this._birthCertNo = childMap[_keyBirthCertNo];
     this._sName = childMap[_keySName];
@@ -40,6 +56,8 @@ class Child {
     this._aor = childMap[_keyAor];
     this._fatherId = childMap[_keyFatherId];
     this._motherId = childMap[_keyMotherId];
+    this._immunizationDoses =
+        doses.map((dataMap) => ImmunizationDose.fromMap(dataMap)).toList();
   }
 
   Map<String, dynamic> toMap() {
@@ -57,6 +75,8 @@ class Child {
 
     return map;
   }
+
+  List<ImmunizationDose> get immunizationDoses => this._immunizationDoses;
 
   String get motherId => this._motherId;
 
