@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/models/place_chip.dart';
+import 'package:rounded_modal/rounded_modal.dart';
 
 class PlacesChipTags extends StatefulWidget {
   final List<dynamic> centers;
@@ -35,18 +36,26 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
 //          ),
           label: Text(place.name),
           onPressed: () {
-            showModalBottomSheet(
+            showRoundedModalBottomSheet(
+                radius: 16,
                 context: context,
                 builder: (context) {
-                  return Wrap(
-                    children: _getSubCountyWidgets([
-                      "Starehe",
-                      "Kasarani",
-                      "Roysambu",
-                      "Starehe",
-                      "Kasarani",
-                      "Roysambu"
-                    ]).toList(),
+                  return Container(
+                    color: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Constants.defaultPadding,
+                      horizontal: Constants.defaultPadding,
+                    ),
+                    child: Wrap(
+                      children: _getSubCountyWidgets([
+                        "Starehe",
+                        "Kasarani",
+                        "Roysambu",
+                        "Starehe",
+                        "Kasarani",
+                        "Roysambu"
+                      ]).toList(),
+                    ),
                   );
                 });
           },
