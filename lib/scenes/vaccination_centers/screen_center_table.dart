@@ -27,7 +27,7 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
   CentersTableDataSource _tableDataSource;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _sort<T>(Comparable<T> getField(VaccineCenter c), int columnIndex,
+  void _sort<T>(Comparable<T> getField(TableSubCounty c), int columnIndex,
       bool isSortAscending) {
     _tableDataSource?.sort(getField, isSortAscending);
     setState(() {
@@ -98,7 +98,16 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
             } else {
               if (snapshot.hasData) {
                 var centerList = snapshot.data;
-                _tableDataSource = CentersTableDataSource(centerList);
+                final List<TableSubCounty> tableSubCountyList = List();
+                centerList.forEach((center) {
+                  center.subCounties.forEach((sc) {
+                    tableSubCountyList.add(TableSubCounty(
+                        id: sc.id, name: sc.name, county: center.county));
+                    return sc;
+                  });
+                  return center;
+                });
+                _tableDataSource = CentersTableDataSource(tableSubCountyList);
                 if (_showTableView) {
                   var tableItemsCount = _tableDataSource.rowCount;
                   var isRowCountLessDefaultRowsPerPage =
@@ -152,21 +161,21 @@ class __CentersScreenBodyState extends State<_CentersScreenBody> {
                           onSort: (ci, isSortAscending) => _sort<String>(
                               (c) => c.county, ci, isSortAscending),
                         ),
-//                        DataColumn(
-//                          label: Text("Sub County"),
-//                          onSort: (ci, isSortAscending) => _sort<String>(
-//                              (c) => c.subCounty, ci, isSortAscending),
-//                        ),
+                        DataColumn(
+                          label: Text("Sub County"),
+                          onSort: (ci, isSortAscending) =>
+                              _sort<String>((c) => c.name, ci, isSortAscending),
+                        ),
                       ],
                       source: _tableDataSource,
                     ),
                   );
                 } else {
                   return ListView.separated(
-                    itemCount: centerList.length,
+                    itemCount: tableSubCountyList.length,
                     separatorBuilder: (context, position) => Divider(),
                     itemBuilder: (context, position) {
-                      var center = centerList[position];
+                      var center = tableSubCountyList[position];
                       bool _selected = center.isSelected;
                       return ListTile(
                         leading: Text(

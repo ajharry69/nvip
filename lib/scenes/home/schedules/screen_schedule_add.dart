@@ -345,7 +345,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
       var result = await Connectivity().checkConnectivity();
 
       if (result != ConnectivityResult.none) {
-        var schedule = Schedule(
+        var schedule1 = Schedule(
           title: title,
           description: description,
           startDate: startDate,
@@ -357,8 +357,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
         if (!_isRequestSent) {
           _isRequestSent = true;
           var sr = await (schedule == null
-              ? ScheduleDataRepo().addSchedule(schedule)
-              : ScheduleDataRepo().updateSchedule(schedule));
+              ? ScheduleDataRepo().addSchedule(schedule1)
+              : ScheduleDataRepo().updateSchedule(schedule1));
 
           Constants.showSnackBar(_scaffoldKey, sr.message);
         }

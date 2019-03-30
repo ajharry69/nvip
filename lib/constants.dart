@@ -76,12 +76,13 @@ class Constants {
   static const String childrenRecNoParent = "PARENT";
 
   static const String defaultDateFormat = "yyyy-MM-dd";
+  static const String dateFormatLong = "EEE, MMM d, ''yy";
   static const errInvalidDate =
       "invalid date or date format. Use: YYYY-MM-DD format";
 
   // Cache Database
   static final String dbName = '${appName.toLowerCase()}.db';
-  static final int dbVersion = 1;
+  static final int dbVersion = 3;
 
   static final IconData backIcon = Icons.arrow_back;
 
@@ -475,10 +476,18 @@ class SQLQueries {
       "(${UserRolesTable.colId} INTEGER AUTO_INCREMENT PRIMARY KEY, "
       "${UserRolesTable.colName} VARCHAR(50) NOT NULL);";
 
+  static final String createCentersTable = "CREATE TABLE IF NOT EXISTS "
+      "${CentersTable.tableName}(${CentersTable.colCounty} VARCHAR(100) "
+      "PRIMARY KEY, ${CentersTable.colSubCountiesCount} INTEGER, "
+      "${CentersTable.colSubCounties} LONGTEXT);";
+
   // Delete tables...
 
   static final String dropUserRolesTable =
       "DROP TABLE IF EXISTS ${UserRolesTable.tableName};";
+
+  static final String dropCentersTable =
+      "DROP TABLE IF EXISTS ${CentersTable.tableName};";
 }
 
 class UserRolesTable {
@@ -496,8 +505,9 @@ class DiseasesTable {
 
 class CentersTable {
   static final String tableName = 'centers';
-  static final String colId = 'id';
-  static final String colName = 'name';
+  static final String colCounty = 'county';
+  static final String colSubCountiesCount = 'subCountiesCount';
+  static final String colSubCounties = 'subCounties';
 }
 
 class UserTable {

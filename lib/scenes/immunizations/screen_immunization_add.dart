@@ -343,8 +343,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 MaterialPageRoute(
                     builder: (_) => AddVaccinationCenterScreen(
                           callerId: AddCenterCallerId.immunization,
-                          center: VaccineCenter(
-                              0, _selectedCenter, _selectedCenter),
+                          center: VaccineCenter(subCounty: _selectedCenter),
                         )));
           },
         );

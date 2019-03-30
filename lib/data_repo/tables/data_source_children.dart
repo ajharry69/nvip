@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/models/child.dart';
 import 'package:nvip/models/immunization_dose.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 
 class ChildrenTableDataSource extends DataTableSource {
+  final dateFormat = DateFormat(Constants.dateFormatLong);
   final List<Child> children;
   final BuildContext context;
   int _childrenSelectedCount = 0;
@@ -107,61 +109,78 @@ class ChildrenTableDataSource extends DataTableSource {
     for (var i = 0; i < doseList.length; i++) {
       var dose = doseList[i];
       var diseaseInitials = Constants.wordInitials(str: dose.disease);
-      var lastImmunizationDate = dose.lastImmunizationDate;
+//      var lastImmunizationDate = dose.lastImmunizationDate;
       var nextImmunizationDate = dose.nextImmunizationDate;
-      yield ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.grey.shade300,
-          child: Center(
-            child: Text(
-              diseaseInitials,
-              textAlign: TextAlign.center,
+      yield Column(
+        children: <Widget>[
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.grey.shade300,
+              child: Center(
+                child: Text(
+                  diseaseInitials,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "${dose.disease}(${dose.vaccine})",
+                  style: Theme.of(context).textTheme.subhead.merge(
+                        TextStyle(
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                ),
+                Text(
+                  "(${dose.administered}/${dose.recommended} doses)",
+                  style: Theme.of(context).textTheme.subhead.merge(
+                        TextStyle(
+                          fontFamily: "Courgette",
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                ),
+              ],
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+//              Text(
+//                lastImmunizationDate != null && lastImmunizationDate != ''
+//                    ? dateFormat.format(DateTime.tryParse(lastImmunizationDate))
+//                    : "YYYY-MM-DD",
+//                style: Theme.of(context).textTheme.body1,
+//              ),
+                  Text(
+                    nextImmunizationDate != null && nextImmunizationDate != ''
+                        ? dateFormat
+                            .format(DateTime.tryParse(nextImmunizationDate))
+                        : "YYYY-MM-DD",
+                    style: Theme.of(context).textTheme.body1,
+                  ),
+                  Text(
+                    "Approx, ${dose.daysToNext} days",
+                    style: Theme.of(context).textTheme.body1,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              "${dose.disease}(${dose.vaccine})",
-              style: Theme.of(context).textTheme.subhead.merge(
-                    TextStyle(
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.defaultPadding),
+            child: Divider(
+              height: 1,
+              color: Colors.black54,
             ),
-            Text(
-              "(${dose.administered}/${dose.recommended} doses)",
-              style: Theme.of(context).textTheme.subhead.merge(
-                    TextStyle(
-                      fontFamily: "Courgette",
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-            ),
-          ],
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                lastImmunizationDate != null && lastImmunizationDate != ''
-                    ? lastImmunizationDate
-                    : "YYYY-MM-DD",
-                style: Theme.of(context).textTheme.body1,
-              ),
-              Text(
-                nextImmunizationDate != null && nextImmunizationDate != ''
-                    ? nextImmunizationDate
-                    : "YYYY-MM-DD",
-                style: Theme.of(context).textTheme.body1,
-              ),
-            ],
-          ),
-        ),
+          )
+        ],
       );
     }
   }

@@ -1,37 +1,85 @@
+import 'dart:convert';
+
 class VaccineCenter {
-  static final String _keyId = 'id';
+  static final String _keySubCountiesCount = 'subCountiesCount';
   static final String _keyCounty = 'county';
   static final String _keySubCounty = 'subCounty';
   static final String _keySubCounties = 'subCounties';
 
-  int _id = 0;
-  String _county;
-  String _subCounty;
-  List<String> _subCounties = List();
+  final int subCountiesCount;
+  final String county, subCounty;
+  final List<SubCounty> subCounties;
   bool isSelected = false;
 
-  VaccineCenter(this._id, this._county, this._subCounty);
+  VaccineCenter(
+      {this.subCountiesCount, this.county, this.subCounty, this.subCounties});
 
-  VaccineCenter.serverParams(this._county, this._subCounty);
-
-  VaccineCenter.fromMap(dynamic centerMap) {
-    this._id = centerMap[_keyId];
-    this._county = centerMap[_keyCounty];
+  factory VaccineCenter.fromMap(dynamic centerMap) {
     List cs = centerMap[_keySubCounties];
-    this._subCounties = cs.cast<String>();
+    return VaccineCenter(
+      county: centerMap[_keyCounty],
+      subCountiesCount: centerMap[_keySubCountiesCount],
+      subCounties: cs.map((dataMap) => SubCounty.fromMap(dataMap)).toList(),
+    );
+  }
+
+  factory VaccineCenter.fromCacheMap(dynamic centerMap) {
+    List cs = jsonDecode(centerMap[_keySubCounties]);
+    return VaccineCenter(
+      county: centerMap[_keyCounty],
+      subCountiesCount: centerMap[_keySubCountiesCount],
+      subCounties: cs.map((dataMap) => SubCounty.fromMap(dataMap)).toList(),
+    );
   }
 
   Map<String, dynamic> toMap() => {
-        _keyId: this.id.toString(),
         _keyCounty: this.county,
         _keySubCounty: this.subCounty,
       };
 
-  int get id => this._id;
+  Map<String, dynamic> toMapForCaching() => {
+        _keyCounty: this.county,
+        _keySubCountiesCount: this.subCountiesCount,
+        _keySubCounties: jsonEncodedSubCountyList
+      };
 
-  String get county => this._county;
+  String get jsonEncodedSubCountyList {
+    String xyz = "";
+    var i = 0;
+    subCounties.forEach((sc) {
+      xyz += i < subCounties.length - 1 ? "${sc.toString()}," : sc.toString();
+      ++i;
+      return sc;
+    });
 
-  String get subCounty => this._subCounty;
+    return "[$xyz]";
+  }
+}
 
-  List<String> get subCounties => this._subCounties;
+class SubCounty {
+  static final _keyId = "id";
+  static final _keyName = "name";
+  final int id;
+  final String name;
+
+  SubCounty({this.id, this.name});
+
+  factory SubCounty.fromMap(dynamic dataMap) =>
+      SubCounty(id: dataMap[_keyId], name: dataMap[_keyName]);
+
+  @override
+  String toString() =>
+      "{\"$_keyId\":${this.id},\"$_keyName\":\"${this.name}\"}";
+}
+
+class TableSubCounty {
+  static final _keyId = "id";
+  static final _keyName = "name";
+  static final String _keyCounty = 'county';
+
+  final int id;
+  final String name, county;
+  bool isSelected = false;
+
+  TableSubCounty({this.id, this.name, this.county});
 }

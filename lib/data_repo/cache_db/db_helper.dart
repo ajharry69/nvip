@@ -36,6 +36,7 @@ class DbHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(SQLQueries.createUserTokenTable);
     await db.execute(SQLQueries.createUserRolesTable);
+    await db.execute(SQLQueries.createCentersTable);
 
     await db.insert(UserRolesTable.tableName,
         {UserRolesTable.colName: Constants.privilegeAdmin},
@@ -52,6 +53,7 @@ class DbHelper {
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     await db.execute(SQLQueries.dropUserRolesTable);
+    await db.execute(SQLQueries.dropCentersTable);
 
     print("Tables deleted.");
     await _onCreate(db, newVersion);

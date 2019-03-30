@@ -3,21 +3,16 @@ import 'package:nvip/constants.dart';
 import 'package:nvip/models/vaccination_center.dart';
 
 class CentersTableDataSource extends DataTableSource {
-  final List<VaccineCenter> centers;
+  final List<TableSubCounty> tableSubCountyList;
   int _rowsSelectedCount = 0;
 
-  CentersTableDataSource(this.centers);
-
-//  Iterable<Widget> subCountiesWidget(VaccineCenter center)sync*{
-//    yield
-//    for()
-//  }
+  CentersTableDataSource(this.tableSubCountyList);
 
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
-    if (index >= centers.length) return null;
-    final VaccineCenter center = centers[index];
+    if (index >= tableSubCountyList.length) return null;
+    final TableSubCounty center = tableSubCountyList[index];
     return DataRow.byIndex(
       index: index,
       selected: center.isSelected,
@@ -25,7 +20,7 @@ class CentersTableDataSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(Text("${index + 1}")),
         DataCell(Text(center.county)),
-//        DataCell(Text(center.subCounty)),
+        DataCell(Text(center.name)),
       ],
     );
   }
@@ -34,18 +29,18 @@ class CentersTableDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => centers.length;
+  int get rowCount => tableSubCountyList.length;
 
   @override
   int get selectedRowCount => _rowsSelectedCount;
 
-  void sort<T>(Comparable<T> getField(VaccineCenter d), bool isAscending) {
-    Constants.getSorted<VaccineCenter, T>(
-        list: centers, getField: getField, isAscending: isAscending);
+  void sort<T>(Comparable<T> getField(TableSubCounty d), bool isAscending) {
+    Constants.getSorted<TableSubCounty, T>(
+        list: tableSubCountyList, getField: getField, isAscending: isAscending);
     notifyListeners();
   }
 
-  void onRowSelected(VaccineCenter center, bool selected) {
+  void onRowSelected(TableSubCounty center, bool selected) {
     if (center.isSelected != selected) {
       _rowsSelectedCount += selected ? 1 : -1;
       center.isSelected = selected;
@@ -54,8 +49,8 @@ class CentersTableDataSource extends DataTableSource {
   }
 
   void selectAll(bool isAllChecked) {
-    centers.forEach((center) => center.isSelected = isAllChecked);
-    _rowsSelectedCount = isAllChecked ? centers.length : 0;
+    tableSubCountyList.forEach((center) => center.isSelected = isAllChecked);
+    _rowsSelectedCount = isAllChecked ? tableSubCountyList.length : 0;
     notifyListeners();
   }
 }

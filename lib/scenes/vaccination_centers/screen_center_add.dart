@@ -150,8 +150,8 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
     try {
       var result = await _connectivity.checkConnectivity();
       if (result != ConnectivityResult.none) {
-        var center = VaccineCenter.serverParams(
-            _nameController.text, _subCountyController.text);
+        var center = VaccineCenter(
+            county: _nameController.text, subCounty: _subCountyController.text);
         if (!_isRequestSent) {
           _isRequestSent = true;
           var sr = await _centersDataRepo.addCenter(center);

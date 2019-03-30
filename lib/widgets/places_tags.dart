@@ -4,7 +4,7 @@ import 'package:nvip/models/place_chip.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 
 class PlacesChipTags extends StatefulWidget {
-  final List<dynamic> centers;
+  final List<String> centers;
 
   const PlacesChipTags({Key key, this.centers}) : super(key: key);
 

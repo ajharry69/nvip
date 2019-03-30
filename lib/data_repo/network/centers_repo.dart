@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:nvip/constants.dart';
+import 'package:nvip/data_repo/cache_db/center_cache.dart';
 import 'package:nvip/models/server_response.dart';
 import 'package:nvip/models/vaccination_center.dart';
 import 'package:nvip/utils/network_utils.dart';
 
 class VaccineCentersDataRepo {
-  NetworkUtils _networkUtils = NetworkUtils();
+  final NetworkUtils _networkUtils = NetworkUtils();
+  final CenterCache centerCache = new CenterCache();
 
   Future<ServerResponse> addCenter(VaccineCenter center) async {
     try {
@@ -36,10 +38,11 @@ class VaccineCentersDataRepo {
   }
 
   Future<List<VaccineCenter>> getCenters() async {
-    return _networkUtils
-        .get(Urls.getVaccineCenters(), headers: await Constants.httpHeaders())
-        .then(
-      (response) {
+    try {
+      List<VaccineCenter> centerList = await centerCache.getCenters();
+      if (centerList == null || centerList.isEmpty) {
+        var response = await _networkUtils.get(Urls.getVaccineCenters(),
+            headers: await Constants.httpHeaders());
         var sr = ServerResponse.fromMap(response);
 
         if (sr.isError) {
@@ -47,10 +50,14 @@ class VaccineCentersDataRepo {
           throw Exception(sr.message);
         }
         List netCenters = response[Constants.keyCenters];
-        return netCenters
+        centerList = netCenters
             .map((centerMap) => VaccineCenter.fromMap(centerMap))
             .toList();
-      },
-    ).catchError((err) => throw Exception(err.toString()));
+        await centerCache.saveAllCenters(centerList);
+      }
+      return centerList;
+    } on Exception catch (err) {
+      throw Exception(err.toString());
+    }
   }
 }

@@ -40,8 +40,10 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
   final RegisterCallerId callerId;
   final String birthCertNo;
   bool _isRequestSent = false;
+  VaccineCenter _selectedCounty;
   String _selectedCenter = "";
-  List<VaccineCenter> _centersList = List();
+  List<VaccineCenter> _countyList = List();
+  List<SubCounty> _subCountyList = List();
   static final List<String> _genders = ["Male", "Female"];
   String _selectedGender = _genders[0];
   var _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -57,17 +59,21 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
   __RegisterChildScreenBodyState({this.callerId, this.birthCertNo});
 
   void _getCenters() async {
-    VaccineCentersDataRepo().getCenters().then((centers) {
-      Future(() {
-        setState(() {
-          _centersList = centers;
-          if (_centersList.length > 0) {
-            _selectedCenter = _centersList[0].county;
-          }
-        });
-      }).catchError((err) => throw Exception(err));
-    }).catchError((err) => Constants.showSnackBar(
-        _scaffoldKey, Constants.refinedExceptionMessage(err)));
+    try {
+      var centers = await VaccineCentersDataRepo().getCenters();
+      setState(() {
+        _countyList = centers;
+        if (_countyList.length > 0) {
+          var center = _countyList[0];
+          _selectedCounty = center;
+          _subCountyList = center.subCounties;
+          _selectedCenter = center.subCounties[0].name;
+        }
+      });
+    } on Exception catch (err) {
+      Constants.showSnackBar(
+          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    }
   }
 
   @override
@@ -105,6 +111,8 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
 
   @override
   Widget build(BuildContext context) {
+    const padding16dp = Constants.defaultPadding * 2;
+    var padding32dp = Constants.defaultPadding * 4;
     return WillPopScope(
       onWillPop: () {
         _onBackPressed(context);
@@ -126,14 +134,13 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
           child: Padding(
             padding: EdgeInsets.only(
               top: Constants.defaultPadding * 3,
-              left: Constants.defaultPadding * 4,
-              right: Constants.defaultPadding * 4,
+              left: padding32dp,
+              right: padding32dp,
             ),
             child: ListView(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: TextFormField(
                     keyboardType: TextInputType.numberWithOptions(),
                     controller: _birthCertNoController,
@@ -151,8 +158,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: TextFormField(
                     controller: _sNameController,
                     decoration: InputDecoration(labelText: 'Sir Name'),
@@ -160,8 +166,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: TextFormField(
                     controller: _fNameController,
                     decoration: InputDecoration(labelText: 'First Name*'),
@@ -175,8 +180,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: TextFormField(
                     controller: _lNameController,
                     decoration: InputDecoration(labelText: 'Last Name'),
@@ -185,7 +189,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: TextFormField(
                     keyboardType: TextInputType.datetime,
@@ -242,16 +246,51 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
-                  child: _centersList.length > 0
+                  child: _countyList.length > 0
+                      ? DropdownButtonFormField<VaccineCenter>(
+                          decoration: InputDecoration(
+                            labelText: "C.O.R*",
+                            helperText: "County of Residence",
+                          ),
+                          items: _countyList.map((center) {
+                            var name = center.county;
+                            return DropdownMenuItem<VaccineCenter>(
+                              child: Text(name),
+                              value: center,
+                            );
+                          }).toList(),
+                          value: _selectedCounty,
+                          onChanged: (selCounty) {
+                            setState(() {
+                              _subCountyList = selCounty.subCounties;
+                              _selectedCounty = selCounty;
+                              _selectedCenter = _subCountyList[0].name;
+                            });
+                          },
+                          validator: (val) {
+                            if (val == null) {
+                              return 'Required*';
+                            } else {
+                              return null;
+                            }
+                          },
+                        )
+                      : null,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(
+                    bottom: padding16dp,
+                  ),
+                  child: _subCountyList.length > 0
                       ? DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: "A.O.R*",
-                            helperText: "child's Area of Residence",
+                            labelText: "S.O.R*",
+                            helperText: "Subcounty of Residence",
                           ),
-                          items: _centersList.map((center) {
-                            var name = center.county;
+                          items: _subCountyList.map((subCounty) {
+                            var name = subCounty.name;
                             return DropdownMenuItem<String>(
                               child: Text(name),
                               value: name,
@@ -265,7 +304,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                           },
                           validator: (val) {
                             if (val.isEmpty) {
-                              return 'Area of Residence is required';
+                              return 'Required*';
                             } else {
                               return null;
                             }
@@ -275,7 +314,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
@@ -304,8 +343,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: TextFormField(
                     controller: _motherIdController,
                     decoration: InputDecoration(
@@ -322,8 +360,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: TextFormField(
                     controller: _fatherIdController,
                     decoration: InputDecoration(
@@ -335,7 +372,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                 ),
                 Container(
                   margin: EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: RaisedButton(
                     child: Text(
@@ -392,7 +429,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
     } on Exception catch (err) {
       _resetPage(
           isError: true, message: Constants.refinedExceptionMessage(err));
-    } finally{
+    } finally {
       _isRequestSent = false;
     }
   }
