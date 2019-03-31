@@ -64,10 +64,10 @@ class __SignInScreenBodyState extends State<_SignInScreenBody>
       ),
       body: Container(
         padding: const EdgeInsets.only(
-          top: Constants.defaultPadding * 4,
-          left: Constants.defaultPadding * 4,
-          right: Constants.defaultPadding * 4,
-          bottom: Constants.defaultPadding * 2,
+          top: Dimensions.defaultPadding * 4,
+          left: Dimensions.defaultPadding * 4,
+          right: Dimensions.defaultPadding * 4,
+          bottom: Dimensions.defaultPadding * 2,
         ),
         child: Form(
           key: _formKey,
@@ -95,7 +95,7 @@ class __SignInScreenBodyState extends State<_SignInScreenBody>
         showError
             ? Container(
                 padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                    const EdgeInsets.only(bottom: Dimensions.defaultPadding * 2),
                 child: Text(
                   showError ? errMsg02 : "",
                   softWrap: true,
@@ -106,7 +106,7 @@ class __SignInScreenBodyState extends State<_SignInScreenBody>
             : Container(),
         Padding(
           padding: const EdgeInsets.only(
-            bottom: Constants.defaultPadding * 2,
+            bottom: Dimensions.defaultPadding * 2,
           ),
           child: TextFormField(
             keyboardType: TextInputType.emailAddress,
@@ -179,7 +179,7 @@ class __SignInScreenBodyState extends State<_SignInScreenBody>
           child: RaisedButton(
             child: Text(
               'Sign In'.toUpperCase(),
-              textScaleFactor: Constants.defaultScaleFactor,
+              textScaleFactor: Dimensions.defaultScaleFactor,
               style: Styles.btnTextStyle,
             ),
             onPressed: _isRequestSent
@@ -218,7 +218,7 @@ class __SignInScreenBodyState extends State<_SignInScreenBody>
             },
           ),
         ),
-        Container(width: Constants.defaultPadding),
+        Container(width: Dimensions.defaultPadding),
         Expanded(
           child: RaisedButton(
             child: Text(

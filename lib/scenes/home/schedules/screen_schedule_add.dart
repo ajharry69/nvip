@@ -105,16 +105,16 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
             key: _formKey,
             child: Padding(
               padding: const EdgeInsets.only(
-                top: Constants.defaultPadding * 4,
-                left: Constants.defaultPadding * 4,
-                right: Constants.defaultPadding * 4,
-                bottom: Constants.defaultPadding * 2,
+                top: Dimensions.defaultPadding * 4,
+                left: Dimensions.defaultPadding * 4,
+                right: Dimensions.defaultPadding * 4,
+                bottom: Dimensions.defaultPadding * 2,
               ),
               child: ListView(
                 children: <Widget>[
                   Padding(
                     padding:
-                        const EdgeInsets.only(bottom: Constants.defaultPadding),
+                        const EdgeInsets.only(bottom: Dimensions.defaultPadding),
                     child: TextFormField(
                       controller: _titleController,
                       validator: (String title) {
@@ -133,7 +133,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2,
+                      bottom: Dimensions.defaultPadding * 2,
                     ),
                     child: TextFormField(
                       keyboardType: TextInputType.datetime,
@@ -205,7 +205,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2,
+                      bottom: Dimensions.defaultPadding * 2,
                     ),
                     child: TextFormField(
                       keyboardType: TextInputType.datetime,
@@ -285,7 +285,7 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        bottom: Constants.defaultPadding * 2),
+                        bottom: Dimensions.defaultPadding * 2),
                     child: TextFormField(
                       controller: _descController,
                       maxLines: 4,
@@ -306,11 +306,11 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
                   DiseasesFilter(filters: diseaseFilters),
                   PlacesFilter(filters: placesFilters),
                   Container(
-                    margin: EdgeInsets.only(bottom: Constants.defaultPadding),
+                    margin: EdgeInsets.only(bottom: Dimensions.defaultPadding),
                     child: RaisedButton(
                       child: Text(
                         (schedule == null ? 'Submit' : 'Update').toUpperCase(),
-                        textScaleFactor: Constants.defaultScaleFactor,
+                        textScaleFactor: Dimensions.defaultScaleFactor,
                         style: Styles.btnTextStyle,
                       ),
                       onPressed: _isRequestSent

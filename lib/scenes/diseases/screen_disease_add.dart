@@ -89,11 +89,11 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
         body: Form(
           key: _formKey,
           child: ListView(
-            padding: EdgeInsets.all(Constants.defaultPadding * 4),
+            padding: EdgeInsets.all(Dimensions.defaultPadding * 4),
             children: <Widget>[
               Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                padding: const EdgeInsets.only(
+                    bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
@@ -109,8 +109,8 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                padding: const EdgeInsets.only(
+                    bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _vaccineController,
                   decoration: InputDecoration(
@@ -126,8 +126,8 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                padding: const EdgeInsets.only(
+                    bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _spreadByController,
                   maxLines: 3,
@@ -145,8 +145,8 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                padding: const EdgeInsets.only(
+                    bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _symptomsController,
                   maxLines: 3,
@@ -164,8 +164,8 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                padding: const EdgeInsets.only(
+                    bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _complicationsController,
                   maxLines: 3,
@@ -180,7 +180,7 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
               RaisedButton(
                 child: Text(
                   "Submit".toUpperCase(),
-                  textScaleFactor: Constants.defaultScaleFactor,
+                  textScaleFactor: Dimensions.defaultScaleFactor,
                   style: Styles.btnTextStyle,
                 ),
                 onPressed: _isRequestSent
@@ -212,10 +212,15 @@ class __DiseaseScreenBodyState extends State<_DiseaseScreenBody> {
           Constants.getCompactedCSV(_complicationsController.text).split(',');
 
       var user = await UserCache().currentUser;
-      var disease = Disease.serverParams(
-          name, vaccine, spreadBy, symptoms, complications);
-      var sr = await DiseaseDataRepo().addDisease(disease, user.id);
-      _onResponseReceived(isError: sr.isError, message: sr.message);
+      var disease = Disease(
+          name: name,
+          vaccine: vaccine,
+          spreadBy: spreadBy,
+          symptoms: symptoms,
+          complications: complications);
+      await DiseaseDataRepo()
+          .addDisease(disease, user.id); // TODO: Add to return result
+      _onResponseReceived(isError: false, message: "Successfully added");
     } on Exception catch (err) {
       _onResponseReceived(
           isError: true, message: Constants.refinedExceptionMessage(err));

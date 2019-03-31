@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:nvip/constants.dart';
-import 'package:nvip/models/educative_post.dart';
+import 'package:nvip/models/article.dart';
 import 'package:nvip/models/server_response.dart';
 import 'package:nvip/utils/network_utils.dart';
 
 class EducativePostDataRepo {
   NetworkUtils _networkUtils = NetworkUtils();
 
-  Future<ServerResponse> addPost(EducativePost post) async {
+  Future<ServerResponse> addPost(Article post) async {
     try {
       return ServerResponse.fromMap(await _networkUtils.post(Urls.educativeAdd,
           body: post.toMap(), headers: await Constants.httpHeaders()));
@@ -17,7 +17,7 @@ class EducativePostDataRepo {
     }
   }
 
-  Future<ServerResponse> updatePost(EducativePost post) async {
+  Future<ServerResponse> updatePost(Article post) async {
     try {
       return ServerResponse.fromMap(await _networkUtils.post(
           Urls.educativeUpdate,
@@ -28,7 +28,7 @@ class EducativePostDataRepo {
     }
   }
 
-  Future<ServerResponse> deletePost(EducativePost post) async {
+  Future<ServerResponse> deletePost(Article post) async {
     try {
       return ServerResponse.fromMap(await _networkUtils.post(
           Urls.educativeDelete,
@@ -39,7 +39,7 @@ class EducativePostDataRepo {
     }
   }
 
-  Future<List<EducativePost>> getPosts() async {
+  Future<List<Article>> getPosts() async {
     try {
       var response = await _networkUtils.get(Urls.getAllEducativePosts(),
           headers: await Constants.httpHeaders());
@@ -51,13 +51,13 @@ class EducativePostDataRepo {
       }
 
       List netPosts = response[Constants.keyEducativePosts];
-      return netPosts.map((postMap) => EducativePost.fromMap(postMap)).toList();
+      return netPosts.map((postMap) => Article.fromMap(postMap)).toList();
     } on Exception catch (err) {
       throw Exception(Constants.refinedExceptionMessage(err));
     }
   }
 
-  Future<List<EducativePost>> flagOrUnflagPost(PostFlag post) async {
+  Future<List<Article>> flagOrUnflagPost(PostFlag post) async {
     try {
       var response = await _networkUtils.post(Urls.educativeFlagPost,
           headers: await Constants.httpHeaders(), body: post.toMap());
@@ -69,7 +69,7 @@ class EducativePostDataRepo {
       }
 
       List netPosts = response[Constants.keyEducativePosts];
-      return netPosts.map((postMap) => EducativePost.fromMap(postMap)).toList();
+      return netPosts.map((postMap) => Article.fromMap(postMap)).toList();
     } on Exception catch (err) {
       throw Exception(Constants.refinedExceptionMessage(err));
     }

@@ -85,13 +85,13 @@ class __ChangePasswordScreenBodyState extends State<_ChangePasswordScreenBody>
         body: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(Constants.defaultPadding * 4),
+            padding: const EdgeInsets.all(Dimensions.defaultPadding * 4),
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding,
-                    top: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding,
+                    top: Dimensions.defaultPadding * 2,
                   ),
                   child: Text(
                     "Hello $_email, please fill in the filleds provided below to "
@@ -100,7 +100,7 @@ class __ChangePasswordScreenBodyState extends State<_ChangePasswordScreenBody>
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: Constants.defaultPadding),
+                      const EdgeInsets.only(bottom: Dimensions.defaultPadding),
                   child: TextFormField(
                     controller: _oldPassController,
                     obscureText: _isOPObscure,
@@ -134,7 +134,7 @@ class __ChangePasswordScreenBodyState extends State<_ChangePasswordScreenBody>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _newPassController,
                     obscureText: _isNPObscure,
@@ -168,11 +168,11 @@ class __ChangePasswordScreenBodyState extends State<_ChangePasswordScreenBody>
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(bottom: Constants.defaultPadding),
+                  margin: EdgeInsets.only(bottom: Dimensions.defaultPadding),
                   child: RaisedButton(
                     child: Text(
                       'Change'.toUpperCase(),
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
                     onPressed: _isRequestSent

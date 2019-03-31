@@ -2,36 +2,55 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/educative_posts_repo.dart';
-import 'package:nvip/models/educative_post.dart';
+import 'package:nvip/models/article.dart';
 import 'package:nvip/models/user.dart';
-import 'package:nvip/scenes/home/educative/screen_educative_post_add.dart';
-import 'package:nvip/scenes/home/educative/screen_educative_post_details.dart';
+import 'package:nvip/scenes/home/articles/screen_article_add.dart';
+import 'package:nvip/scenes/home/articles/screen_article_details.dart';
 import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/post_image_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
 
 enum _CardMenuItems { update, delete }
 
-class EducativePostsScreen extends StatelessWidget {
-  final User _user;
+class ArticlesScreen extends StatelessWidget {
+  final Future<List<Article>> articlesList;
+  final User user;
+  final int positionInTab;
 
-  EducativePostsScreen([this._user]);
-
-  @override
-  Widget build(BuildContext context) => _EducativePostsBody(_user);
-}
-
-class _EducativePostsBody extends StatefulWidget {
-  final User _user;
-
-  _EducativePostsBody([this._user]);
+  const ArticlesScreen(
+      {Key key, this.user, this.positionInTab, this.articlesList})
+      : super(key: key);
 
   @override
-  __EducativePostsBodyState createState() => __EducativePostsBodyState(_user);
+  Widget build(BuildContext context) => _ArticlesScreenBody(
+        positionInTab: this.positionInTab,
+        user: this.user,
+        articlesList: this.articlesList,
+      );
 }
 
-class __EducativePostsBodyState extends State<_EducativePostsBody>
-    with AutomaticKeepAliveClientMixin<_EducativePostsBody> {
+class _ArticlesScreenBody extends StatefulWidget {
+  final Future<List<Article>> articlesList;
+  final User user;
+  final int positionInTab;
+
+  const _ArticlesScreenBody(
+      {Key key, this.user, this.positionInTab, this.articlesList})
+      : super(key: key);
+
+  @override
+  _ArticlesScreenBodyState createState() => _ArticlesScreenBodyState(
+      positionInTab: this.positionInTab,
+      user: this.user,
+      articlesList: this.articlesList);
+}
+
+class _ArticlesScreenBodyState extends State<_ArticlesScreenBody>
+    with AutomaticKeepAliveClientMixin<_ArticlesScreenBody> {
+  Future<List<Article>> articlesList;
+  final User user;
+  final int positionInTab;
+
   var _isRequestSent = false;
   final _connectivity = Connectivity();
   EducativePostDataRepo _educativePostDataRepo;
@@ -40,37 +59,35 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
       " a post. Would you like to sign in or create an ${Constants.appName}"
       " account?";
   final defaultPadding = const EdgeInsets.only(
-    right: Constants.defaultPadding * 2,
-    left: Constants.defaultPadding * 2,
-    bottom: Constants.defaultPadding,
+    right: Dimensions.defaultPadding * 2,
+    left: Dimensions.defaultPadding * 2,
+    bottom: Dimensions.defaultPadding,
   );
   var _scaffoldKey = GlobalKey<ScaffoldState>();
-  Future<List<EducativePost>> _posts;
-  User _user;
 
-  __EducativePostsBodyState([this._user]);
+  _ArticlesScreenBodyState({this.user, this.positionInTab, this.articlesList});
 
-  Iterable<Widget> _postsWidget(BuildContext context, List<EducativePost> posts,
-      bool isPrivileged) sync* {
+  Iterable<Widget> _postsWidget(
+      BuildContext context, List<Article> posts, bool isPrivileged) sync* {
     for (var post in posts) {
       var isFlaggedInappropriate =
-          _user != null && post.flaggers.contains(_user.id);
+          user != null && post.flaggers.contains(user.id);
       yield GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (_) => EducativePostDetailsScreen(
+                  builder: (_) => ArticleDetailsScreen(
                         post: post,
-                        user: _user,
+                        user: user,
                       )));
         },
         child: Card(
           margin: const EdgeInsets.only(
-            top: Constants.defaultPadding / 2,
-            right: Constants.defaultPadding,
-            left: Constants.defaultPadding,
-            bottom: Constants.defaultPadding / 2,
+            top: Dimensions.defaultPadding / 2,
+            right: Dimensions.defaultPadding,
+            left: Dimensions.defaultPadding,
+            bottom: Dimensions.defaultPadding / 2,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,8 +129,8 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => AddEducativePostScreen(
-                                        educativePost: post,
+                                  builder: (_) => ArticleAddScreen(
+                                        article: post,
                                       ),
                                 ));
                             break;
@@ -139,7 +156,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
               CustomFadeInImageView(imageUrl: post.imageUrl),
               Padding(
                 padding:
-                    defaultPadding.copyWith(top: Constants.defaultPadding * 2),
+                    defaultPadding.copyWith(top: Dimensions.defaultPadding * 2),
                 child: Text(
                   post.title,
                   textAlign: TextAlign.start,
@@ -167,7 +184,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
   }
 
   Future deletePost(
-      bool isPrivileged, BuildContext context, EducativePost post) async {
+      bool isPrivileged, BuildContext context, Article post) async {
     if (isPrivileged) {
       Constants.showDeleteDialog(
         context: context,
@@ -196,7 +213,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
         },
       );
     } else {
-      _user == null
+      user == null
           ? signInRequest()
           : Constants.showSnackBar(_scaffoldKey,
               "Administrative privileges are required to delete a post");
@@ -207,20 +224,20 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
   void initState() {
     super.initState();
     _educativePostDataRepo = EducativePostDataRepo();
-    _posts = _educativePostDataRepo.getPosts();
+    articlesList = _educativePostDataRepo.getPosts();
   }
 
   @override
   Widget build(BuildContext context) {
-    var isUserAdmin = _user != null && _user.role == Constants.privilegeAdmin;
+    var isUserAdmin = user != null && user.role == Constants.privilegeAdmin;
     var isUserProvider =
-        _user != null && _user.role == Constants.privilegeProvider;
+        user != null && user.role == Constants.privilegeProvider;
     var isPrivileged = isUserAdmin || isUserProvider;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
-      body: FutureBuilder<List<EducativePost>>(
-        future: _posts,
+      body: FutureBuilder<List<Article>>(
+        future: articlesList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             var errorMessage =
@@ -260,7 +277,7 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => AddEducativePostScreen()),
+                  MaterialPageRoute(builder: (_) => ArticleAddScreen()),
                 );
               },
               child: Icon(Icons.add),
@@ -270,16 +287,16 @@ class __EducativePostsBodyState extends State<_EducativePostsBody>
     );
   }
 
-  void flagOrUnflagPost(EducativePost post) async {
+  void flagOrUnflagPost(Article post) async {
     try {
-      if (_user != null) {
+      if (user != null) {
         ConnectivityResult cr = await _connectivity.checkConnectivity();
         if (cr != ConnectivityResult.none) {
           if (!_isRequestSent) {
             _isRequestSent = true;
 
             setState(() {
-              _posts = _educativePostDataRepo
+              articlesList = _educativePostDataRepo
                   .flagOrUnflagPost(PostFlag.withNamedParams(postId: post.id));
             }); // Refresh page after deleting
           }

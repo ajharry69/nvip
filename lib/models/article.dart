@@ -1,4 +1,4 @@
-class EducativePost {
+class Article {
   static final _keyId = 'id';
   static final _keyTitle = 'title';
   static final _keyDescription = 'desc';
@@ -19,10 +19,10 @@ class EducativePost {
   List<PostFlag> _postFlags = List();
   final List<String> flaggers = List();
 
-  EducativePost(this._id, this._title, this._description, this._imageUrl,
+  Article(this._id, this._title, this._description, this._imageUrl,
       [this._ownerName, this._ownerImageUrl, this._datePosted]);
 
-  EducativePost.fromMap(dynamic postMap) {
+  Article.fromMap(dynamic postMap) {
     this._id = postMap[_keyId];
     this._title = postMap[_keyTitle];
     this._description = postMap[_keyDescription];

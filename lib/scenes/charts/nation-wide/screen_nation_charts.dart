@@ -68,7 +68,7 @@ class __NationChartsBodyState extends State<_NationChartsBody> {
     for (AnnualChartData cd in chartData) {
       yield Step(
         content: SizedBox(
-          height: Constants.graphHeight,
+          height: Dimensions.graphHeight,
           child: StackedBarChart(
             _getChartDiseasesData(cd.diseaseChartData).toList(),
             animate: true,

@@ -147,16 +147,16 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: Constants.defaultPadding * 4,
-              left: Constants.defaultPadding * 4,
-              right: Constants.defaultPadding * 4,
-              bottom: Constants.defaultPadding * 2,
+              top: Dimensions.defaultPadding * 4,
+              left: Dimensions.defaultPadding * 4,
+              right: Dimensions.defaultPadding * 4,
+              bottom: Dimensions.defaultPadding * 2,
             ),
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     controller: _vIdNoTextController,
@@ -172,7 +172,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     controller: _batchNoTextController,
@@ -189,7 +189,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     controller: _nameTextController,
@@ -205,7 +205,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     controller: _manufacturerTextController,
@@ -222,7 +222,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     keyboardType: TextInputType.datetime,
@@ -287,7 +287,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     keyboardType: TextInputType.datetime,
@@ -349,7 +349,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: _diseaseList.length > 0
                       ? DropdownButtonFormField<String>(
@@ -382,7 +382,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -451,7 +451,7 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: TextFormField(
                     controller: _descriptionTextController,
@@ -465,12 +465,12 @@ class __VaccineScreenBodyState extends State<_VaccineScreenBody> {
                 ),
                 Container(
                   margin: EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding * 2,
                   ),
                   child: RaisedButton(
                     child: Text(
                       'Submit'.toUpperCase(),
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
                     onPressed: _isRequestSent

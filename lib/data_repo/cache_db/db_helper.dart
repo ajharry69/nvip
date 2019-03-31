@@ -23,10 +23,10 @@ class DbHelper {
 
   initDb() async {
     io.Directory docsDir = await getApplicationDocumentsDirectory();
-    String path = join(docsDir.path, Constants.dbName);
+    String path = join(docsDir.path, CacheDatabase.dbName);
     Database dbNVIP = await openDatabase(
       path,
-      version: Constants.dbVersion,
+      version: CacheDatabase.dbVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -37,6 +37,7 @@ class DbHelper {
     await db.execute(SQLQueries.createUserTokenTable);
     await db.execute(SQLQueries.createUserRolesTable);
     await db.execute(SQLQueries.createCentersTable);
+    await db.execute(SQLQueries.createDiseasesTable);
 
     await db.insert(UserRolesTable.tableName,
         {UserRolesTable.colName: Constants.privilegeAdmin},
@@ -54,6 +55,7 @@ class DbHelper {
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     await db.execute(SQLQueries.dropUserRolesTable);
     await db.execute(SQLQueries.dropCentersTable);
+    await db.execute(SQLQueries.dropDiseasesTable);
 
     print("Tables deleted.");
     await _onCreate(db, newVersion);

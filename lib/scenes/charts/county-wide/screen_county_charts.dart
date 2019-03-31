@@ -123,7 +123,7 @@ class __CountyChartsBodyState extends State<_CountyChartsBody> {
         title: Text(cd.county),
         isActive: true,
         content: SizedBox(
-          height: Constants.graphHeight,
+          height: Dimensions.graphHeight,
           child: GroupedStackedBarChart(
             _getChartDiseasesData(cd.diseaseChartData).toList(),
             animate: true,

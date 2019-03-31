@@ -8,30 +8,32 @@ class Disease {
   static final String _keySymptoms = 'symptoms';
   static final String _keyComplications = 'complications';
 
-  int _id = 0;
-  String _name, _vaccine;
-  List<String> _spreadBy = List();
-  List<String> _symptoms = List();
-  List<String> _complications = List();
+  final int id;
+  final String name, vaccine;
+  final List<String> spreadBy, symptoms, complications;
   bool isSelected = false;
 
-  Disease(this._id, this._name,
-      [this._vaccine, this._spreadBy, this._symptoms, this._complications]);
+  Disease(
+      {this.id,
+      this.name,
+      this.vaccine,
+      this.spreadBy,
+      this.symptoms,
+      this.complications});
 
-  Disease.serverParams(this._name,
-      [this._vaccine, this._spreadBy, this._symptoms, this._complications]);
-
-  Disease.fromMap(dynamic diseaseMap) {
+  factory Disease.fromMap(dynamic diseaseMap) {
     List spreadBy = jsonDecode(diseaseMap[_keySpreadBy]);
     List symptoms = jsonDecode(diseaseMap[_keySymptoms]);
     List complications = jsonDecode(diseaseMap[_keyComplications]);
 
-    this._id = diseaseMap[_keyId];
-    this._name = diseaseMap[_keyName];
-    this._vaccine = diseaseMap[_keyVaccine];
-    this._spreadBy = spreadBy.cast<String>();
-    this._symptoms = symptoms.cast<String>();
-    this._complications = complications.cast<String>();
+    return Disease(
+      id: diseaseMap[_keyId],
+      name: diseaseMap[_keyName],
+      vaccine: diseaseMap[_keyVaccine],
+      spreadBy: spreadBy.cast<String>(),
+      symptoms: symptoms.cast<String>(),
+      complications: complications.cast<String>(),
+    );
   }
 
   Map<String, dynamic> toMap() => {
@@ -42,16 +44,4 @@ class Disease {
         _keySymptoms: jsonEncode(this.symptoms),
         _keyComplications: jsonEncode(this.complications),
       };
-
-  List<String> get complications => this._complications;
-
-  List<String> get symptoms => this._symptoms;
-
-  List<String> get spreadBy => this._spreadBy;
-
-  String get vaccine => this._vaccine;
-
-  String get name => this._name;
-
-  int get id => this._id;
 }

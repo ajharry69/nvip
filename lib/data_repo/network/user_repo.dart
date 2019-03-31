@@ -199,7 +199,7 @@ class UserDataRepo {
   Future<ServerResponse> requestPasswordReset(String email) async {
     try {
       var response = await _networkUtils
-          .post(Urls.mailSendTempPass, body: {RestKeys.keyEmail: email});
+          .post(Urls.mailSendTempPass, body: {RestAPIKeys.keyEmail: email});
       return ServerResponse.fromMap(response);
     } on Exception catch (err) {
       throw Exception(Constants.refinedExceptionMessage(err));

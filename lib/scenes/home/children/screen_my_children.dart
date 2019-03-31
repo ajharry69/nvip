@@ -9,37 +9,51 @@ import 'package:nvip/widgets/data_fetch_error_widget.dart';
 import 'package:nvip/widgets/token_error_widget.dart';
 
 class MyChildrenScreen extends StatelessWidget {
-  final User _user;
+  final Future<List<Child>> children;
+  final User user;
+  final int positionInTab;
 
-  const MyChildrenScreen([this._user]);
+  const MyChildrenScreen(
+      {Key key, this.user, this.positionInTab, this.children})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _MyChildrenScreenBody(this._user);
+  Widget build(BuildContext context) => _MyChildrenScreenBody(
+        positionInTab: this.positionInTab,
+        user: this.user,
+        children: this.children,
+      );
 }
 
 class _MyChildrenScreenBody extends StatefulWidget {
-  final User _user;
+  final Future<List<Child>> children;
+  final User user;
+  final int positionInTab;
 
-  const _MyChildrenScreenBody([this._user]);
+  const _MyChildrenScreenBody(
+      {Key key, this.user, this.positionInTab, this.children})
+      : super(key: key);
 
   @override
-  __MyChildrenScreenBodyState createState() =>
-      __MyChildrenScreenBodyState(this._user);
+  __MyChildrenScreenBodyState createState() => __MyChildrenScreenBodyState(
+      positionInTab: positionInTab, user: this.user, childrenList: this.children);
 }
 
 class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
     with AutomaticKeepAliveClientMixin<_MyChildrenScreenBody> {
+  Future<List<Child>> childrenList;
+  final User user;
+  final int positionInTab;
+
   var _defaultRowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   int _rowsPerPage = 0;
   int _rowsPerPage1 = 0;
   bool _isSortAscending = true;
   int _sortColumnIndex = 1;
-  final User _user;
   ChildrenTableDataSource _childrenDataSource;
-  Future<List<Child>> _children;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  __MyChildrenScreenBodyState(this._user);
+  __MyChildrenScreenBodyState({this.user, this.positionInTab, this.childrenList});
 
   void _sort<T>(
       Comparable<T> getField(Child d), int columnIndex, bool isAscending) {
@@ -53,7 +67,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
   @override
   void initState() {
     super.initState();
-    _children =
+    childrenList =
         ChildrenDataRepo().getChildren(no: Constants.childrenRecNoParent);
     _rowsPerPage = _defaultRowsPerPage;
     _rowsPerPage1 = _defaultRowsPerPage;
@@ -63,7 +77,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      floatingActionButton: _user != null
+      floatingActionButton: user != null
           ? FloatingActionButton(
               child: Icon(Icons.person_add),
               tooltip: "Register a new child",
@@ -78,7 +92,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
             )
           : null,
       body: FutureBuilder<List<Child>>(
-        future: _children,
+        future: childrenList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             var isTokenError =
@@ -87,7 +101,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
             return isTokenError
                 ? TokenErrorWidget()
                 : DataFetchErrorWidget(
-                    message: _user != null
+                    message: user != null
                         ? "You have no children registered with ${Constants.appName}. "
                             "Press the button below to register your child(ren)."
                         : "You must be a registered ${Constants.appName} to access "
@@ -107,7 +121,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
 
               return SingleChildScrollView(
                 child: PaginatedDataTable(
-                  header: Text("${_user.fName}'s child(ren) table"),
+                  header: Text("${user.fName}'s child(ren) table"),
                   rowsPerPage: isRowCountLessDefaultRowsPerPage
                       ? _rowsPerPage1
                       : _rowsPerPage,

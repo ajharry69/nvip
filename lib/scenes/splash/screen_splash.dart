@@ -72,7 +72,7 @@ class __SplashScreenBodyState extends State<_SplashScreenBody>
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.only(top: Constants.defaultPadding * 3),
+                          EdgeInsets.only(top: Dimensions.defaultPadding * 3),
                       child: Text(
                         Constants.appName,
                         style: TextStyle(
@@ -93,7 +93,7 @@ class __SplashScreenBodyState extends State<_SplashScreenBody>
                 children: <Widget>[
                   CircularProgressIndicator(),
                   Padding(
-                    padding: const EdgeInsets.all(Constants.defaultPadding * 3),
+                    padding: const EdgeInsets.all(Dimensions.defaultPadding * 3),
                     child: Text(
                       'Copyright ${DateTime.now().year}. ${Constants.appName}, '
                           'All Rights Reserved.',

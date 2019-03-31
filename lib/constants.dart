@@ -48,10 +48,10 @@ class Constants {
   static final String prTypeReset = 'R';
 
   // App Dependent Constants
-  static final String appName = "NVIP";
+  static const String appName = "NVIP";
   static final String drawerHeaderName = "Guest Account";
   static final String drawerHeaderEmail = "email@guest.com";
-  static final String tabTitleEducative = "Educative".toUpperCase();
+  static final String tabTitleArticles = "Articles".toUpperCase();
   static final String tabTitleSchedule = "Schedules".toUpperCase();
   static final String tabTitleChildren = "My Children".toUpperCase();
   static final String connectionLost =
@@ -61,12 +61,7 @@ class Constants {
       "Kindly sign in again using the button labeled 'SIGN IN' to start a new session.";
   static const defaultDeviceToken = "deviceId";
   static String tokenErrorType = "UnauthorizedRequestException";
-  static final graphHeight = 375.0;
-  static final double dividerSize = 5.0;
   static final int initialTimeout = 30;
-  static final double buttonRadius = 5.0;
-  static const double defaultPadding = 8.0;
-  static const double defaultScaleFactor = 1.3;
 
   static final hideKbMethod = 'TextInput.hide';
 
@@ -79,10 +74,6 @@ class Constants {
   static const String dateFormatLong = "EEE, MMM d, ''yy";
   static const errInvalidDate =
       "invalid date or date format. Use: YYYY-MM-DD format";
-
-  // Cache Database
-  static final String dbName = '${appName.toLowerCase()}.db';
-  static final int dbVersion = 3;
 
   static final IconData backIcon = Icons.arrow_back;
 
@@ -396,10 +387,10 @@ class Constants {
     return BeveledRectangleBorder(
       side: BorderSide(color: Theme.of(context).accentColor),
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(Constants.buttonRadius),
-        topRight: Radius.circular(Constants.buttonRadius),
-        bottomLeft: Radius.circular(Constants.buttonRadius),
-        bottomRight: Radius.circular(Constants.buttonRadius),
+        topLeft: Radius.circular(Dimensions.buttonRadius),
+        topRight: Radius.circular(Dimensions.buttonRadius),
+        bottomLeft: Radius.circular(Dimensions.buttonRadius),
+        bottomRight: Radius.circular(Dimensions.buttonRadius),
       ),
     );
   }
@@ -460,8 +451,23 @@ class Constants {
   }
 }
 
+class Dimensions {
+  static final graphHeight = 375.0;
+  static final double dividerSize = 5.0;
+  static final int initialTimeout = 30;
+  static final double buttonRadius = 5.0;
+  static const double defaultPadding = 8.0;
+  static const double defaultScaleFactor = 1.3;
+}
+
 class Styles {
   static final TextStyle btnTextStyle = TextStyle(color: Colors.white);
+}
+
+class CacheDatabase {
+  // Cache Database
+  static final String dbName = '${Constants.appName.toLowerCase()}.db';
+  static final int dbVersion = 1;
 }
 
 class SQLQueries {
@@ -481,6 +487,14 @@ class SQLQueries {
       "PRIMARY KEY, ${CentersTable.colSubCountiesCount} INTEGER, "
       "${CentersTable.colSubCounties} LONGTEXT);";
 
+  static final String createDiseasesTable = "CREATE TABLE IF NOT EXISTS "
+      "${DiseasesTable.tableName}(${DiseasesTable.colId} INTEGER "
+      "PRIMARY KEY, ${DiseasesTable.colName} VARCHAR(50), "
+      "${DiseasesTable.colVaccine} VARCHAR(50), "
+      "${DiseasesTable.colSpreadBy} LONGTEXT, "
+      "${DiseasesTable.colSymptoms} LONGTEXT, "
+      "${DiseasesTable.colComplications} LONGTEXT);";
+
   // Delete tables...
 
   static final String dropUserRolesTable =
@@ -488,6 +502,9 @@ class SQLQueries {
 
   static final String dropCentersTable =
       "DROP TABLE IF EXISTS ${CentersTable.tableName};";
+
+  static final String dropDiseasesTable =
+      "DROP TABLE IF EXISTS ${DiseasesTable.tableName};";
 }
 
 class UserRolesTable {
@@ -498,9 +515,12 @@ class UserRolesTable {
 
 class DiseasesTable {
   static final String tableName = 'diseases';
-  static final String colId = 'duid';
+  static final String colId = 'id';
   static final String colName = 'name';
-  static final String colDesc = 'description';
+  static final String colVaccine = 'vaccine';
+  static final String colSpreadBy = 'spreadBy';
+  static final String colSymptoms = 'symptoms';
+  static final String colComplications = 'complications';
 }
 
 class CentersTable {
@@ -529,7 +549,7 @@ class UserTokenTable {
   static final String colToken = 'token';
 }
 
-class RestKeys {
+class RestAPIKeys {
   static final String keyUserId = 'uuid';
   static final String keyRecordNo = 'no';
   static final String keyId = 'id';
@@ -596,7 +616,7 @@ class Urls {
 
   static String getImmunizations(
           {String userId, String no = Constants.immunizationRecNoAll}) =>
-      "$_immunizationRoot/get.php?${RestKeys.keyRecordNo}=$no";
+      "$_immunizationRoot/get.php?${RestAPIKeys.keyRecordNo}=$no";
   static final String immunizationAdd = "$_immunizationRoot/add.php";
   static final String immunizationDelete = "$_immunizationRoot/delete.php";
   static final String immunizationUpdate = "$_immunizationRoot/update.php";
@@ -608,7 +628,7 @@ class Urls {
 
   static String getChildren(
           {String userId, String no = Constants.childrenRecNoAll}) =>
-      "$_childRoot/get.php?${RestKeys.keyRecordNo}=$no";
+      "$_childRoot/get.php?${RestAPIKeys.keyRecordNo}=$no";
   static final String childRegister = "$_childRoot/register.php";
   static final String childDelete = "$_childRoot/delete.php";
   static final String childUpdate = "$_childRoot/update.php";
@@ -624,7 +644,7 @@ class Urls {
   static final String vaccineUpdate = "$_vaccinesRoot/update.php";
 
   static String getEducativePosts([String postId]) =>
-      "$_educativePostsRoot/get.php?${RestKeys.keyId}=$postId";
+      "$_educativePostsRoot/get.php?${RestAPIKeys.keyId}=$postId";
 
   static String getAllEducativePosts() => "$_educativePostsRoot/getAll.php";
   static final String educativeAdd = "$_educativePostsRoot/add.php";
@@ -633,7 +653,7 @@ class Urls {
   static final String educativeUpdate = "$_educativePostsRoot/update.php";
 
   static String getSchedule([String postId]) =>
-      "$_schedulePostsRoot/get.php?${RestKeys.keyId}=$postId";
+      "$_schedulePostsRoot/get.php?${RestAPIKeys.keyId}=$postId";
 
   static String getAllSchedules() => "$_schedulePostsRoot/getAll.php";
   static final String scheduleAdd = "$_schedulePostsRoot/add.php";

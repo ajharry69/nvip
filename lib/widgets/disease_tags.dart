@@ -21,8 +21,8 @@ class _DiseasesChipTagsState extends State<DiseasesChipTags> {
     for (DiseaseChipEntry disease in _diseases) {
       yield Padding(
         padding: const EdgeInsets.only(
-          top: Constants.defaultPadding / 2,
-          right: Constants.defaultPadding,
+          top: Dimensions.defaultPadding / 2,
+          right: Dimensions.defaultPadding,
         ),
         child: Chip(
 //          avatar: CircleAvatar(

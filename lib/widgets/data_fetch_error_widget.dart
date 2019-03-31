@@ -20,7 +20,7 @@ class _DataFetchErrorWidgetState extends State<DataFetchErrorWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(Constants.defaultPadding * 4),
+        padding: const EdgeInsets.all(Dimensions.defaultPadding * 4),
         child: Text(
           message,
           style: Theme.of(context).textTheme.body1,

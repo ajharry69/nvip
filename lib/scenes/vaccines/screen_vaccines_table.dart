@@ -220,10 +220,10 @@ class __VaccinesScreenBodyState extends State<_VaccinesScreenBody> {
                       bool _selected = vaccine.isSelected;
                       return Card(
                         margin: EdgeInsets.only(
-                          right: Constants.defaultPadding,
-                          left: Constants.defaultPadding,
-                          top: Constants.defaultPadding / 2,
-                          bottom: Constants.defaultPadding / 2,
+                          right: Dimensions.defaultPadding,
+                          left: Dimensions.defaultPadding,
+                          top: Dimensions.defaultPadding / 2,
+                          bottom: Dimensions.defaultPadding / 2,
                         ),
                         child: ListTile(
                           leading: Text(

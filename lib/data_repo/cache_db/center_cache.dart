@@ -16,9 +16,11 @@ class CenterCache {
 
     var res = 0;
 
-    centers.forEach((center) async => res = await clientDb.insert(
-        _table, center.toMapForCaching(),
-        conflictAlgorithm: ConflictAlgorithm.replace));
+    centers.forEach((center) async {
+      await clientDb.insert(_table, center.toMapForCaching(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      ++res;
+    });
     return res;
   }
 

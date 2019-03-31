@@ -87,11 +87,11 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
         body: Form(
           key: _formKey,
           child: ListView(
-            padding: EdgeInsets.all(Constants.defaultPadding * 4),
+            padding: EdgeInsets.all(Dimensions.defaultPadding * 4),
             children: <Widget>[
               Padding(
                 padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                    const EdgeInsets.only(bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
@@ -108,7 +108,7 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+                    const EdgeInsets.only(bottom: Dimensions.defaultPadding * 2),
                 child: TextFormField(
                   controller: _subCountyController,
                   decoration: InputDecoration(
@@ -126,7 +126,7 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
               RaisedButton(
                 child: Text(
                   "Submit".toUpperCase(),
-                  textScaleFactor: Constants.defaultScaleFactor,
+                  textScaleFactor: Dimensions.defaultScaleFactor,
                   style: Styles.btnTextStyle,
                 ),
                 onPressed: _isRequestSent
@@ -154,8 +154,8 @@ class __CenterScreenBodyState extends State<_CenterScreenBody> {
             county: _nameController.text, subCounty: _subCountyController.text);
         if (!_isRequestSent) {
           _isRequestSent = true;
-          var sr = await _centersDataRepo.addCenter(center);
-          _onResponseReceived(isError: sr.isError, message: sr.message);
+          await _centersDataRepo.addCenter(center); // TODO: Add to return result
+          _onResponseReceived(isError: false, message: "Success");
         }
       } else {
         Constants.showSnackBar(_scaffoldKey, "", isNetworkConnected: false);

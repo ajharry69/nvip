@@ -107,13 +107,13 @@ class __VerifyAccountScreenBodyState extends State<_VerifyAccountScreenBody>
           title: Text("Verify Account"),
         ),
         body: Container(
-          padding: EdgeInsets.all(Constants.defaultPadding * 4),
+          padding: EdgeInsets.all(Dimensions.defaultPadding * 4),
           child: ListView(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(
-                  top: Constants.defaultPadding,
-                  bottom: Constants.defaultPadding,
+                  top: Dimensions.defaultPadding,
+                  bottom: Dimensions.defaultPadding,
                 ),
                 child: Text(
                   'Your account $_email is NOT yet verified. Please input '
@@ -123,20 +123,20 @@ class __VerifyAccountScreenBodyState extends State<_VerifyAccountScreenBody>
               ),
               Padding(
                 padding:
-                    const EdgeInsets.only(bottom: Constants.defaultPadding),
+                    const EdgeInsets.only(bottom: Dimensions.defaultPadding),
                 child: midSection(context),
               ),
               Container(
                 margin: EdgeInsets.only(
-                  top: Constants.defaultPadding,
-                  bottom: Constants.defaultPadding * 2,
+                  top: Dimensions.defaultPadding,
+                  bottom: Dimensions.defaultPadding * 2,
                 ),
                 child: RaisedButton(
                     key: _vButtonKey,
                     child: Text(
                       'Verify'.toUpperCase(),
                       style: Styles.btnTextStyle,
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                     ),
                     onPressed: _isRequestSent
                         ? null
@@ -207,7 +207,7 @@ class __VerifyAccountScreenBodyState extends State<_VerifyAccountScreenBody>
   }) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(Constants.defaultPadding / 4),
+        padding: const EdgeInsets.all(Dimensions.defaultPadding / 4),
         child: TextField(
           key: key,
           textAlign: TextAlign.center,

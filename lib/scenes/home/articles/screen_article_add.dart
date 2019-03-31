@@ -6,31 +6,32 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/educative_posts_repo.dart';
-import 'package:nvip/models/educative_post.dart';
+import 'package:nvip/models/article.dart';
 import 'package:nvip/widgets/post_image_widget.dart';
 
-class AddEducativePostScreen extends StatelessWidget {
-  final EducativePost educativePost;
+class ArticleAddScreen extends StatelessWidget {
+  final Article article;
 
-  const AddEducativePostScreen({Key key, this.educativePost}) : super(key: key);
+  const ArticleAddScreen({Key key, this.article}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _PostScreenBody(
-        educativePost: educativePost,
+  Widget build(BuildContext context) => _ArticleAddScreenBody(
+        article: article,
       );
 }
 
-class _PostScreenBody extends StatefulWidget {
-  final EducativePost educativePost;
+class _ArticleAddScreenBody extends StatefulWidget {
+  final Article article;
 
-  const _PostScreenBody({Key key, this.educativePost}) : super(key: key);
+  const _ArticleAddScreenBody({Key key, this.article}) : super(key: key);
 
   @override
-  _PostScreenBodyState createState() => _PostScreenBodyState(educativePost);
+  _ArticleAddScreenBodyState createState() =>
+      _ArticleAddScreenBodyState(article);
 }
 
-class _PostScreenBodyState extends State<_PostScreenBody> {
-  final EducativePost educativePost;
+class _ArticleAddScreenBodyState extends State<_ArticleAddScreenBody> {
+  final Article article;
   final defaultImage = "images/no_image.png";
   final imageHeight = 194.0;
   bool _isRequestSent = false;
@@ -41,7 +42,7 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
   TextEditingController _titleController;
   TextEditingController _descController;
 
-  _PostScreenBodyState(this.educativePost);
+  _ArticleAddScreenBodyState(this.article);
 
   @override
   void initState() {
@@ -50,9 +51,9 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
     _titleController = TextEditingController();
     _descController = TextEditingController();
 
-    if (educativePost != null) {
-      _titleController.text = educativePost.title;
-      _descController.text = educativePost.description;
+    if (article != null) {
+      _titleController.text = article.title;
+      _descController.text = article.description;
     }
   }
 
@@ -85,16 +86,16 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: Constants.defaultPadding * 4,
-              left: Constants.defaultPadding * 4,
-              right: Constants.defaultPadding * 4,
-              bottom: Constants.defaultPadding * 2,
+              top: Dimensions.defaultPadding * 4,
+              left: Dimensions.defaultPadding * 4,
+              right: Dimensions.defaultPadding * 4,
+              bottom: Dimensions.defaultPadding * 2,
             ),
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: Constants.defaultPadding),
+                      const EdgeInsets.only(bottom: Dimensions.defaultPadding),
                   child: GestureDetector(
                     onTap: () {
                       showDialog<void>(
@@ -135,9 +136,7 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                     },
                     child: _imageFile == null
                         ? CustomFadeInImageView(
-                            imageUrl: educativePost != null
-                                ? educativePost.imageUrl
-                                : null)
+                            imageUrl: article != null ? article.imageUrl : null)
                         : Image.file(
                             _imageFile,
                             width: double.maxFinite,
@@ -148,7 +147,7 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _titleController,
                     validator: (String title) {
@@ -169,7 +168,7 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _descController,
                     maxLines: 4,
@@ -187,12 +186,11 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(bottom: Constants.defaultPadding),
+                  margin: EdgeInsets.only(bottom: Dimensions.defaultPadding),
                   child: RaisedButton(
                     child: Text(
-                      (educativePost == null ? 'Submit' : 'Update')
-                          .toUpperCase(),
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      (article == null ? 'Submit' : 'Update').toUpperCase(),
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
                     onPressed: _isRequestSent
@@ -223,14 +221,13 @@ class _PostScreenBodyState extends State<_PostScreenBody> {
       var result = await _connectivity.checkConnectivity();
 
       if (result != ConnectivityResult.none) {
-        var post =
-            EducativePost(0, _title, _description, base64Image, "", "", "");
+        var post = Article(0, _title, _description, base64Image, "", "", "");
 
         if (!_isRequestSent) {
           _isRequestSent = true;
 
           var educativePostDataRepo = EducativePostDataRepo();
-          await (educativePost == null
+          await (article == null
               ? educativePostDataRepo.addPost(post)
               : educativePostDataRepo.updatePost(post));
 

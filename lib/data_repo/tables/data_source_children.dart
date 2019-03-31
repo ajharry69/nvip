@@ -75,8 +75,8 @@ class ChildrenTableDataSource extends DataTableSource {
         );
         return Container(
           padding: EdgeInsets.symmetric(
-            vertical: Constants.defaultPadding * 2,
-            horizontal: Constants.defaultPadding * 2,
+            vertical: Dimensions.defaultPadding * 2,
+            horizontal: Dimensions.defaultPadding * 2,
           ),
           child: ListView(
             children: _listWidgets(child, sortedDoseList).toList(),
@@ -91,7 +91,7 @@ class ChildrenTableDataSource extends DataTableSource {
     var childName =
         "${child.sName} ${child.fName} ${child.lName}".trimRight().trimLeft();
     yield Container(
-      padding: EdgeInsets.only(bottom: Constants.defaultPadding * 2),
+      padding: EdgeInsets.only(bottom: Dimensions.defaultPadding * 2),
       child: Center(
         child: Text(
           childName,
@@ -147,7 +147,7 @@ class ChildrenTableDataSource extends DataTableSource {
               ],
             ),
             subtitle: Padding(
-              padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
+              padding: const EdgeInsets.only(top: Dimensions.defaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -174,7 +174,7 @@ class ChildrenTableDataSource extends DataTableSource {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-                horizontal: Constants.defaultPadding),
+                horizontal: Dimensions.defaultPadding),
             child: Divider(
               height: 1,
               color: Colors.black54,

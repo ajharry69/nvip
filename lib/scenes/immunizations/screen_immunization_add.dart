@@ -25,9 +25,11 @@ class _ImmunizationScreenBody extends StatefulWidget {
 
 class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
   bool _isRequestSent = false;
-  String _selectedCenter = "";
   String _selectedDisease = "";
-  List<VaccineCenter> _centersList = List();
+  VaccineCenter _selectedCounty;
+  String _selectedCenter = "";
+  List<VaccineCenter> _countyList = List();
+  List<SubCounty> _subCountyList = List();
   List<Disease> _diseaseList = List();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
@@ -36,29 +38,26 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
   TextEditingController _notesController;
 
   void _getCentersAndDiseases() async {
-    VaccineCentersDataRepo().getCenters().then((centers) {
-      Future(() {
-        setState(() {
-          _centersList = centers;
-          if (_centersList.length > 0) {
-            _selectedCenter = _centersList[0].county;
-          }
-        });
-      }).catchError((err) => throw Exception(err));
-    }).catchError((err) => Constants.showSnackBar(
-        _scaffoldKey, Constants.refinedExceptionMessage(err)));
-
-    DiseaseDataRepo().getDiseases().then((diseases) {
-      Future(() {
-        setState(() {
-          _diseaseList = diseases;
-          if (_diseaseList.length > 0) {
-            _selectedDisease = _diseaseList[0].name;
-          }
-        });
-      }).catchError((err) => throw Exception(err));
-    }).catchError((err) => Constants.showSnackBar(
-        _scaffoldKey, Constants.refinedExceptionMessage(err)));
+    try {
+      var counties = await VaccineCentersDataRepo().getCenters();
+      var diseases = await DiseaseDataRepo().getDiseases();
+      setState(() {
+        _countyList = counties;
+        if (_countyList.length > 0) {
+          var county = _countyList[0];
+          _selectedCounty = county;
+          _subCountyList = county.subCounties;
+          _selectedCenter = county.subCounties[0].name;
+        }
+        _diseaseList = diseases;
+        if (_diseaseList.length > 0) {
+          _selectedDisease = _diseaseList[0].name;
+        }
+      });
+    } on Exception catch (err) {
+      Constants.showSnackBar(
+          _scaffoldKey, Constants.refinedExceptionMessage(err));
+    }
   }
 
   @override
@@ -81,6 +80,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
 
   @override
   Widget build(BuildContext context) {
+    const padding16dp = Dimensions.defaultPadding * 2;
     return WillPopScope(
       onWillPop: () {
         Navigator.pushReplacementNamed(context, Routes.keyImmunizationsTable);
@@ -102,15 +102,15 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: Constants.defaultPadding * 3,
-              left: Constants.defaultPadding * 4,
-              right: Constants.defaultPadding * 4,
+              top: Dimensions.defaultPadding * 3,
+              left: Dimensions.defaultPadding * 4,
+              right: Dimensions.defaultPadding * 4,
             ),
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: TextFormField(
                     controller: _birthCertController,
@@ -131,7 +131,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: TextFormField(
                     controller: _vaccineBatchController,
@@ -150,17 +150,51 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
-                  child: _centersList.length > 0
+                  child: _countyList.length > 0
+                      ? DropdownButtonFormField<VaccineCenter>(
+                          decoration: InputDecoration(
+                            labelText: "C.O.V*",
+                            helperText: "select county of vaccination",
+                          ),
+                          items: _countyList.map((center) {
+                            var name = center.county;
+                            return DropdownMenuItem<VaccineCenter>(
+                              child: Text(name),
+                              value: center,
+                            );
+                          }).toList(),
+                          value: _selectedCounty,
+                          onChanged: (selCounty) {
+                            setState(() {
+                              _subCountyList = selCounty.subCounties;
+                              _selectedCounty = selCounty;
+                              _selectedCenter = _subCountyList[0].name;
+                            });
+                          },
+                          validator: (val) {
+                            if (val == null) {
+                              return 'Required*';
+                            } else {
+                              return null;
+                            }
+                          },
+                        )
+                      : null,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(
+                    bottom: padding16dp,
+                  ),
+                  child: _subCountyList.length > 0
                       ? DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: "Vaccination Center*",
-                            helperText:
-                                "select vaccination center A.K.A place of vaccination",
+                            labelText: "S.O.V*",
+                            helperText: "Subcounty of Vaccination",
                           ),
-                          items: _centersList.map((center) {
-                            var name = center.county;
+                          items: _subCountyList.map((subCounty) {
+                            var name = subCounty.name;
                             return DropdownMenuItem<String>(
                               child: Text(name),
                               value: name,
@@ -174,7 +208,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                           },
                           validator: (val) {
                             if (val.isEmpty) {
-                              return "vaccination center is required";
+                              return 'Required*';
                             } else {
                               return null;
                             }
@@ -184,7 +218,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: _diseaseList.length > 0
                       ? DropdownButtonFormField<String>(
@@ -196,7 +230,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                           items: _diseaseList.map((disease) {
                             var name = disease.name;
                             return DropdownMenuItem<String>(
-                              child: Text(name),
+                              child: Text("$name (${disease.vaccine})"),
                               value: name,
                             );
                           }).toList(),
@@ -218,7 +252,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: TextFormField(
                     controller: _notesController,
@@ -233,12 +267,12 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 ),
                 Container(
                   margin: EdgeInsets.only(
-                    bottom: Constants.defaultPadding * 2,
+                    bottom: padding16dp,
                   ),
                   child: RaisedButton(
                     child: Text(
                       'Submit'.toUpperCase(),
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
                     onPressed: _isRequestSent
@@ -325,7 +359,7 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 MaterialPageRoute(
                     builder: (_) => AddDiseaseScreen(
                           callerId: AddDiseaseCaller.immunization,
-                          disease: Disease(0, _selectedDisease),
+                          disease: Disease(name: _selectedDisease),
                         )));
           },
         );
@@ -343,7 +377,9 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
                 MaterialPageRoute(
                     builder: (_) => AddVaccinationCenterScreen(
                           callerId: AddCenterCallerId.immunization,
-                          center: VaccineCenter(subCounty: _selectedCenter),
+                          center: VaccineCenter(
+                              subCounty: _selectedCenter,
+                              county: _selectedCounty.county),
                         )));
           },
         );

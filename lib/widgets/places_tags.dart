@@ -22,8 +22,8 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
     for (PlaceChipEntry place in _places) {
       yield Padding(
         padding: const EdgeInsets.only(
-          top: Constants.defaultPadding / 2,
-          right: Constants.defaultPadding,
+          top: Dimensions.defaultPadding / 2,
+          right: Dimensions.defaultPadding,
         ),
         child: ActionChip(
 //          avatar: CircleAvatar(
@@ -43,8 +43,8 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
                   return Container(
                     color: Colors.transparent,
                     padding: const EdgeInsets.symmetric(
-                      vertical: Constants.defaultPadding,
-                      horizontal: Constants.defaultPadding * 2,
+                      vertical: Dimensions.defaultPadding,
+                      horizontal: Dimensions.defaultPadding * 2,
                     ),
                     child: Wrap(
                       children: _getSubCountyWidgets([
@@ -68,8 +68,8 @@ class _PlacesChipTagsState extends State<PlacesChipTags> {
     for (String subCounty in subCounties) {
       yield Padding(
         padding: const EdgeInsets.only(
-          top: Constants.defaultPadding / 2,
-          right: Constants.defaultPadding,
+          top: Dimensions.defaultPadding / 2,
+          right: Dimensions.defaultPadding,
         ),
         child: Chip(
           label: Text(subCounty),

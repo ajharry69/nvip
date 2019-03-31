@@ -60,14 +60,16 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
 
   void _getCenters() async {
     try {
-      var centers = await VaccineCentersDataRepo().getCenters();
+      var counties = await VaccineCentersDataRepo().getCenters();
       setState(() {
-        _countyList = centers;
+        _dobController.text =
+            DateFormat(Constants.defaultDateFormat).format(DateTime.now());
+        _countyList = counties;
         if (_countyList.length > 0) {
-          var center = _countyList[0];
-          _selectedCounty = center;
-          _subCountyList = center.subCounties;
-          _selectedCenter = center.subCounties[0].name;
+          var county = _countyList[0];
+          _selectedCounty = county;
+          _subCountyList = county.subCounties;
+          _selectedCenter = county.subCounties[0].name;
         }
       });
     } on Exception catch (err) {
@@ -89,11 +91,6 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
     _fatherIdController = TextEditingController();
 
     _birthCertNoController.text = birthCertNo;
-    setState(() {
-      _dobController.text =
-          DateFormat(Constants.defaultDateFormat).format(DateTime.now());
-    });
-
     _getCenters();
   }
 
@@ -111,8 +108,8 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
 
   @override
   Widget build(BuildContext context) {
-    const padding16dp = Constants.defaultPadding * 2;
-    var padding32dp = Constants.defaultPadding * 4;
+    const padding16dp = Dimensions.defaultPadding * 2;
+    var padding32dp = Dimensions.defaultPadding * 4;
     return WillPopScope(
       onWillPop: () {
         _onBackPressed(context);
@@ -133,7 +130,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
           key: _formKey,
           child: Padding(
             padding: EdgeInsets.only(
-              top: Constants.defaultPadding * 3,
+              top: Dimensions.defaultPadding * 3,
               left: padding32dp,
               right: padding32dp,
             ),
@@ -245,9 +242,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(
-                    bottom: padding16dp,
-                  ),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: _countyList.length > 0
                       ? DropdownButtonFormField<VaccineCenter>(
                           decoration: InputDecoration(
@@ -280,9 +275,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                       : null,
                 ),
                 Container(
-                  padding: const EdgeInsets.only(
-                    bottom: padding16dp,
-                  ),
+                  padding: const EdgeInsets.only(bottom: padding16dp),
                   child: _subCountyList.length > 0
                       ? DropdownButtonFormField<String>(
                           decoration: InputDecoration(
@@ -377,7 +370,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
                   child: RaisedButton(
                     child: Text(
                       'Register'.toUpperCase(),
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
                     onPressed: _isRequestSent

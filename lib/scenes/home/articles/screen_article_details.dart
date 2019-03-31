@@ -2,38 +2,38 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:nvip/constants.dart';
 import 'package:nvip/data_repo/network/educative_posts_repo.dart';
-import 'package:nvip/models/educative_post.dart';
+import 'package:nvip/models/article.dart';
 import 'package:nvip/models/user.dart';
 import 'package:nvip/scenes/home/screen_home.dart';
 import 'package:nvip/widgets/post_image_widget.dart';
 
-class EducativePostDetailsScreen extends StatelessWidget {
-  final EducativePost post;
+class ArticleDetailsScreen extends StatelessWidget {
+  final Article post;
   final User user;
 
-  const EducativePostDetailsScreen({Key key, this.post, this.user})
+  const ArticleDetailsScreen({Key key, this.post, this.user})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => _EducativePostDetailsBody(
+  Widget build(BuildContext context) => _ArticleDetailsScreenBody(
         post: post,
         user: user,
       );
 }
 
-class _EducativePostDetailsBody extends StatefulWidget {
-  final EducativePost post;
+class _ArticleDetailsScreenBody extends StatefulWidget {
+  final Article post;
   final User user;
 
-  const _EducativePostDetailsBody({Key key, this.post, this.user})
+  const _ArticleDetailsScreenBody({Key key, this.post, this.user})
       : super(key: key);
 
   @override
-  __EducativePostDetailsBodyState createState() =>
-      __EducativePostDetailsBodyState(user, post);
+  _ArticleDetailsScreenBodyState createState() =>
+      _ArticleDetailsScreenBodyState(user, post);
 }
 
-class __EducativePostDetailsBodyState extends State<_EducativePostDetailsBody> {
+class _ArticleDetailsScreenBodyState extends State<_ArticleDetailsScreenBody> {
   bool _isRequestSent = false;
   EducativePostDataRepo _educativePostDataRepo;
   final accountError =
@@ -41,16 +41,16 @@ class __EducativePostDetailsBodyState extends State<_EducativePostDetailsBody> {
       " a post. Would you like to sign in or create an ${Constants.appName}"
       " account?";
   final defaultPadding = const EdgeInsets.only(
-    right: Constants.defaultPadding * 2,
-    left: Constants.defaultPadding * 2,
-    bottom: Constants.defaultPadding,
+    right: Dimensions.defaultPadding * 2,
+    left: Dimensions.defaultPadding * 2,
+    bottom: Dimensions.defaultPadding,
   );
-  EducativePost post;
+  Article post;
   final User _user;
   final _connectivity = Connectivity();
   final GlobalKey _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  __EducativePostDetailsBodyState(this._user, this.post);
+  _ArticleDetailsScreenBodyState(this._user, this.post);
 
   @override
   void initState() {
@@ -157,7 +157,7 @@ class __EducativePostDetailsBodyState extends State<_EducativePostDetailsBody> {
               children: <Widget>[
                 Padding(
                   padding: defaultPadding.copyWith(
-                      top: Constants.defaultPadding * 2),
+                      top: Dimensions.defaultPadding * 2),
                   child: Text(
                     post.title,
                     textAlign: TextAlign.start,
@@ -195,7 +195,7 @@ class __EducativePostDetailsBodyState extends State<_EducativePostDetailsBody> {
           if (!_isRequestSent) {
             _isRequestSent = true;
 
-            List<EducativePost> _posts = await _educativePostDataRepo
+            List<Article> _posts = await _educativePostDataRepo
                 .flagOrUnflagPost(PostFlag.withNamedParams(postId: post.id));
 
             for (var p in _posts) {

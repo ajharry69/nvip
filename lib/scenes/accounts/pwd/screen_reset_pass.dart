@@ -71,13 +71,13 @@ class __ResetPasswordScreenBodyState extends State<_ResetPasswordScreenBody> {
         body: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(Constants.defaultPadding * 4),
+            padding: const EdgeInsets.all(Dimensions.defaultPadding * 4),
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
-                    bottom: Constants.defaultPadding,
-                    top: Constants.defaultPadding * 2,
+                    bottom: Dimensions.defaultPadding,
+                    top: Dimensions.defaultPadding * 2,
                   ),
                   child: Text(
                     "An email with a password reset instructions will be sent"
@@ -87,7 +87,7 @@ class __ResetPasswordScreenBodyState extends State<_ResetPasswordScreenBody> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -109,12 +109,12 @@ class __ResetPasswordScreenBodyState extends State<_ResetPasswordScreenBody> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: Constants.defaultPadding),
+                  padding: EdgeInsets.only(bottom: Dimensions.defaultPadding),
                   child: RaisedButton(
                     child: Text(
                       'Submit'.toUpperCase(),
                       style: Styles.btnTextStyle,
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                     ),
                     onPressed: _isRequestSent
                         ? null

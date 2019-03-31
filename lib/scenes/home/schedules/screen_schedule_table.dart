@@ -15,29 +15,45 @@ enum SortBy { title, startDate, endDate, datePosted }
 enum SortOrder { ascending, descending }
 
 class SchedulesTableScreen extends StatelessWidget {
-  final User _user;
+  final Future<List<Schedule>> scheduleList;
+  final User user;
+  final int positionInTab;
 
-  SchedulesTableScreen([this._user]);
+  const SchedulesTableScreen(
+      {Key key, this.scheduleList, this.user, this.positionInTab})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return _SchedulesTableBody(_user);
-  }
+  Widget build(BuildContext context) => _SchedulesTableBody(
+        positionInTab: this.positionInTab,
+        user: this.user,
+        scheduleList: this.scheduleList,
+      );
 }
 
 class _SchedulesTableBody extends StatefulWidget {
-  final User _user;
+  final Future<List<Schedule>> scheduleList;
+  final User user;
+  final int positionInTab;
 
-  _SchedulesTableBody([this._user]);
+  const _SchedulesTableBody(
+      {Key key, this.scheduleList, this.user, this.positionInTab})
+      : super(key: key);
 
   @override
-  _SchedulesTableBodyState createState() => _SchedulesTableBodyState(_user);
+  _SchedulesTableBodyState createState() => _SchedulesTableBodyState(
+      positionInTab: this.positionInTab,
+      user: this.user,
+      scheduleList: this.scheduleList);
 }
 
 class _SchedulesTableBodyState extends State<_SchedulesTableBody>
     with AutomaticKeepAliveClientMixin<_SchedulesTableBody> {
-  User _user;
-  static const padding16dp = Constants.defaultPadding * 2;
+  final Future<List<Schedule>> scheduleList;
+  final User user;
+  final int positionInTab;
+
+  static const padding16dp = Dimensions.defaultPadding * 2;
   static const tagTitleTextStyle = TextStyle(
     fontFamily: "Roboto",
     fontWeight: FontWeight.w700,
@@ -53,7 +69,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
   Future<List<Schedule>> _schedules;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _SchedulesTableBodyState([this._user]);
+  _SchedulesTableBodyState({this.scheduleList, this.positionInTab, this.user});
 
   @override
   void initState() {
@@ -63,7 +79,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
 
   @override
   Widget build(BuildContext context) {
-    var isUserAdmin = _user != null && _user.role == Constants.privilegeAdmin;
+    var isUserAdmin = user != null && user.role == Constants.privilegeAdmin;
     return Scaffold(
       key: _scaffoldKey,
       body: FutureBuilder<List<Schedule>>(
@@ -87,43 +103,46 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        IconButton(
-                          iconSize: 20,
-                          highlightColor: Colors.transparent,
-                          tooltip: "Sort",
-                          icon: Icon(
-                            Icons.sort,
-                            color: Colors.grey.shade700,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: padding16dp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                            iconSize: 20,
+                            highlightColor: Colors.transparent,
+                            tooltip: "Sort",
+                            icon: Icon(
+                              Icons.sort,
+                              color: Colors.grey.shade700,
+                            ),
+                            onPressed: () =>
+                                _showSortDialog(context, scheduleList),
                           ),
-                          onPressed: () =>
-                              _showSortDialog(context, scheduleList),
-                        ),
-                        IconButton(
-                          iconSize: 20,
-                          highlightColor: Colors.transparent,
-                          disabledColor: Colors.grey.shade500,
-                          tooltip: "Add to calender",
-                          icon: Icon(
-                            Icons.calendar_today,
-                            color: Colors.grey.shade700,
+                          IconButton(
+                            iconSize: 20,
+                            highlightColor: Colors.transparent,
+                            disabledColor: Colors.grey.shade500,
+                            tooltip: "Add to calender",
+                            icon: Icon(
+                              Icons.event_available,
+                              color: Colors.grey.shade700,
+                            ),
+                            onPressed: () {},
                           ),
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          iconSize: 20,
-                          highlightColor: Colors.transparent,
-                          disabledColor: Colors.grey.shade500,
-                          tooltip: "Delete all",
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.grey.shade700,
+                          IconButton(
+                            iconSize: 20,
+                            highlightColor: Colors.transparent,
+                            disabledColor: Colors.grey.shade500,
+                            tooltip: "Delete all",
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.grey.shade700,
+                            ),
+                            onPressed: () {},
                           ),
-                          onPressed: () {},
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
@@ -171,12 +190,13 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
       var diseases = schedule.diseases;
       var places = schedule.places;
 
+      const padding16dp = Dimensions.defaultPadding / 2;
       yield Card(
         margin: const EdgeInsets.only(
-          top: Constants.defaultPadding / 2,
-          right: Constants.defaultPadding,
-          left: Constants.defaultPadding,
-          bottom: Constants.defaultPadding / 2,
+          top: padding16dp,
+          right: Dimensions.defaultPadding,
+          left: Dimensions.defaultPadding,
+          bottom: padding16dp,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +315,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
               padding: const EdgeInsets.only(
                 right: padding16dp,
                 left: padding16dp,
-                bottom: Constants.defaultPadding,
+                bottom: Dimensions.defaultPadding,
               ),
               child: PlacesChipTags(centers: places),
             ),

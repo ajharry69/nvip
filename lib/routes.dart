@@ -13,8 +13,8 @@ import 'package:nvip/scenes/diseases/screen_diseases_table.dart';
 import 'package:nvip/scenes/feedback/screen_feedback.dart';
 import 'package:nvip/scenes/help/screen_help.dart';
 import 'package:nvip/scenes/home/children/screen_my_children.dart';
-import 'package:nvip/scenes/home/educative/screen_educative_post_add.dart';
-import 'package:nvip/scenes/home/educative/screen_educative_posts.dart';
+import 'package:nvip/scenes/home/articles/screen_article_add.dart';
+import 'package:nvip/scenes/home/articles/screen_articles_list.dart';
 import 'package:nvip/scenes/home/schedules/screen_schedule_add.dart';
 import 'package:nvip/scenes/home/schedules/screen_schedule_table.dart';
 import 'package:nvip/scenes/home/screen_home.dart';
@@ -48,8 +48,8 @@ final routes = {
   Routes.keyFeedback: (BuildContext context) => FeedbackScreen(),
   Routes.keyHelp: (BuildContext context) => HelpScreen(),
   Routes.keyEducativePostAdd: (BuildContext context) =>
-      AddEducativePostScreen(),
-  Routes.keyEducativePosts: (BuildContext context) => EducativePostsScreen(),
+      ArticleAddScreen(),
+  Routes.keyEducativePosts: (BuildContext context) => ArticlesScreen(),
   Routes.keyScheduleAdd: (BuildContext context) => AddScheduleScreen(),
   Routes.keyScheduleAdd: (BuildContext context) => SchedulesTableScreen(),
   Routes.keyHome: (BuildContext context) => HomeScreen(),

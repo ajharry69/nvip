@@ -85,13 +85,13 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          tooltip: "Add new immunization record",
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, Routes.keyImmunizationAdd);
-          },
-        ),
+//        floatingActionButton: FloatingActionButton(
+//          child: Icon(Icons.add),
+//          tooltip: "Add new immunization record",
+//          onPressed: () {
+//            Navigator.pushReplacementNamed(context, Routes.keyImmunizationAdd);
+//          },
+//        ),
         body: FutureBuilder<List<Immunization>>(
           future: _immunizationList,
           builder: (context, snapshot) {

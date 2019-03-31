@@ -10,7 +10,7 @@ class _TokenErrorWidgetState extends State<TokenErrorWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(Constants.defaultPadding * 4),
+      padding: const EdgeInsets.all(Dimensions.defaultPadding * 4),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

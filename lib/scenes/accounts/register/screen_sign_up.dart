@@ -78,15 +78,15 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
           key: _formKey,
           child: Padding(
             padding: EdgeInsets.only(
-              top: Constants.defaultPadding * 4,
-              left: Constants.defaultPadding * 4,
-              right: Constants.defaultPadding * 4,
+              top: Dimensions.defaultPadding * 4,
+              left: Dimensions.defaultPadding * 4,
+              right: Dimensions.defaultPadding * 4,
             ),
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _sNameController,
                     decoration: InputDecoration(labelText: 'Sir Name'),
@@ -95,7 +95,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _fNameController,
                     decoration: InputDecoration(labelText: 'First Name*'),
@@ -110,7 +110,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _lNameController,
                     decoration: InputDecoration(labelText: 'Last Name'),
@@ -119,7 +119,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     keyboardType: TextInputType.numberWithOptions(),
                     controller: _idNoController,
@@ -148,7 +148,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
@@ -166,7 +166,7 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: Constants.defaultPadding * 2),
+                      bottom: Dimensions.defaultPadding * 2),
                   child: TextFormField(
                     controller: _passController,
                     obscureText: _isPassObscure,
@@ -197,11 +197,11 @@ class __SignUpScreenBodyState extends State<_SignUpScreenBody>
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: Constants.defaultPadding * 2),
+                  margin: EdgeInsets.only(top: Dimensions.defaultPadding * 2),
                   child: RaisedButton(
                     child: Text(
                       'Sign Up'.toUpperCase(),
-                      textScaleFactor: Constants.defaultScaleFactor,
+                      textScaleFactor: Dimensions.defaultScaleFactor,
                       style: Styles.btnTextStyle,
                     ),
                     onPressed: _isRequestSent

@@ -87,8 +87,8 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    vertical: Constants.defaultPadding * 3,
-                    horizontal: Constants.defaultPadding * 3),
+                    vertical: Dimensions.defaultPadding * 3,
+                    horizontal: Dimensions.defaultPadding * 3),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -96,7 +96,7 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: Constants.defaultPadding * 2),
+                            bottom: Dimensions.defaultPadding * 2),
                         child: TextFormField(
                           controller: _textControllerSirName,
                           decoration: InputDecoration(
@@ -108,7 +108,7 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: Constants.defaultPadding * 2),
+                            bottom: Dimensions.defaultPadding * 2),
                         child: TextFormField(
                           controller: _textControllerFirstName,
                           decoration: InputDecoration(
@@ -126,7 +126,7 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: Constants.defaultPadding * 2),
+                            bottom: Dimensions.defaultPadding * 2),
                         child: TextFormField(
                           controller: _textControllerLastName,
                           decoration: InputDecoration(
@@ -138,7 +138,7 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: Constants.defaultPadding * 2),
+                            bottom: Dimensions.defaultPadding * 2),
                         child: TextFormField(
                           controller: _textControllerIDNo,
                           keyboardType: TextInputType.numberWithOptions(),
@@ -164,7 +164,7 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: Constants.defaultPadding * 2),
+                            bottom: Dimensions.defaultPadding * 2),
                         child: TextFormField(
                           controller: _textControllerMobile,
                           keyboardType: TextInputType.phone,
@@ -177,7 +177,7 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            bottom: Constants.defaultPadding * 2),
+                            bottom: Dimensions.defaultPadding * 2),
                         child: TextFormField(
                           enabled: false,
                           keyboardType: TextInputType.emailAddress,
@@ -197,11 +197,11 @@ class __ProfileScreenBodyState extends State<_ProfileScreenBody> {
                       Container(
                         width: double.maxFinite,
                         padding: const EdgeInsets.only(
-                            top: Constants.defaultPadding),
+                            top: Dimensions.defaultPadding),
                         child: RaisedButton(
                           child: Text(
                             'Update Profile'.toUpperCase(),
-                            textScaleFactor: Constants.defaultScaleFactor,
+                            textScaleFactor: Dimensions.defaultScaleFactor,
                             style: Styles.btnTextStyle,
                           ),
                           onPressed: _isRequestSent
