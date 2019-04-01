@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nvip/constants.dart';
@@ -147,7 +149,8 @@ class ChildrenTableDataSource extends DataTableSource {
               ],
             ),
             subtitle: Padding(
-              padding: const EdgeInsets.only(top: Dimensions.defaultPadding / 2),
+              padding:
+                  const EdgeInsets.only(top: Dimensions.defaultPadding / 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -161,7 +164,8 @@ class ChildrenTableDataSource extends DataTableSource {
                     nextImmunizationDate != null && nextImmunizationDate != ''
                         ? dateFormat
                             .format(DateTime.tryParse(nextImmunizationDate))
-                        : "YYYY-MM-DD",
+                        : dateFormat.format(DateTime.now()
+                            .add(Duration(days: Random.secure().nextInt(100)))),
                     style: Theme.of(context).textTheme.body1,
                   ),
                   Text(
