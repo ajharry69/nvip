@@ -142,7 +142,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
 
   @override
   void dispose() {
-    if(!_tabController.indexIsChanging){
+    if (!_tabController.indexIsChanging) {
       _tabController.removeListener(tabSelectListener);
       _tabController.dispose();
     }
@@ -168,7 +168,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
                 widget.title,
                 textScaleFactor: Dimensions.defaultScaleFactor,
                 style: TextStyle(
-                  fontFamily: "Kalam",
+//                  fontFamily: "Kalam",
                   letterSpacing: 5.5,
                   fontWeight: FontWeight.w700,
                 ),
@@ -385,7 +385,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
             child: Text(
               _user != null ? name : Constants.drawerHeaderName,
               style: TextStyle(
-                fontFamily: "Kalam",
+//                fontFamily: "Kalam",
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.8,
               ),
@@ -395,7 +395,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody>
           Text(
             _user != null ? email : Constants.drawerHeaderEmail,
             style: TextStyle(
-              fontFamily: "Kalam",
+//              fontFamily: "Kalam",
               fontWeight: FontWeight.w400,
               letterSpacing: 2.5,
             ),
