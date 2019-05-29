@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           User user = await UserCache().currentUser;
           await UserDataRepo().updateDeviceId(user?.id, token);
         } on Exception catch (err) {
-          print(Constants.refinedExceptionMessage(err));
+          print('MyApp.build: ${Constants.refinedExceptionMessage(err)}');
         }
       },
     ).onError((err) => print(

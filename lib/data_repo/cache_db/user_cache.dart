@@ -38,8 +38,7 @@ class UserCache {
     return res;
   }
 
-  Future<bool> isAccountVerified() async =>
-      await isSignedIn() && (await currentUser).isVerified;
+  Future<bool> isAccountVerified() async => (await currentUser).isVerified;
 
   Future<bool> isSignedIn() async => await currentUser != null;
 }
