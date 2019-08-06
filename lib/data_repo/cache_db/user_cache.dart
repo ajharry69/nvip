@@ -16,7 +16,7 @@ class UserCache {
     await deleteAllUserTokens();
 
     var res = await dbClient.insert(
-        UserTokenTable.tableName, {UserTokenTable.colToken: token},
+        AuthTokenTable.tableName, {AuthTokenTable.colToken: token},
         conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }
@@ -26,19 +26,23 @@ class UserCache {
     DbHelper helper = DbHelper();
     var dbClient = await helper.db;
     List<Map<String, dynamic>> userList =
-        await dbClient.query(UserTokenTable.tableName);
-    userList.forEach((token) => userToken = token[UserTokenTable.colToken]);
+        await dbClient.query(AuthTokenTable.tableName);
+    userList.forEach((token) => userToken = token[AuthTokenTable.colToken]);
     return userList.length == 1 ? userToken : "";
   }
 
   Future<int> deleteAllUserTokens() async {
     DbHelper helper = DbHelper();
     var dbClient = await helper.db;
-    var res = await dbClient.delete(UserTokenTable.tableName);
+    var res = await dbClient.delete(AuthTokenTable.tableName);
     return res;
   }
 
-  Future<bool> isAccountVerified() async => (await currentUser).isVerified;
+  /// User's account is checked for verification status iff he's passed the
+  /// <code>isSignedIn()</code> check
+  Future<bool> isAccountVerified() async =>
+      await isSignedIn() && (await currentUser).isVerified;
 
+  /// Returns <code>true</code> iff the user is not null
   Future<bool> isSignedIn() async => await currentUser != null;
 }

@@ -318,24 +318,24 @@ class Constants {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: Text(
-              "Confirm!",
-              style: Theme.of(ctx).textTheme.title,
-            ),
-            content: Text(dialogContent),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Cancel".toUpperCase()),
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("Delete".toUpperCase()),
-                onPressed: doDelete,
-              )
-            ],
+        title: Text(
+          "Confirm!",
+          style: Theme.of(ctx).textTheme.title,
+        ),
+        content: Text(dialogContent),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Cancel".toUpperCase()),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
           ),
+          FlatButton(
+            child: Text("Delete".toUpperCase()),
+            onPressed: doDelete,
+          )
+        ],
+      ),
     );
   }
 
@@ -473,8 +473,8 @@ class CacheDatabase {
 class SQLQueries {
   // Create tables...
 
-  static final String createUserTokenTable =
-      "CREATE TABLE IF NOT EXISTS ${UserTokenTable.tableName}(${UserTokenTable.colToken} "
+  static final String createAuthTokenTable =
+      "CREATE TABLE IF NOT EXISTS ${AuthTokenTable.tableName}(${AuthTokenTable.colToken} "
       "TEXT);";
 
   static final String createUserRolesTable =
@@ -496,6 +496,8 @@ class SQLQueries {
       "${DiseasesTable.colComplications} LONGTEXT);";
 
   // Delete tables...
+  static final String dropAuthTokenTable =
+      "DROP TABLE IF EXISTS ${AuthTokenTable.tableName};";
 
   static final String dropUserRolesTable =
       "DROP TABLE IF EXISTS ${UserRolesTable.tableName};";
@@ -544,8 +546,8 @@ class UserTable {
   static final String colVerified = 'verified';
 }
 
-class UserTokenTable {
-  static final String tableName = "user_token";
+class AuthTokenTable {
+  static final String tableName = "auth_token";
   static final String colToken = 'token';
 }
 
@@ -595,7 +597,7 @@ class Routes {
 
 class Urls {
 //  static final String _baseUrl = "https://nvip.krizlaapp.com/";
-  static final String _baseUrl = "http://10.0.2.2:8888/NVIP";
+  static final String _baseUrl = "http://10.0.2.2/nvip";
   static final String _baseAPIUrl = "$_baseUrl/RestAPI";
   static final String _immunizationRoot = "$_baseAPIUrl/immunization";
   static final String _userRoot = "$_baseAPIUrl/user";

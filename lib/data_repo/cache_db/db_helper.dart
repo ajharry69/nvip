@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io' as io;
 
 import 'package:nvip/constants.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
@@ -22,10 +20,10 @@ class DbHelper {
   }
 
   initDb() async {
-    io.Directory docsDir = await getApplicationDocumentsDirectory();
-    String path = join(docsDir.path, CacheDatabase.dbName);
+//    io.Directory docsDir = await getApplicationDocumentsDirectory();
+//    String path = join(docsDir.path, CacheDatabase.dbName);
     Database dbNVIP = await openDatabase(
-      path,
+      join(await getDatabasesPath(), CacheDatabase.dbName),
       version: CacheDatabase.dbVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
@@ -33,29 +31,36 @@ class DbHelper {
     return dbNVIP;
   }
 
+  /// Executed upon database creation
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute(SQLQueries.createUserTokenTable);
-    await db.execute(SQLQueries.createUserRolesTable);
-    await db.execute(SQLQueries.createCentersTable);
-    await db.execute(SQLQueries.createDiseasesTable);
+    db.transaction((txn) async {
+      await txn.execute(SQLQueries.createAuthTokenTable);
+      await txn.execute(SQLQueries.createUserRolesTable);
+      await txn.execute(SQLQueries.createCentersTable);
+      await txn.execute(SQLQueries.createDiseasesTable);
 
-    await db.insert(UserRolesTable.tableName,
-        {UserRolesTable.colName: Constants.privilegeAdmin},
-        conflictAlgorithm: ConflictAlgorithm.abort);
-    await db.insert(UserRolesTable.tableName,
-        {UserRolesTable.colName: Constants.privilegeProvider},
-        conflictAlgorithm: ConflictAlgorithm.abort);
-    await db.insert(UserRolesTable.tableName,
-        {UserRolesTable.colName: Constants.privilegeParent},
-        conflictAlgorithm: ConflictAlgorithm.abort);
+      await txn.insert(UserRolesTable.tableName,
+          {UserRolesTable.colName: Constants.privilegeAdmin},
+          conflictAlgorithm: ConflictAlgorithm.abort);
+      await db.insert(UserRolesTable.tableName,
+          {UserRolesTable.colName: Constants.privilegeProvider},
+          conflictAlgorithm: ConflictAlgorithm.abort);
+      await db.insert(UserRolesTable.tableName,
+          {UserRolesTable.colName: Constants.privilegeParent},
+          conflictAlgorithm: ConflictAlgorithm.abort);
+    });
 
     print("Tables created.");
   }
 
+  /// Executed upon database upgrade (version change)
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    await db.execute(SQLQueries.dropUserRolesTable);
-    await db.execute(SQLQueries.dropCentersTable);
-    await db.execute(SQLQueries.dropDiseasesTable);
+    db.transaction((txn) async {
+      await txn.execute(SQLQueries.dropAuthTokenTable);
+      await txn.execute(SQLQueries.dropUserRolesTable);
+      await txn.execute(SQLQueries.dropCentersTable);
+      await txn.execute(SQLQueries.dropDiseasesTable);
+    });
 
     print("Tables deleted.");
     await _onCreate(db, newVersion);

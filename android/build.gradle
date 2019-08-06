@@ -1,13 +1,13 @@
 buildscript {
-    ext.kotlin_version = '1.3.31'
+    ext.kotlin_version = '1.3.41'
     repositories {
         google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.google.gms:google-services:4.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -29,47 +29,38 @@ subprojects {
         resolutionStrategy.eachDependency { details ->
             def requested = details.requested
             if (requested.group == 'androidx.lifecycle') {
-                details.useVersion "2.0.0"
+                details.useVersion "2.2.0-alpha02"
             }
             if (requested.group == 'androidx.collection') {
-                details.useVersion "1.0.0"
+                details.useVersion "1.1.0"
             }
             if (requested.group == 'androidx.sqlite') {
-                details.useVersion "2.0.0"
+                details.useVersion "2.0.1"
             }
             if (requested.group == 'androidx.palette') {
                 details.useVersion "1.0.0"
             }
             if (requested.group == 'androidx.fragment') {
-                details.useVersion "1.0.0"
+                details.useVersion "1.1.0-rc03"
             }
             if (requested.group == 'androidx.core') {
-                details.useVersion "1.0.0"
+                details.useVersion "1.2.0-alpha02"
             }
-            if (requested.group == 'android.arch.navigation') {
-                details.useVersion "1.0.0-alpha06"
+            if (requested.group == 'androidx.navigation') {
+                details.useVersion "2.1.0-beta02"
             }
-            if (requested.group == 'android.arch.work') {
-                details.useVersion "1.0.0-alpha10"
+            if (requested.group == 'androidx.work') {
+                details.useVersion "2.2.0-rc01"
             }
             if (requested.group == 'androidx.appcompat') {
-                details.useVersion "1.0.0"
+                details.useVersion "1.1.0-rc01"
             }
             if (requested.group == 'androidx.vectordrawable') {
-                details.useVersion "1.0.0"
+                details.useVersion "1.1.0-rc01"
             }
             if (requested.group == 'androidx.annotation') {
-                details.useVersion "1.0.0"
+                details.useVersion "1.1.0"
             }
-
-//            if (requested.group == 'com.android.support'
-//                    && !requested.name.contains('multidex')) {
-//                details.useVersion "28.0.0"
-//            }
-//
-//            if (requested.group == 'com.google.firebase') {
-//                details.useVersion "15.+"
-//            }
         }
     }
 }
