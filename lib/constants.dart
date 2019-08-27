@@ -596,9 +596,9 @@ class Routes {
 }
 
 class Urls {
-//  static final String _baseUrl = "https://nvip.krizlaapp.com/";
+//  static final String _baseUrl = "https://nvip.xently.com/";
   static final String _baseUrl = "http://10.0.2.2/nvip";
-  static final String _baseAPIUrl = "$_baseUrl/RestAPI";
+  static final String _baseAPIUrl = "$_baseUrl/api";
   static final String _immunizationRoot = "$_baseAPIUrl/immunization";
   static final String _userRoot = "$_baseAPIUrl/user";
   static final String _adminRoot = "$_userRoot/admin";

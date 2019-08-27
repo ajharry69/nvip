@@ -111,9 +111,7 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
     const padding16dp = Dimensions.defaultPadding * 2;
     var padding32dp = Dimensions.defaultPadding * 4;
     return WillPopScope(
-      onWillPop: () {
-        _onBackPressed(context);
-      },
+      onWillPop: () => _onBackPressed(context),
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -446,13 +444,17 @@ class __RegisterChildScreenBodyState extends State<_RegisterChildScreenBody> {
     });
   }
 
-  void _onBackPressed(BuildContext context) {
+  Future<bool> _onBackPressed(BuildContext context) {
+    var route = Navigator.pushReplacementNamed(context, Routes.keyHome);
+
     if (callerId == RegisterCallerId.table) {
-      Navigator.pushReplacementNamed(context, Routes.keyChildrenTable);
-    } else if (callerId == RegisterCallerId.immunization) {
-      Navigator.pushReplacementNamed(context, Routes.keyImmunizationAdd);
-    } else {
-      Navigator.pushReplacementNamed(context, Routes.keyHome);
+      route = Navigator.pushReplacementNamed(context, Routes.keyChildrenTable);
     }
+    if (callerId == RegisterCallerId.immunization) {
+      route =
+          Navigator.pushReplacementNamed(context, Routes.keyImmunizationAdd);
+    }
+
+    return route;
   }
 }
