@@ -164,6 +164,7 @@ class _SchedulesTableBodyState extends State<_SchedulesTableBody>
       ),
       floatingActionButton: isUserAdmin
           ? FloatingActionButton(
+        heroTag: "fab:home:schedule",
               onPressed: () {
                 Navigator.pushReplacement(
                     context,

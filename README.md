@@ -3,20 +3,17 @@
 An Immunization Information System application for the GoK-MoH(Government of Kenya - Ministry of Health)
  vaccination department.
 
-## Getting Started
+## Screenshots
 
-```dart
-var done = "hello world";
-print(done);
-```
+| Screenshot | Screenshot | Screenshot |
+| --- | --- | --- |
+| ![signin][signin] | ![articles][articles] | ![schedule][schedule] |
+| ![county-coverage][county-coverage] | ![nationwide-annual-coverage][nationwide-annual-coverage] | ![child-immunization-history][child-immunization-history] |
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+[signin]: screenshots/signin.png "Sign-in"
+[articles]: screenshots/articles.png "Immunization/vaccination articles"
+[schedule]: screenshots/schedule.png "Immunization/vaccination schedules"
+[county-coverage]: screenshots/county-coverage.png "county immunization coverage"
+[nationwide-annual-coverage]: screenshots/nationwide-annual-coverage.png "nationwide annual immunization coverage"
+[child-immunization-history]: screenshots/child-immunization-history.png "child immunization history and schedules"

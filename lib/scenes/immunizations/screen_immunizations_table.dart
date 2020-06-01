@@ -60,9 +60,7 @@ class __ImmunizationsScreenBodyState extends State<_ImmunizationsScreenBody> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        Navigator.pushReplacementNamed(context, Routes.keyHome);
-      },
+      onWillPop: () => Navigator.pushReplacementNamed(context, Routes.keyHome),
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(

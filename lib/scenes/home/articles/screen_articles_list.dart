@@ -274,6 +274,7 @@ class _ArticlesScreenBodyState extends State<_ArticlesScreenBody>
       ),
       floatingActionButton: isPrivileged
           ? FloatingActionButton(
+              heroTag: "fab:home:articles",
               onPressed: () {
                 Navigator.pushReplacement(
                   context,

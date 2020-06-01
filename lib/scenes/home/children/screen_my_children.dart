@@ -77,10 +77,13 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
         key: _scaffoldKey,
         floatingActionButton: user != null
             ? FloatingActionButton(
+                heroTag: "fab:home:my_children",
                 child: Icon(Icons.person_add),
                 tooltip: "Register a new child",
                 onPressed: () {
@@ -222,6 +225,7 @@ class __MyChildrenScreenBodyState extends State<_MyChildrenScreenBody>
           },
         ),
       );
+  }
 
   @override
   bool get wantKeepAlive => true;

@@ -82,9 +82,8 @@ class __ImmunizationScreenBodyState extends State<_ImmunizationScreenBody> {
   Widget build(BuildContext context) {
     const padding16dp = Dimensions.defaultPadding * 2;
     return WillPopScope(
-      onWillPop: () {
-        Navigator.pushReplacementNamed(context, Routes.keyImmunizationsTable);
-      },
+      onWillPop: () =>
+          Navigator.pushReplacementNamed(context, Routes.keyImmunizationsTable),
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(

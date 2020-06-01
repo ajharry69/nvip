@@ -86,9 +86,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
 
   @override
   Widget build(BuildContext context) => WillPopScope(
-        onWillPop: () {
-          Navigator.pushReplacementNamed(context, Routes.keyHome);
-        },
+        onWillPop: () =>
+            Navigator.pushReplacementNamed(context, Routes.keyHome),
         child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
@@ -113,8 +112,8 @@ class __ScheduleScreenBodyState extends State<_ScheduleScreenBody> {
               child: ListView(
                 children: <Widget>[
                   Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: Dimensions.defaultPadding),
+                    padding: const EdgeInsets.only(
+                        bottom: Dimensions.defaultPadding),
                     child: TextFormField(
                       controller: _titleController,
                       validator: (String title) {
